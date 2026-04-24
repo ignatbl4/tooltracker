@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Учет инструментов | ToolTracker</title>
-    <!-- Подключаем библиотеку для сканирования QR-кодов -->
+    <!-- Библиотека для сканирования QR-кодов -->
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js">
     </script>
     <style>
@@ -36,7 +36,7 @@
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
+            align-items: center;
             padding: 0;
             margin: 0;
             -webkit-tap-highlight-color: transparent;
@@ -51,6 +51,130 @@
             position: relative;
             overflow-x: hidden;
             box-shadow: var(--shadow);
+        }
+
+        /* ==================== ЭКРАН ВХОДА ==================== */
+        .login-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 40px 24px;
+            text-align: center;
+            background: linear-gradient(180deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            color: white;
+        }
+        .login-logo {
+            font-size: 80px;
+            margin-bottom: 24px;
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-12px);
+            }
+        }
+        .login-title {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+        .login-subtitle {
+            font-size: 15px;
+            opacity: 0.7;
+            margin-bottom: 40px;
+            line-height: 1.5;
+        }
+        .login-features {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 48px;
+            width: 100%;
+            max-width: 300px;
+        }
+        .login-feature {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 14px 18px;
+            border-radius: 12px;
+            font-size: 14px;
+            text-align: left;
+        }
+        .login-feature .icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        .btn-login {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            max-width: 300px;
+            padding: 16px 24px;
+            background: #2AABEE;
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 8px 24px rgba(42, 171, 238, 0.4);
+            letter-spacing: 0.3px;
+        }
+        .btn-login:active {
+            transform: scale(0.96);
+            box-shadow: 0 4px 12px rgba(42, 171, 238, 0.3);
+        }
+        .btn-login .tg-icon {
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #2AABEE;
+        }
+        .login-footer {
+            margin-top: 32px;
+            font-size: 12px;
+            opacity: 0.4;
+        }
+        .login-error {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+            padding: 12px 18px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            max-width: 300px;
+            display: none;
+        }
+        .login-error.show {
+            display: block;
+        }
+
+        /* ==================== ОСНОВНОЕ ПРИЛОЖЕНИЕ ==================== */
+        .main-app {
+            display: none;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .main-app.active {
+            display: flex;
         }
 
         /* Header */
@@ -104,6 +228,21 @@
             border-radius: 10px;
             margin-left: 6px;
             text-transform: uppercase;
+        }
+        .btn-logout {
+            margin-left: auto;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .btn-logout:active {
+            background: rgba(255, 255, 255, 0.2);
         }
 
         /* Tabs */
@@ -180,7 +319,6 @@
         #qr-reader__scan_region img {
             display: none;
         }
-        /* Скрываем лишние элементы библиотеки */
         #qr-reader__dashboard {
             display: none;
         }
@@ -482,90 +620,133 @@
 </head>
 <body>
     <div class="app" id="app">
-        <!-- Header -->
-        <div class="header">
-            <h1>🔧 Учет инструментов</h1>
-            <div class="subtitle">Сканируйте QR-код для работы</div>
-            <div class="user-badge" id="userBadge">
-                <div class="user-avatar" id="userAvatar">👤</div>
-                <span id="userName">Загрузка...</span>
-                <span class="admin-badge" id="adminBadge" style="display:none;">Админ</span>
-            </div>
-        </div>
+        <!-- ==================== ЭКРАН ВХОДА ==================== -->
+        <div class="login-screen" id="loginScreen">
+            <div class="login-logo">🔧</div>
+            <div class="login-title">ToolTracker</div>
+            <div class="login-subtitle">Учет инструментов на предприятии</div>
 
-        <!-- Tabs -->
-        <div class="tabs" id="tabsContainer">
-            <button class="tab active" data-screen="scan">📷 Сканер</button>
-            <button class="tab" data-screen="history">📋 История</button>
-            <button class="tab" data-screen="admin" id="tabAdmin" style="display:none;">⚙️ Админ</button>
-        </div>
-
-        <!-- Screen: Scanner -->
-        <div class="screen active" id="screen-scan">
-            <div class="scanner-container" id="scannerContainer">
-                <div id="qr-reader"></div>
-                <div class="scanner-overlay"></div>
-                <div class="scanner-hint">Наведите камеру на QR-код</div>
-            </div>
-            <button class="btn-stop-scan" id="btnStopScan" style="display:none;">⏹ Остановить сканер</button>
-            <div class="manual-section">
-                <p style="font-size:13px;color:var(--tg-theme-hint-color);margin-bottom:8px;">Или введите код вручную:</p>
-                <input type="text" class="manual-input" id="manualInput" placeholder="Например: TOOL-001" maxlength="20">
-                <button class="btn-manual" id="btnManual">🔍 Найти инструмент</button>
-                <p style="font-size:11px;color:var(--tg-theme-hint-color);margin-top:8px;">
-                    Демо-коды: <strong>TOOL-001, TOOL-002, TOOL-003, TOOL-004</strong>
-                </p>
-            </div>
-
-            <!-- Tool Card (скрыта по умолчанию) -->
-            <div class="tool-card" id="toolCard" style="display:none;">
-                <div class="tool-icon" id="toolIcon">🔨</div>
-                <div class="tool-name" id="toolName">Перфоратор Bosch</div>
-                <div class="tool-id" id="toolId">TOOL-001</div>
-                <div class="status-badge" id="statusBadge">
-                    <span id="statusText">На складе</span>
+            <div class="login-features">
+                <div class="login-feature">
+                    <span class="icon">📷</span>
+                    <span>Сканирование QR-кодов инструментов</span>
                 </div>
-                <div class="holder-info" id="holderInfo" style="display:none;">
-                    На руках у: <strong id="holderName">—</strong>
+                <div class="login-feature">
+                    <span class="icon">🤚</span>
+                    <span>Фиксация выдачи и возврата</span>
                 </div>
-                <button class="btn-action btn-take btn" id="btnTake" style="display:none;">🤚 Взять инструмент</button>
-                <button class="btn-action btn-return btn" id="btnReturn" style="display:none;">✅ Вернуть на склад</button>
-                <button class="btn-action btn-disabled btn" id="btnBlocked" style="display:none;" disabled>🔒 Инструмент занят</button>
-                <button class="btn-action btn-danger btn" id="btnForceReturn" style="display:none;">⚡ Принудительный возврат (Админ)</button>
-            </div>
-        </div>
-
-        <!-- Screen: History -->
-        <div class="screen" id="screen-history">
-            <h3 style="margin-bottom:12px;">📋 Последние операции</h3>
-            <div id="historyList">
-                <div class="empty-state">
-                    <div class="icon">📭</div>
-                    <p>История операций пуста</p>
+                <div class="login-feature">
+                    <span class="icon">📋</span>
+                    <span>Полная история операций</span>
                 </div>
             </div>
+
+            <div class="login-error" id="loginError">
+                ⚠️ Авторизация доступна только внутри Telegram. Откройте приложение через бота.
+            </div>
+
+            <button class="btn-login" id="btnLogin">
+                <span class="tg-icon">✈</span>
+                Войти через Telegram
+            </button>
+
+            <div class="login-footer">
+                ToolTracker v1.0 · Telegram Mini App
+            </div>
         </div>
 
-        <!-- Screen: Admin -->
-        <div class="screen" id="screen-admin">
-            <h3 style="margin-bottom:12px;">⚙️ Панель администратора</h3>
-            <div class="admin-actions">
-                <button class="btn-small" id="btnAddTool">➕ Добавить инструмент</button>
-                <button class="btn-small btn-outline" id="btnExportCSV">📥 Экспорт CSV</button>
+        <!-- ==================== ОСНОВНОЕ ПРИЛОЖЕНИЕ ==================== -->
+        <div class="main-app" id="mainApp">
+            <!-- Header -->
+            <div class="header">
+                <div style="display:flex;align-items:center;justify-content:space-between;">
+                    <div>
+                        <h1>🔧 Учет инструментов</h1>
+                        <div class="subtitle">Сканируйте QR-код для работы</div>
+                    </div>
+                    <button class="btn-logout" id="btnLogout">🚪 Выйти</button>
+                </div>
+                <div class="user-badge" id="userBadge">
+                    <div class="user-avatar" id="userAvatar">👤</div>
+                    <span id="userName">Пользователь</span>
+                    <span class="admin-badge" id="adminBadge" style="display:none;">Админ</span>
+                </div>
             </div>
-            <div style="overflow-x:auto;">
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>QR-код</th>
-                            <th>Название</th>
-                            <th>Статус</th>
-                            <th>У кого</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody id="adminTableBody"></tbody>
-                </table>
+
+            <!-- Tabs -->
+            <div class="tabs" id="tabsContainer">
+                <button class="tab active" data-screen="scan">📷 Сканер</button>
+                <button class="tab" data-screen="history">📋 История</button>
+                <button class="tab" data-screen="admin" id="tabAdmin" style="display:none;">⚙️ Админ</button>
+            </div>
+
+            <!-- Screen: Scanner -->
+            <div class="screen active" id="screen-scan">
+                <div class="scanner-container" id="scannerContainer">
+                    <div id="qr-reader"></div>
+                    <div class="scanner-overlay"></div>
+                    <div class="scanner-hint">Наведите камеру на QR-код</div>
+                </div>
+                <button class="btn-stop-scan" id="btnStopScan" style="display:none;">⏹ Остановить сканер</button>
+                <div class="manual-section">
+                    <p style="font-size:13px;color:var(--tg-theme-hint-color);margin-bottom:8px;">Или введите код вручную:</p>
+                    <input type="text" class="manual-input" id="manualInput" placeholder="Например: TOOL-001" maxlength="20">
+                    <button class="btn-manual" id="btnManual">🔍 Найти инструмент</button>
+                    <p style="font-size:11px;color:var(--tg-theme-hint-color);margin-top:8px;">
+                        Демо-коды: <strong>TOOL-001, TOOL-002, TOOL-003, TOOL-004</strong>
+                    </p>
+                </div>
+
+                <!-- Tool Card -->
+                <div class="tool-card" id="toolCard" style="display:none;">
+                    <div class="tool-icon" id="toolIcon">🔨</div>
+                    <div class="tool-name" id="toolName">Перфоратор Bosch</div>
+                    <div class="tool-id" id="toolId">TOOL-001</div>
+                    <div class="status-badge" id="statusBadge">
+                        <span id="statusText">На складе</span>
+                    </div>
+                    <div class="holder-info" id="holderInfo" style="display:none;">
+                        На руках у: <strong id="holderName">—</strong>
+                    </div>
+                    <button class="btn-action btn-take btn" id="btnTake" style="display:none;">🤚 Взять инструмент</button>
+                    <button class="btn-action btn-return btn" id="btnReturn" style="display:none;">✅ Вернуть на склад</button>
+                    <button class="btn-action btn-disabled btn" id="btnBlocked" style="display:none;" disabled>🔒 Инструмент занят</button>
+                    <button class="btn-action btn-danger btn" id="btnForceReturn" style="display:none;">⚡ Принудительный возврат (Админ)</button>
+                </div>
+            </div>
+
+            <!-- Screen: History -->
+            <div class="screen" id="screen-history">
+                <h3 style="margin-bottom:12px;">📋 Последние операции</h3>
+                <div id="historyList">
+                    <div class="empty-state">
+                        <div class="icon">📭</div>
+                        <p>История операций пуста</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Screen: Admin -->
+            <div class="screen" id="screen-admin">
+                <h3 style="margin-bottom:12px;">⚙️ Панель администратора</h3>
+                <div class="admin-actions">
+                    <button class="btn-small" id="btnAddTool">➕ Добавить инструмент</button>
+                    <button class="btn-small btn-outline" id="btnExportCSV">📥 Экспорт CSV</button>
+                </div>
+                <div style="overflow-x:auto;">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>QR-код</th>
+                                <th>Название</th>
+                                <th>Статус</th>
+                                <th>У кого</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminTableBody"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -575,17 +756,17 @@
 
     <script>
         (function() {
-            // ==================== ДАННЫЕ (In-Memory Database) ====================
-            // В реальном приложении здесь будет API к серверу
+            // ==================== БАЗА ДАННЫХ ====================
             const STORAGE_KEY = 'tooltracker_db';
+            const AUTH_KEY = 'tooltracker_auth';
 
             function getDefaultData() {
                 return {
                     users: [
-                        { telegram_id: 123456789, username: 'ivan_petrov', full_name: 'Иван Петров',
-                            role: 'user' },
                         { telegram_id: 987654321, username: 'admin_user', full_name: 'Сергей Админов',
                             role: 'admin' },
+                        { telegram_id: 123456789, username: 'ivan_petrov', full_name: 'Иван Петров',
+                        role: 'user' },
                         { telegram_id: 555555555, username: 'olga_smirnova', full_name: 'Ольга Смирнова',
                             role: 'user' },
                     ],
@@ -624,90 +805,141 @@
 
             let DB = loadData();
 
-            // ==================== ТЕКУЩИЙ ПОЛЬЗОВАТЕЛЬ (Интеграция с Telegram) ====================
-            // По умолчанию — гость. Реальные данные подставятся из Telegram WebApp API.
-            let currentUser = {
-                telegram_id: 0,
-                username: 'guest',
-                full_name: 'Гость',
-                role: 'user'
-            };
+            // ==================== АВТОРИЗАЦИЯ ====================
+            let currentUser = null;
 
-            // Попытка получить реальные данные из Telegram
-            if (window.Telegram && window.Telegram.WebApp) {
-                const tg = window.Telegram.WebApp;
-                tg.ready();
-                tg.expand();
+            function checkSavedAuth() {
+                const saved = localStorage.getItem(AUTH_KEY);
+                if (saved) {
+                    try {
+                        const authData = JSON.parse(saved);
+                        const user = DB.users.find(u => u.telegram_id === authData.telegram_id);
+                        if (user) {
+                            currentUser = user;
+                            return true;
+                        }
+                    } catch (e) {}
+                }
+                return false;
+            }
 
-                // Установка цветов темы Telegram
-                document.documentElement.style.setProperty('--tg-theme-bg-color', tg.themeParams.bg_color ||
-                    '#ffffff');
-                document.documentElement.style.setProperty('--tg-theme-text-color', tg.themeParams.text_color ||
-                    '#1e293b');
-                document.documentElement.style.setProperty('--tg-theme-button-color', tg.themeParams.button_color ||
-                    '#2AABEE');
-                document.documentElement.style.setProperty('--tg-theme-secondary-bg-color', tg.themeParams
-                    .secondary_bg_color || '#f1f5f9');
-                document.documentElement.style.setProperty('--tg-theme-hint-color', tg.themeParams.hint_color ||
-                    '#94a3b8');
+            function saveAuth() {
+                if (currentUser) {
+                    localStorage.setItem(AUTH_KEY, JSON.stringify({
+                        telegram_id: currentUser.telegram_id,
+                        timestamp: Date.now()
+                    }));
+                }
+            }
 
-                if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                    const u = tg.initDataUnsafe.user;
-                    currentUser.telegram_id = u.id;
-                    currentUser.username = u.username || ('user_' + u.id);
-                    // 🔥 ВАЖНО: Реальное имя из Telegram
-                    currentUser.full_name = (u.first_name || '') + (u.last_name ? ' ' + u.last_name : '');
-                    if (!currentUser.full_name.trim()) {
-                        currentUser.full_name = u.username || ('Пользователь ' + u.id);
+            function clearAuth() {
+                localStorage.removeItem(AUTH_KEY);
+                currentUser = null;
+            }
+
+            function isRunningInTelegram() {
+                return !!(window.Telegram && window.Telegram.WebApp);
+            }
+
+            function authenticateViaTelegram() {
+                if (!isRunningInTelegram()) {
+                    showLoginError();
+                    return false;
+                }
+
+                try {
+                    const tg = window.Telegram.WebApp;
+                    tg.ready();
+                    tg.expand();
+
+                    // Применяем тему Telegram
+                    document.documentElement.style.setProperty('--tg-theme-bg-color', tg.themeParams.bg_color ||
+                        '#ffffff');
+                    document.documentElement.style.setProperty('--tg-theme-text-color', tg.themeParams.text_color ||
+                        '#1e293b');
+                    document.documentElement.style.setProperty('--tg-theme-button-color', tg.themeParams
+                        .button_color || '#2AABEE');
+                    document.documentElement.style.setProperty('--tg-theme-secondary-bg-color', tg.themeParams
+                        .secondary_bg_color || '#f1f5f9');
+                    document.documentElement.style.setProperty('--tg-theme-hint-color', tg.themeParams.hint_color ||
+                        '#94a3b8');
+
+                    if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                        const u = tg.initDataUnsafe.user;
+                        const telegramId = u.id;
+                        const username = u.username || ('user_' + telegramId);
+                        const fullName = (u.first_name || '') + (u.last_name ? ' ' + u.last_name : '');
+                        const finalName = fullName.trim() || username;
+
+                        // Ищем или создаем пользователя
+                        let user = DB.users.find(dbU => dbU.telegram_id === telegramId);
+                        if (!user) {
+                            user = {
+                                telegram_id: telegramId,
+                                username: username,
+                                full_name: finalName,
+                                role: 'user'
+                            };
+                            DB.users.push(user);
+                            saveData();
+                            console.log('👤 Новый пользователь:', user.full_name);
+                        } else {
+                            // Обновляем данные, если изменились
+                            if (user.full_name !== finalName || user.username !== username) {
+                                user.full_name = finalName;
+                                user.username = username;
+                                saveData();
+                            }
+                        }
+
+                        currentUser = user;
+                        saveAuth();
+                        return true;
+                    } else {
+                        console.error('❌ Нет данных пользователя в Telegram');
+                        showLoginError();
+                        return false;
                     }
-                    console.log('✅ Данные из Telegram:', currentUser);
-                } else {
-                    console.warn('⚠️ Нет initDataUnsafe, возможно тестовый запуск');
+                } catch (e) {
+                    console.error('❌ Ошибка авторизации:', e);
+                    showLoginError();
+                    return false;
                 }
-            } else {
-                console.warn('⚠️ Не открыто через Telegram. Используется режим разработки.');
-                // Режим разработки в браузере
-                currentUser = {
-                    telegram_id: 123456789,
-                    username: 'dev_user',
-                    full_name: 'Разработчик',
-                    role: 'admin' // В браузере сразу админ для тестов
-                };
             }
 
-            // Проверяем, есть ли пользователь в БД, иначе добавляем
-            let dbUser = DB.users.find(u => u.telegram_id === currentUser.telegram_id);
-            if (!dbUser && currentUser.telegram_id !== 0) {
-                dbUser = {
-                    telegram_id: currentUser.telegram_id,
-                    username: currentUser.username,
-                    full_name: currentUser.full_name,
-                    role: 'user'
-                };
-                DB.users.push(dbUser);
-                saveData();
-                console.log('👤 Новый пользователь добавлен в БД:', dbUser.full_name);
+            function showLoginError() {
+                const errorEl = document.getElementById('loginError');
+                errorEl.classList.add('show');
+                setTimeout(() => errorEl.classList.remove('show'), 5000);
             }
-            if (dbUser) {
-                // Обновляем имя в БД, если оно изменилось в Telegram
-                if (dbUser.full_name !== currentUser.full_name) {
-                    dbUser.full_name = currentUser.full_name;
-                    dbUser.username = currentUser.username;
-                    saveData();
+
+            function logout() {
+                if (confirm('Вы уверены, что хотите выйти?')) {
+                    // Останавливаем сканер если активен
+                    if (html5QrCode && html5QrCode.isScanning) {
+                        html5QrCode.stop().catch(() => {});
+                        html5QrCode = null;
+                    }
+                    clearAuth();
+                    hideToolCard();
+                    showLoginScreen();
+                    showToast('Вы вышли из системы');
                 }
-                currentUser = dbUser;
             }
 
             // ==================== UI ЭЛЕМЕНТЫ ====================
             const $ = (sel) => document.querySelector(sel);
             const $$ = (sel) => document.querySelectorAll(sel);
 
-            const userBadge = $('#userBadge');
+            const loginScreen = $('#loginScreen');
+            const mainApp = $('#mainApp');
+            const btnLogin = $('#btnLogin');
+            const btnLogout = $('#btnLogout');
+            const loginError = $('#loginError');
             const userNameEl = $('#userName');
             const userAvatarEl = $('#userAvatar');
             const adminBadge = $('#adminBadge');
             const tabAdmin = $('#tabAdmin');
-            const scannerContainer = $('#scannerContainer');
             const qrReader = $('#qr-reader');
             const btnStopScan = $('#btnStopScan');
             const toolCard = $('#toolCard');
@@ -731,21 +963,24 @@
             let html5QrCode = null;
             let currentScannedTool = null;
 
-            // ==================== ИНИЦИАЛИЗАЦИЯ ====================
-            function init() {
+            // ==================== УПРАВЛЕНИЕ ЭКРАНАМИ ====================
+            function showLoginScreen() {
+                loginScreen.style.display = 'flex';
+                mainApp.classList.remove('active');
+                loginError.classList.remove('show');
+            }
+
+            function showMainApp() {
+                loginScreen.style.display = 'none';
+                mainApp.classList.add('active');
                 updateUserUI();
                 renderAllTabs();
-                setupEventListeners();
-                // Не запускаем сканер автоматически, ждем действия пользователя
                 showScannerPlaceholder();
-                console.log('🔧 ToolTracker Mini App готов');
-                console.log('👤 Пользователь:', currentUser.full_name, '| Роль:', currentUser.role);
-                console.log('📱 Демо-коды: TOOL-001, TOOL-002, TOOL-003, TOOL-004');
             }
 
             function updateUserUI() {
+                if (!currentUser) return;
                 userNameEl.textContent = currentUser.full_name;
-                // Берем первую букву имени для аватара
                 const firstLetter = currentUser.full_name.trim().charAt(0).toUpperCase() || '?';
                 userAvatarEl.textContent = firstLetter;
                 if (currentUser.role === 'admin') {
@@ -757,8 +992,8 @@
                 }
             }
 
+            // ==================== СКАНЕР ====================
             function showScannerPlaceholder() {
-                // Показываем кнопку запуска вместо авто-сканера
                 qrReader.innerHTML = `
                     <div style="display:flex;align-items:center;justify-content:center;height:100%;flex-direction:column;cursor:pointer;background:#1e293b;" id="startScanBtn">
                         <div style="font-size:64px;margin-bottom:12px;">📷</div>
@@ -767,55 +1002,42 @@
                     </div>`;
                 btnStopScan.style.display = 'none';
                 const startBtn = document.getElementById('startScanBtn');
-                if (startBtn) {
-                    startBtn.addEventListener('click', startScanner);
-                }
+                if (startBtn) startBtn.addEventListener('click', startScanner);
             }
 
             async function startScanner() {
-                if (html5QrCode) {
-                    await stopScanner();
-                }
+                if (html5QrCode) await stopScanner();
                 qrReader.innerHTML = '<div id="qr-reader"></div>';
                 html5QrCode = new Html5Qrcode("qr-reader");
                 btnStopScan.style.display = 'block';
-
                 try {
                     await html5QrCode.start({ facingMode: "environment" }, {
-                            fps: 10,
-                            qrbox: { width: 200, height: 200 },
-                            aspectRatio: 1.0
-                        },
-                        onScanSuccess,
-                        onScanFailure
-                    );
+                        fps: 10,
+                        qrbox: { width: 200, height: 200 },
+                        aspectRatio: 1.0
+                    }, onScanSuccess, onScanFailure);
                 } catch (err) {
                     console.error('Ошибка камеры:', err);
-                    showToast('Ошибка доступа к камере. Используйте ручной ввод.', 'error');
+                    showToast('Ошибка доступа к камере', 'error');
                     showScannerPlaceholder();
                 }
             }
 
             async function stopScanner() {
                 if (html5QrCode && html5QrCode.isScanning) {
-                    try {
-                        await html5QrCode.stop();
-                    } catch (e) {}
+                    try { await html5QrCode.stop(); } catch (e) {}
                 }
                 html5QrCode = null;
                 btnStopScan.style.display = 'none';
             }
 
             function onScanSuccess(decodedText) {
-                // Останавливаем сканер после успешного чтения
                 stopScanner();
                 showScannerPlaceholder();
                 processScannedCode(decodedText.trim());
             }
 
-            function onScanFailure(error) {
-                // Игнорируем частые ошибки сканирования
-            }
+            function onScanFailure(error) {}
 
             function processScannedCode(code) {
                 const tool = DB.tools.find(t => t.id === code);
@@ -833,8 +1055,6 @@
                 toolIcon.textContent = tool.icon || '🔧';
                 toolName.textContent = tool.name;
                 toolIdEl.textContent = tool.id;
-
-                // Скрываем все кнопки сначала
                 btnTake.style.display = 'none';
                 btnReturn.style.display = 'none';
                 btnBlocked.style.display = 'none';
@@ -848,28 +1068,21 @@
                 } else {
                     statusBadge.className = 'status-badge status-taken';
                     statusText.textContent = '❌ На руках';
-
                     const holder = DB.users.find(u => u.telegram_id === tool.current_holder);
                     const holderNameStr = holder ? holder.full_name : 'Неизвестный';
-
                     if (tool.current_holder === currentUser.telegram_id) {
-                        // Этот пользователь и есть владелец
                         holderInfo.style.display = 'block';
                         holderName.textContent = 'Вы';
                         btnReturn.style.display = 'block';
                     } else {
-                        // Инструмент у другого
                         holderInfo.style.display = 'block';
                         holderName.textContent = holderNameStr;
                         btnBlocked.style.display = 'block';
-
-                        // Админ может принудительно вернуть
                         if (currentUser.role === 'admin') {
                             btnForceReturn.style.display = 'block';
                         }
                     }
                 }
-                // Скроллим к карточке
                 toolCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
 
@@ -878,10 +1091,9 @@
                 currentScannedTool = null;
             }
 
-            // ==================== ДЕЙСТВИЯ ====================
+            // ==================== ДЕЙСТВИЯ С ИНСТРУМЕНТАМИ ====================
             function takeTool() {
-                if (!currentScannedTool) return;
-                if (currentScannedTool.status !== 'available') {
+                if (!currentScannedTool || currentScannedTool.status !== 'available') {
                     showToast('Инструмент уже занят', 'error');
                     return;
                 }
@@ -901,9 +1113,8 @@
             }
 
             function returnTool() {
-                if (!currentScannedTool) return;
-                if (currentScannedTool.status !== 'taken' || currentScannedTool.current_holder !== currentUser
-                    .telegram_id) {
+                if (!currentScannedTool || currentScannedTool.status !== 'taken' || currentScannedTool
+                    .current_holder !== currentUser.telegram_id) {
                     showToast('Вы не можете вернуть этот инструмент', 'error');
                     return;
                 }
@@ -923,8 +1134,7 @@
             }
 
             function forceReturnTool() {
-                if (!currentScannedTool) return;
-                if (currentUser.role !== 'admin') return;
+                if (!currentScannedTool || currentUser.role !== 'admin') return;
                 currentScannedTool.status = 'available';
                 currentScannedTool.current_holder = null;
                 DB.transactions.push({
@@ -944,7 +1154,7 @@
             function addTool() {
                 const name = prompt('Название инструмента:');
                 if (!name) return;
-                const icon = prompt('Эмодзи-иконка (например 🔧):', '🔧');
+                const icon = prompt('Эмодзи-иконка:', '🔧');
                 const id = 'TOOL-' + String(DB.tools.length + 1).padStart(3, '0');
                 DB.tools.push({
                     id: id,
@@ -987,7 +1197,7 @@
                 const transactions = DB.transactions.slice().reverse().slice(0, 20);
                 if (transactions.length === 0) {
                     historyList.innerHTML =
-                        '<div class="empty-state"><div class="icon">📭</div><p>История операций пуста</p></div>';
+                        '<div class="empty-state"><div class="icon">📭</div><p>История пуста</p></div>';
                     return;
                 }
                 historyList.innerHTML = transactions.map(t => {
@@ -996,9 +1206,7 @@
                     const isTake = t.action === 'take';
                     return `
                     <div class="history-item">
-                        <div class="history-icon ${isTake ? 'icon-take' : 'icon-return'}">
-                            ${isTake ? '🤚' : '✅'}
-                        </div>
+                        <div class="history-icon ${isTake ? 'icon-take' : 'icon-return'}">${isTake ? '🤚' : '✅'}</div>
                         <div class="history-details">
                             <div class="history-action">${isTake ? 'Взял' : 'Вернул'}: ${tool?.name || t.tool_id}</div>
                             <div class="history-tool">${user?.full_name || 'Пользователь #'+t.user_id}</div>
@@ -1016,21 +1224,13 @@
                     <tr>
                         <td><code>${t.id}</code></td>
                         <td>${t.icon} ${t.name}</td>
-                        <td>
-                            <span class="status-dot ${t.status==='available'?'dot-green':'dot-red'}"></span>
-                            ${t.status==='available'?'Склад':'Выдан'}
-                        </td>
+                        <td><span class="status-dot ${t.status==='available'?'dot-green':'dot-red'}"></span>${t.status==='available'?'Склад':'Выдан'}</td>
                         <td>${holder ? holder.full_name : '—'}</td>
-                        <td>
-                            ${t.status==='taken' && currentUser.role==='admin' ? 
-                                `<button class="btn-small btn-outline" onclick="window._forceReturnById('${t.id}')">Вернуть</button>` 
-                                : ''}
-                        </td>
+                        <td>${t.status==='taken' && currentUser.role==='admin' ? `<button class="btn-small btn-outline" onclick="window._forceReturnById('${t.id}')">Вернуть</button>` : ''}</td>
                     </tr>`;
                 }).join('');
             }
 
-            // Глобальная функция для кнопок в таблице
             window._forceReturnById = function(toolId) {
                 const tool = DB.tools.find(t => t.id === toolId);
                 if (tool && tool.status === 'taken') {
@@ -1042,14 +1242,12 @@
                         user_id: currentUser.telegram_id,
                         action: 'return',
                         timestamp: new Date().toISOString(),
-                        note: 'Принудительный возврат из админ-панели'
+                        note: 'Принудительный возврат'
                     });
                     saveData();
                     showToast('⚡ Инструмент возвращен', 'success');
                     renderAllTabs();
-                    if (currentScannedTool && currentScannedTool.id === toolId) {
-                        showToolCard(tool);
-                    }
+                    if (currentScannedTool && currentScannedTool.id === toolId) showToolCard(tool);
                 }
             };
 
@@ -1058,39 +1256,43 @@
                 toast.textContent = message;
                 toast.className = 'toast ' + type + ' show';
                 clearTimeout(toast._timeout);
-                toast._timeout = setTimeout(() => {
-                    toast.classList.remove('show');
-                }, 2500);
+                toast._timeout = setTimeout(() => toast.classList.remove('show'), 2500);
             }
 
             function switchScreen(screenName) {
                 $$('.screen').forEach(s => s.classList.remove('active'));
                 const target = $('#screen-' + screenName);
                 if (target) target.classList.add('active');
-
                 $$('.tab').forEach(t => t.classList.remove('active'));
                 const activeTab = document.querySelector(`.tab[data-screen="${screenName}"]`);
                 if (activeTab) activeTab.classList.add('active');
-
-                // Останавливаем сканер при уходе с экрана сканера
                 if (screenName !== 'scan') {
                     stopScanner();
                     showScannerPlaceholder();
                 } else {
-                    // Возвращаемся на экран сканера
                     showScannerPlaceholder();
                 }
             }
 
+            // ==================== ОБРАБОТЧИКИ СОБЫТИЙ ====================
             function setupEventListeners() {
-                // Табы
-                $$('.tab').forEach(tab => {
-                    tab.addEventListener('click', () => {
-                        switchScreen(tab.dataset.screen);
-                    });
+                // Кнопка входа
+                btnLogin.addEventListener('click', () => {
+                    if (authenticateViaTelegram()) {
+                        showMainApp();
+                        showToast('✅ Добро пожаловать, ' + currentUser.full_name + '!', 'success');
+                    }
                 });
 
-                // Кнопки действий
+                // Кнопка выхода
+                btnLogout.addEventListener('click', logout);
+
+                // Табы
+                $$('.tab').forEach(tab => {
+                    tab.addEventListener('click', () => switchScreen(tab.dataset.screen));
+                });
+
+                // Действия с инструментами
                 btnTake.addEventListener('click', takeTool);
                 btnReturn.addEventListener('click', returnTool);
                 btnForceReturn.addEventListener('click', forceReturnTool);
@@ -1110,26 +1312,41 @@
                     }
                 });
                 manualInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        btnManual.click();
-                    }
+                    if (e.key === 'Enter') btnManual.click();
                 });
 
-                // Админские кнопки
+                // Админ-кнопки
                 const addBtn = $('#btnAddTool');
                 const exportBtn = $('#btnExportCSV');
                 if (addBtn) addBtn.addEventListener('click', addTool);
                 if (exportBtn) exportBtn.addEventListener('click', exportCSV);
 
-                // Кнопка "Нажмите, чтобы сканировать" (делегирование)
+                // Делегирование для кнопки старта сканера
                 document.addEventListener('click', function(e) {
-                    if (e.target.closest('#startScanBtn')) {
-                        startScanner();
-                    }
+                    if (e.target.closest('#startScanBtn')) startScanner();
                 });
             }
 
-            // Запуск
+            // ==================== ИНИЦИАЛИЗАЦИЯ ====================
+            function init() {
+                setupEventListeners();
+
+                // Проверяем, есть ли сохраненная сессия
+                if (checkSavedAuth()) {
+                    // Пользователь уже авторизован
+                    showMainApp();
+                    console.log('🔧 Автовход:', currentUser.full_name);
+                } else if (isRunningInTelegram()) {
+                    // Открыто в Telegram, но сессии нет — показываем кнопку входа
+                    showLoginScreen();
+                    console.log('🔧 Ожидание авторизации через Telegram');
+                } else {
+                    // Обычный браузер — показываем экран входа
+                    showLoginScreen();
+                    console.log('🔧 Браузерный режим. Нажмите "Войти через Telegram"');
+                }
+            }
+
             init();
         })();
     </script>
