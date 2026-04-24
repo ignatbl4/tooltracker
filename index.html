@@ -94,9 +94,6 @@
         .btn-login:active {
             transform: scale(0.96);
         }
-        .btn-login .tg-icon {
-            font-size: 24px;
-        }
         .login-error {
             background: rgba(239, 68, 68, 0.15);
             border: 1px solid rgba(239, 68, 68, 0.3);
@@ -369,14 +366,16 @@
             font-weight: 700;
             margin-bottom: 4px;
         }
-        .tool-id {
-            font-size: 12px;
-            color: #94a3b8;
-            background: rgba(0, 0, 0, 0.05);
+        .tool-serial {
+            font-size: 13px;
+            color: #64748b;
+            background: rgba(0, 0, 0, 0.04);
             display: inline-block;
-            padding: 4px 10px;
+            padding: 5px 12px;
             border-radius: 12px;
             margin-bottom: 12px;
+            font-family: monospace;
+            letter-spacing: 0.5px;
         }
         .status-badge {
             display: inline-flex;
@@ -499,6 +498,7 @@
         .admin-table td {
             padding: 10px 8px;
             border-bottom: 1px solid #e2e8f0;
+            vertical-align: middle;
         }
         .status-dot {
             display: inline-block;
@@ -544,6 +544,116 @@
             margin-bottom: 12px;
         }
 
+        /* Модальное окно */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 100;
+            justify-content: center;
+            align-items: flex-end;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: white;
+            border-radius: 20px 20px 0 0;
+            padding: 24px 20px 32px;
+            width: 100%;
+            max-width: 480px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+        .modal h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .modal .form-group {
+            margin-bottom: 16px;
+        }
+        .modal label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #64748b;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .modal input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: inherit;
+        }
+        .modal input:focus {
+            outline: none;
+            border-color: #2AABEE;
+        }
+        .modal .serial-input-group {
+            display: flex;
+            gap: 8px;
+        }
+        .modal .serial-input-group input {
+            flex: 1;
+            font-family: monospace;
+            letter-spacing: 1px;
+        }
+        .modal .btn-scan-serial {
+            padding: 14px 16px;
+            background: #f1f5f9;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 20px;
+            white-space: nowrap;
+        }
+        .modal .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: #2AABEE;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+        .modal .btn-cancel {
+            width: 100%;
+            padding: 14px;
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 4px;
+        }
+        .serial-hint {
+            font-size: 11px;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+
         /* Toast */
         .toast {
             position: fixed;
@@ -580,7 +690,7 @@
             <div class="login-subtitle">Учет инструментов на предприятии</div>
             <div class="login-error" id="loginError">⚠️ Авторизация доступна только внутри Telegram</div>
             <button class="btn-login" id="btnLogin">
-                <span class="tg-icon">✈️</span> Войти через Telegram
+                <span>✈️</span> Войти через Telegram
             </button>
             <div class="dev-login-section" id="devSection">
                 <div class="dev-login-title">Режим разработчика</div>
@@ -621,18 +731,18 @@
                 </div>
                 <button class="btn-stop-scan" id="btnStopScan" style="display:none;">⏹ Остановить сканер</button>
                 <div class="manual-section">
-                    <p style="font-size:13px;color:#94a3b8;margin-bottom:8px;">Или введите код вручную:</p>
-                    <input type="text" class="manual-input" id="manualInput" placeholder="TOOL-001" maxlength="20">
+                    <p style="font-size:13px;color:#94a3b8;margin-bottom:8px;">Или введите серийный номер вручную:</p>
+                    <input type="text" class="manual-input" id="manualInput" placeholder="SN-775533" maxlength="30">
                     <button class="btn-manual" id="btnManual">🔍 Найти инструмент</button>
                     <p style="font-size:11px;color:#94a3b8;margin-top:8px;">
-                        Коды: <strong>TOOL-001</strong>, <strong>TOOL-002</strong>, <strong>TOOL-003</strong>, <strong>TOOL-004</strong>
+                        Демо: <strong>SN-775533</strong>, <strong>SN-992211</strong>, <strong>SN-448899</strong>, <strong>SN-112266</strong>
                     </p>
                 </div>
 
                 <div class="tool-card" id="toolCard" style="display:none;">
                     <div class="tool-icon" id="toolIcon">🔨</div>
                     <div class="tool-name" id="toolName"></div>
-                    <div class="tool-id" id="toolId"></div>
+                    <div class="tool-serial" id="toolSerial"></div>
                     <div class="status-badge" id="statusBadge"><span id="statusText"></span></div>
                     <div class="holder-info" id="holderInfo" style="display:none;">На руках у: <strong id="holderName"></strong></div>
                     <button class="btn-action btn-take" id="btnTake" style="display:none;">🤚 Взять инструмент</button>
@@ -659,10 +769,46 @@
                 </div>
                 <div style="overflow-x:auto;">
                     <table class="admin-table">
-                        <thead><tr><th>QR-код</th><th>Название</th><th>Статус</th><th>У кого</th><th></th></tr></thead>
+                        <thead><tr><th>Серийный №</th><th>Название</th><th>Статус</th><th>У кого</th><th></th></tr></thead>
                         <tbody id="adminTableBody"></tbody>
                     </table>
                 </div>
+            </div>
+        </div>
+
+        <!-- Модальное окно добавления инструмента -->
+        <div class="modal-overlay" id="modalAddTool">
+            <div class="modal">
+                <h3>➕ Добавить инструмент</h3>
+                <div class="form-group">
+                    <label>Серийный номер (QR-код)</label>
+                    <div class="serial-input-group">
+                        <input type="text" id="inputSerial" placeholder="SN-XXXXXX" maxlength="30">
+                        <button class="btn-scan-serial" id="btnScanSerial" title="Сканировать QR-код">📷</button>
+                    </div>
+                    <div class="serial-hint">Введите вручную или нажмите 📷 для сканирования</div>
+                </div>
+                <div class="form-group">
+                    <label>Название инструмента</label>
+                    <input type="text" id="inputName" placeholder="Перфоратор Bosch GBH 2-28">
+                </div>
+                <div class="form-group">
+                    <label>Эмодзи-иконка</label>
+                    <input type="text" id="inputIcon" placeholder="🔨" maxlength="4">
+                </div>
+                <button class="btn-submit" id="btnSubmitTool">✅ Сохранить инструмент</button>
+                <button class="btn-cancel" id="btnCancelTool">Отмена</button>
+            </div>
+        </div>
+
+        <!-- Модальное окно сканирования серийного номера -->
+        <div class="modal-overlay" id="modalScanSerial">
+            <div class="modal">
+                <h3>📷 Сканируйте серийный номер</h3>
+                <div class="scanner-container" id="serialScannerContainer" style="max-height:300px;">
+                    <div id="serial-qr-reader"></div>
+                </div>
+                <button class="btn-cancel" id="btnCancelScan">Отмена</button>
             </div>
         </div>
 
@@ -678,23 +824,23 @@
             function getDefaultData() {
                 return {
                     users: [
-                        { telegram_id: 680208277, username: 'admin_user', full_name: 'Игнат',
+                        { telegram_id: 987654321, username: 'admin_user', full_name: 'Сергей Админов',
                             role: 'admin' },
                         { telegram_id: 123456789, username: 'ivan_petrov', full_name: 'Иван Петров',
                         role: 'user' },
                     ],
                     tools: [
-                        { id: 'TOOL-001', name: 'Перфоратор Bosch GBH 2-28', icon: '🔨', status: 'available',
+                        { serial: 'SN-775533', name: 'Перфоратор Bosch GBH 2-28', icon: '🔨', status: 'available',
                             current_holder: null },
-                        { id: 'TOOL-002', name: 'Шуруповерт Makita DF333', icon: '🔩', status: 'available',
+                        { serial: 'SN-992211', name: 'Шуруповерт Makita DF333', icon: '🔩', status: 'available',
                             current_holder: null },
-                        { id: 'TOOL-003', name: 'УШМ DeWALT 125мм', icon: '⚙️', status: 'available',
+                        { serial: 'SN-448899', name: 'УШМ DeWALT 125мм', icon: '⚙️', status: 'available',
                             current_holder: null },
-                        { id: 'TOOL-004', name: 'Лазерный нивелир Bosch', icon: '📐', status: 'taken',
+                        { serial: 'SN-112266', name: 'Лазерный нивелир Bosch', icon: '📐', status: 'taken',
                             current_holder: 123456789 },
                     ],
                     transactions: [
-                        { id: 1, tool_id: 'TOOL-004', user_id: 123456789, action: 'take',
+                        { id: 1, tool_serial: 'SN-112266', user_id: 123456789, action: 'take',
                             timestamp: new Date(Date.now() - 3600000).toISOString() },
                     ]
                 };
@@ -702,7 +848,15 @@
 
             function loadData() {
                 const saved = localStorage.getItem(STORAGE_KEY);
-                if (saved) { try { return JSON.parse(saved); } catch (e) {} }
+                if (saved) {
+                    try {
+                        const data = JSON.parse(saved);
+                        if (!data.tools[0] || data.tools[0].serial === undefined) {
+                            return getDefaultData();
+                        }
+                        return data;
+                    } catch (e) {}
+                }
                 const def = getDefaultData();
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(def));
                 return def;
@@ -732,7 +886,7 @@
             const toolCard = $('#toolCard');
             const toolIcon = $('#toolIcon');
             const toolName = $('#toolName');
-            const toolIdEl = $('#toolId');
+            const toolSerial = $('#toolSerial');
             const statusBadge = $('#statusBadge');
             const statusText = $('#statusText');
             const holderInfo = $('#holderInfo');
@@ -746,7 +900,15 @@
             const toast = $('#toast');
             const manualInput = $('#manualInput');
 
-            let html5QrCode = null;
+            // Модалки
+            const modalAddTool = $('#modalAddTool');
+            const modalScanSerial = $('#modalScanSerial');
+            const inputSerial = $('#inputSerial');
+            const inputName = $('#inputName');
+            const inputIcon = $('#inputIcon');
+
+            let mainScanner = null;
+            let serialScanner = null;
             let currentScannedTool = null;
             let toastTimer = null;
 
@@ -774,7 +936,6 @@
 
             function loginAs(user) {
                 currentUser = user;
-                // Обновляем данные в БД если изменились
                 const dbUser = DB.users.find(u => u.telegram_id === user.telegram_id);
                 if (dbUser) {
                     dbUser.full_name = user.full_name;
@@ -790,10 +951,10 @@
 
             function logout() {
                 if (confirm('Вы уверены, что хотите выйти?')) {
-                    if (html5QrCode && html5QrCode.isScanning) {
-                        html5QrCode.stop().catch(() => {});
-                        html5QrCode = null;
-                    }
+                    if (mainScanner && mainScanner.isScanning) mainScanner.stop().catch(() => {});
+                    if (serialScanner && serialScanner.isScanning) serialScanner.stop().catch(() => {});
+                    mainScanner = null;
+                    serialScanner = null;
                     clearAuth();
                     hideToolCard();
                     showLoginScreen();
@@ -805,11 +966,7 @@
                 loginScreen.style.display = 'flex';
                 mainApp.classList.remove('active');
                 loginError.classList.remove('show');
-                if (!isRunningInTelegram()) {
-                    devSection.style.display = 'block';
-                } else {
-                    devSection.style.display = 'none';
-                }
+                devSection.style.display = isRunningInTelegram() ? 'none' : 'block';
             }
 
             function showMainApp() {
@@ -853,14 +1010,9 @@
                     const telegramId = u.id;
                     const username = u.username || ('user_' + telegramId);
                     const fullName = ((u.first_name || '') + ' ' + (u.last_name || '')).trim() || username;
-                    loginAs({
-                        telegram_id: telegramId,
-                        username: username,
-                        full_name: fullName,
-                        role: 'user'
-                    });
+                    loginAs({ telegram_id: telegramId, username, full_name: fullName, role: 'user' });
                 } catch (e) {
-                    console.error('Ошибка авторизации:', e);
+                    console.error(e);
                     loginError.classList.add('show');
                 }
             }
@@ -871,61 +1023,56 @@
                     try {
                         const authData = JSON.parse(saved);
                         const user = DB.users.find(u => u.telegram_id === authData.telegram_id);
-                        if (user) {
-                            currentUser = user;
-                            return true;
-                        }
+                        if (user) { currentUser = user; return true; }
                     } catch (e) {}
                 }
                 return false;
             }
 
-            // ==================== СКАНЕР ====================
+            // ==================== СКАНЕР (ОСНОВНОЙ) ====================
             function showScannerPlaceholder() {
                 qrReader.innerHTML = `
                     <div style="display:flex;align-items:center;justify-content:center;height:100%;flex-direction:column;cursor:pointer;background:#1e293b;" id="startScanBtn">
                         <div style="font-size:64px;margin-bottom:12px;">📷</div>
                         <div style="color:white;font-weight:600;font-size:16px;">Нажмите, чтобы сканировать</div>
-                        <div style="color:#94a3b8;font-size:13px;margin-top:4px;">QR-код инструмента</div>
+                        <div style="color:#94a3b8;font-size:13px;margin-top:4px;">QR-код с серийным номером</div>
                     </div>`;
                 btnStopScan.style.display = 'none';
-                document.getElementById('startScanBtn').addEventListener('click', startScanner);
+                document.getElementById('startScanBtn').addEventListener('click', startMainScanner);
             }
 
-            async function startScanner() {
-                if (html5QrCode) await stopScanner();
+            async function startMainScanner() {
+                if (mainScanner) await stopMainScanner();
                 qrReader.innerHTML = '<div id="qr-reader"></div>';
-                html5QrCode = new Html5Qrcode("qr-reader");
+                mainScanner = new Html5Qrcode("qr-reader");
                 btnStopScan.style.display = 'block';
                 try {
-                    await html5QrCode.start({ facingMode: "environment" }, {
+                    await mainScanner.start({ facingMode: "environment" }, {
                         fps: 10,
                         qrbox: { width: 200, height: 200 },
                         aspectRatio: 1.0
-                    }, onScanSuccess, () => {});
+                    }, (text) => {
+                        stopMainScanner();
+                        showScannerPlaceholder();
+                        processCode(text.trim());
+                    }, () => {});
                 } catch (err) {
-                    console.error('Ошибка камеры:', err);
+                    console.error(err);
                     showToast('Ошибка доступа к камере', 'error');
                     showScannerPlaceholder();
                 }
             }
 
-            async function stopScanner() {
-                if (html5QrCode && html5QrCode.isScanning) {
-                    try { await html5QrCode.stop(); } catch (e) {}
+            async function stopMainScanner() {
+                if (mainScanner && mainScanner.isScanning) {
+                    try { await mainScanner.stop(); } catch (e) {}
                 }
-                html5QrCode = null;
+                mainScanner = null;
                 btnStopScan.style.display = 'none';
             }
 
-            function onScanSuccess(decodedText) {
-                stopScanner();
-                showScannerPlaceholder();
-                processCode(decodedText.trim());
-            }
-
             function processCode(code) {
-                const tool = DB.tools.find(t => t.id === code);
+                const tool = DB.tools.find(t => t.serial === code);
                 if (!tool) {
                     showToast('Инструмент не найден: ' + code, 'error');
                     hideToolCard();
@@ -939,7 +1086,7 @@
                 toolCard.style.display = 'block';
                 toolIcon.textContent = tool.icon || '🔧';
                 toolName.textContent = tool.name;
-                toolIdEl.textContent = tool.id;
+                toolSerial.textContent = 'Серийный №: ' + tool.serial;
                 btnTake.style.display = 'none';
                 btnReturn.style.display = 'none';
                 btnBlocked.style.display = 'none';
@@ -981,7 +1128,7 @@
                 currentScannedTool.current_holder = currentUser.telegram_id;
                 DB.transactions.push({
                     id: Date.now(),
-                    tool_id: currentScannedTool.id,
+                    tool_serial: currentScannedTool.serial,
                     user_id: currentUser.telegram_id,
                     action: 'take',
                     timestamp: new Date().toISOString()
@@ -999,7 +1146,7 @@
                 currentScannedTool.current_holder = null;
                 DB.transactions.push({
                     id: Date.now(),
-                    tool_id: currentScannedTool.id,
+                    tool_serial: currentScannedTool.serial,
                     user_id: currentUser.telegram_id,
                     action: 'return',
                     timestamp: new Date().toISOString()
@@ -1016,7 +1163,7 @@
                 currentScannedTool.current_holder = null;
                 DB.transactions.push({
                     id: Date.now(),
-                    tool_id: currentScannedTool.id,
+                    tool_serial: currentScannedTool.serial,
                     user_id: currentUser.telegram_id,
                     action: 'return',
                     timestamp: new Date().toISOString(),
@@ -1028,25 +1175,33 @@
                 renderAllTabs();
             }
 
-            function addTool() {
-                const name = prompt('Название инструмента:');
-                if (!name) return;
-                const icon = prompt('Эмодзи-иконка:', '🔧');
-                const id = 'TOOL-' + String(DB.tools.length + 1).padStart(3, '0');
-                DB.tools.push({ id, name, icon: icon || '🔧', description: '', status: 'available',
-                    current_holder: null });
-                saveData();
-                showToast('✅ Добавлен: ' + id, 'success');
-                renderAllTabs();
+            function forceReturnBySerial(serial) {
+                const tool = DB.tools.find(t => t.serial === serial);
+                if (tool && tool.status === 'taken') {
+                    tool.status = 'available';
+                    tool.current_holder = null;
+                    DB.transactions.push({
+                        id: Date.now(),
+                        tool_serial: tool.serial,
+                        user_id: currentUser.telegram_id,
+                        action: 'return',
+                        timestamp: new Date().toISOString(),
+                        note: 'Принудительный возврат'
+                    });
+                    saveData();
+                    showToast('⚡ Инструмент возвращен', 'success');
+                    renderAllTabs();
+                    if (currentScannedTool && currentScannedTool.serial === serial) showToolCard(tool);
+                }
             }
 
             function exportCSV() {
-                let csv = 'Дата;Инструмент;Пользователь;Действие\n';
+                let csv = 'Дата;Серийный номер;Инструмент;Пользователь;Действие\n';
                 [...DB.transactions].reverse().forEach(t => {
-                    const tool = DB.tools.find(tl => tl.id === t.tool_id);
+                    const tool = DB.tools.find(tl => tl.serial === t.tool_serial);
                     const user = DB.users.find(u => u.telegram_id === t.user_id);
                     csv +=
-                        `${new Date(t.timestamp).toLocaleString()};${tool?.name||t.tool_id};${user?.full_name||t.user_id};${t.action==='take'?'Взял':'Вернул'}\n`;
+                        `${new Date(t.timestamp).toLocaleString()};${t.tool_serial};${tool?.name||''};${user?.full_name||t.user_id};${t.action==='take'?'Взял':'Вернул'}\n`;
                 });
                 const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
                 const url = URL.createObjectURL(blob);
@@ -1058,23 +1213,72 @@
                 showToast('📥 Отчет скачан', 'success');
             }
 
-            function forceReturnById(toolId) {
-                const tool = DB.tools.find(t => t.id === toolId);
-                if (tool && tool.status === 'taken') {
-                    tool.status = 'available';
-                    tool.current_holder = null;
-                    DB.transactions.push({
-                        id: Date.now(),
-                        tool_id: tool.id,
-                        user_id: currentUser.telegram_id,
-                        action: 'return',
-                        timestamp: new Date().toISOString(),
-                        note: 'Принудительный возврат'
-                    });
-                    saveData();
-                    showToast('⚡ Инструмент возвращен', 'success');
-                    renderAllTabs();
-                    if (currentScannedTool && currentScannedTool.id === toolId) showToolCard(tool);
+            // ==================== ДОБАВЛЕНИЕ ИНСТРУМЕНТА ====================
+            function openAddToolModal() {
+                inputSerial.value = '';
+                inputName.value = '';
+                inputIcon.value = '🔧';
+                modalAddTool.classList.add('active');
+                inputName.focus();
+            }
+
+            function closeAddToolModal() {
+                modalAddTool.classList.remove('active');
+            }
+
+            function submitNewTool() {
+                const serial = inputSerial.value.trim();
+                const name = inputName.value.trim();
+                const icon = inputIcon.value.trim() || '🔧';
+
+                if (!serial) { showToast('Введите серийный номер', 'error');
+                    inputSerial.focus(); return; }
+                if (!name) { showToast('Введите название инструмента', 'error');
+                    inputName.focus(); return; }
+                if (DB.tools.find(t => t.serial === serial)) {
+                    showToast('Инструмент с таким серийным номером уже существует!', 'error');
+                    inputSerial.focus();
+                    return;
+                }
+
+                DB.tools.push({ serial, name, icon, status: 'available', current_holder: null });
+                saveData();
+                closeAddToolModal();
+                showToast('✅ Инструмент добавлен: ' + serial, 'success');
+                renderAllTabs();
+            }
+
+            // ==================== СКАНЕР ДЛЯ ДОБАВЛЕНИЯ ====================
+            function openSerialScanner() {
+                modalScanSerial.classList.add('active');
+                setTimeout(() => startSerialScanner(), 300);
+            }
+
+            function closeSerialScanner() {
+                if (serialScanner && serialScanner.isScanning) {
+                    serialScanner.stop().catch(() => {});
+                }
+                serialScanner = null;
+                modalScanSerial.classList.remove('active');
+            }
+
+            async function startSerialScanner() {
+                document.getElementById('serial-qr-reader').innerHTML = '';
+                serialScanner = new Html5Qrcode("serial-qr-reader");
+                try {
+                    await serialScanner.start({ facingMode: "environment" }, {
+                        fps: 10,
+                        qrbox: { width: 200, height: 200 },
+                        aspectRatio: 1.0
+                    }, (text) => {
+                        inputSerial.value = text.trim();
+                        closeSerialScanner();
+                        showToast('✅ Серийный номер считан!', 'success');
+                    }, () => {});
+                } catch (err) {
+                    console.error(err);
+                    showToast('Ошибка камеры', 'error');
+                    closeSerialScanner();
                 }
             }
 
@@ -1092,15 +1296,15 @@
                     return;
                 }
                 historyList.innerHTML = transactions.map(t => {
-                    const tool = DB.tools.find(tl => tl.id === t.tool_id);
+                    const tool = DB.tools.find(tl => tl.serial === t.tool_serial);
                     const user = DB.users.find(u => u.telegram_id === t.user_id);
                     const isTake = t.action === 'take';
                     return `
                     <div class="history-item">
                         <div class="history-icon ${isTake ? 'icon-take' : 'icon-return'}">${isTake ? '🤚' : '✅'}</div>
                         <div class="history-details">
-                            <div class="history-action">${isTake ? 'Взял' : 'Вернул'}: ${tool?.name || t.tool_id}</div>
-                            <div class="history-tool">${user?.full_name || 'ID: '+t.user_id}</div>
+                            <div class="history-action">${isTake ? 'Взял' : 'Вернул'}: ${tool?.name || t.tool_serial}</div>
+                            <div class="history-tool">${user?.full_name || 'ID: '+t.user_id} · ${t.tool_serial}</div>
                             <div class="history-time">${new Date(t.timestamp).toLocaleString()}</div>
                         </div>
                     </div>`;
@@ -1113,17 +1317,16 @@
                         null;
                     return `
                     <tr>
-                        <td><code>${t.id}</code></td>
+                        <td><code>${t.serial}</code></td>
                         <td>${t.icon} ${t.name}</td>
                         <td><span class="status-dot ${t.status==='available'?'dot-green':'dot-red'}"></span>${t.status==='available'?'Склад':'Выдан'}</td>
                         <td>${holder ? holder.full_name : '—'}</td>
-                        <td>${t.status==='taken' && currentUser.role==='admin' ? `<button class="btn-small btn-outline" data-force="${t.id}">Вернуть</button>` : ''}</td>
+                        <td>${t.status==='taken' && currentUser.role==='admin' ? `<button class="btn-small btn-outline" data-force-serial="${t.serial}">Вернуть</button>` : ''}</td>
                     </tr>`;
                 }).join('');
 
-                // Навешиваем обработчики на кнопки в таблице
-                adminTableBody.querySelectorAll('[data-force]').forEach(btn => {
-                    btn.addEventListener('click', () => forceReturnById(btn.dataset.force));
+                adminTableBody.querySelectorAll('[data-force-serial]').forEach(btn => {
+                    btn.addEventListener('click', () => forceReturnBySerial(btn.dataset.forceSerial));
                 });
             }
 
@@ -1135,39 +1338,29 @@
                 const tab = document.querySelector(`.tab[data-screen="${name}"]`);
                 if (tab) tab.classList.add('active');
                 if (name !== 'scan') {
-                    stopScanner();
+                    stopMainScanner();
                     showScannerPlaceholder();
                 }
             }
 
             // ==================== ИНИЦИАЛИЗАЦИЯ ====================
             function init() {
-                // Обработчики событий
+                // Авторизация
                 $('#btnLogin').addEventListener('click', authenticateViaTelegram);
                 $('#btnLogout').addEventListener('click', logout);
-                $('#btnDevUser').addEventListener('click', () => loginAs({
-                    telegram_id: 123456789,
-                    username: 'ivan_petrov',
-                    full_name: 'Иван Петров',
-                    role: 'user'
-                }));
-                $('#btnDevAdmin').addEventListener('click', () => loginAs({
-                    telegram_id: 987654321,
-                    username: 'admin_user',
-                    full_name: 'Сергей Админов',
-                    role: 'admin'
-                }));
+                $('#btnDevUser').addEventListener('click', () => loginAs({ telegram_id: 123456789,
+                    username: 'ivan_petrov', full_name: 'Иван Петров', role: 'user' }));
+                $('#btnDevAdmin').addEventListener('click', () => loginAs({ telegram_id: 680208277,
+                    username: 'admin_user', full_name: 'Игнат', role: 'admin' }));
 
                 // Табы
-                $$('.tab').forEach(tab => {
-                    tab.addEventListener('click', () => switchScreen(tab.dataset.screen));
-                });
+                $$('.tab').forEach(tab => tab.addEventListener('click', () => switchScreen(tab.dataset.screen)));
 
                 // Действия
                 btnTake.addEventListener('click', takeTool);
                 btnReturn.addEventListener('click', returnTool);
                 btnForceReturn.addEventListener('click', forceReturn);
-                btnStopScan.addEventListener('click', () => { stopScanner();
+                btnStopScan.addEventListener('click', () => { stopMainScanner();
                     showScannerPlaceholder(); });
 
                 // Ручной ввод
@@ -1176,26 +1369,38 @@
                     if (code) { processCode(code);
                         manualInput.value = ''; }
                 });
-                manualInput.addEventListener('keypress', e => {
-                    if (e.key === 'Enter') $('#btnManual').click();
-                });
+                manualInput.addEventListener('keypress', e => { if (e.key === 'Enter') $('#btnManual')
+                    .click(); });
 
                 // Админ
-                $('#btnAddTool').addEventListener('click', addTool);
+                $('#btnAddTool').addEventListener('click', openAddToolModal);
                 $('#btnExportCSV').addEventListener('click', exportCSV);
 
-                // Показываем экран входа или автовход
-                if (checkSavedAuth()) {
-                    showMainApp();
-                } else if (isRunningInTelegram()) {
-                    authenticateViaTelegram();
-                } else {
-                    showLoginScreen();
-                }
+                // Модалка добавления
+                $('#btnSubmitTool').addEventListener('click', submitNewTool);
+                $('#btnCancelTool').addEventListener('click', closeAddToolModal);
+                $('#btnScanSerial').addEventListener('click', openSerialScanner);
+                $('#btnCancelScan').addEventListener('click', closeSerialScanner);
+                modalAddTool.addEventListener('click', e => { if (e.target === modalAddTool)
+                    closeAddToolModal(); });
+                modalScanSerial.addEventListener('click', e => { if (e.target === modalScanSerial)
+                    closeSerialScanner(); });
+
+                // Enter в модалке
+                [inputSerial, inputName, inputIcon].forEach(inp => {
+                    inp.addEventListener('keypress', e => { if (e.key === 'Enter') submitNewTool
+                    (); });
+                });
+
+                // Старт
+                if (checkSavedAuth()) showMainApp();
+                else if (isRunningInTelegram()) authenticateViaTelegram();
+                else showLoginScreen();
+
+                console.log('🔧 ToolTracker v2.0 готов');
             }
 
             init();
-            console.log('🔧 ToolTracker готов');
         })();
     </script>
 </body>
