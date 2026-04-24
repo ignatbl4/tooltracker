@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Учет инструментов | ToolTracker</title>
-    <!-- Библиотека для сканирования QR-кодов -->
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js">
     </script>
     <style>
@@ -15,12 +14,9 @@
             --tg-theme-button-color: #2AABEE;
             --tg-theme-button-text-color: #ffffff;
             --tg-theme-secondary-bg-color: #f1f5f9;
-            --tg-theme-destructive-text-color: #ef4444;
             --success: #10b981;
-            --warning: #f59e0b;
             --danger: #ef4444;
             --radius: 16px;
-            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         }
 
         * {
@@ -30,15 +26,13 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: var(--tg-theme-secondary-bg-color);
-            color: var(--tg-theme-text-color);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 0;
-            margin: 0;
             -webkit-tap-highlight-color: transparent;
             user-select: none;
         }
@@ -47,13 +41,13 @@
             width: 100%;
             max-width: 480px;
             min-height: 100vh;
-            background: var(--tg-theme-bg-color);
+            background: #ffffff;
             position: relative;
             overflow-x: hidden;
-            box-shadow: var(--shadow);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         }
 
-        /* ==================== ЭКРАН ВХОДА ==================== */
+        /* ЭКРАН ВХОДА */
         .login-screen {
             display: flex;
             flex-direction: column;
@@ -62,56 +56,22 @@
             min-height: 100vh;
             padding: 40px 24px;
             text-align: center;
-            background: linear-gradient(180deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
             color: white;
         }
         .login-logo {
             font-size: 80px;
             margin-bottom: 24px;
-            animation: float 3s ease-in-out infinite;
-        }
-        @keyframes float {
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-12px);
-            }
         }
         .login-title {
             font-size: 28px;
             font-weight: 800;
             margin-bottom: 8px;
-            letter-spacing: -0.5px;
         }
         .login-subtitle {
             font-size: 15px;
             opacity: 0.7;
-            margin-bottom: 40px;
-            line-height: 1.5;
-        }
-        .login-features {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
             margin-bottom: 48px;
-            width: 100%;
-            max-width: 300px;
-        }
-        .login-feature {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 14px 18px;
-            border-radius: 12px;
-            font-size: 14px;
-            text-align: left;
-        }
-        .login-feature .icon {
-            font-size: 24px;
-            flex-shrink: 0;
         }
         .btn-login {
             display: flex;
@@ -130,27 +90,12 @@
             cursor: pointer;
             transition: all 0.2s ease;
             box-shadow: 0 8px 24px rgba(42, 171, 238, 0.4);
-            letter-spacing: 0.3px;
         }
         .btn-login:active {
             transform: scale(0.96);
-            box-shadow: 0 4px 12px rgba(42, 171, 238, 0.3);
         }
         .btn-login .tg-icon {
-            width: 24px;
-            height: 24px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            color: #2AABEE;
-        }
-        .login-footer {
-            margin-top: 32px;
-            font-size: 12px;
-            opacity: 0.4;
+            font-size: 24px;
         }
         .login-error {
             background: rgba(239, 68, 68, 0.15);
@@ -166,8 +111,37 @@
         .login-error.show {
             display: block;
         }
+        .dev-login-section {
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+            max-width: 300px;
+        }
+        .dev-login-title {
+            font-size: 12px;
+            opacity: 0.5;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .btn-dev-login {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: white;
+            border-radius: 12px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-bottom: 6px;
+            transition: all 0.2s;
+        }
+        .btn-dev-login:active {
+            background: rgba(255, 255, 255, 0.12);
+        }
 
-        /* ==================== ОСНОВНОЕ ПРИЛОЖЕНИЕ ==================== */
+        /* ОСНОВНОЕ ПРИЛОЖЕНИЕ */
         .main-app {
             display: none;
             flex-direction: column;
@@ -181,27 +155,39 @@
         .header {
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
             color: white;
-            padding: 20px 20px 24px;
+            padding: 20px;
             position: sticky;
             top: 0;
             z-index: 50;
         }
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
         .header h1 {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 700;
-            letter-spacing: -0.3px;
-            margin-bottom: 4px;
         }
         .header .subtitle {
-            font-size: 13px;
+            font-size: 12px;
             opacity: 0.7;
-            font-weight: 400;
         }
-        .header .user-badge {
+        .btn-logout {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .user-badge {
             display: flex;
             align-items: center;
             gap: 8px;
-            margin-top: 14px;
             background: rgba(255, 255, 255, 0.1);
             padding: 8px 14px;
             border-radius: 25px;
@@ -209,15 +195,15 @@
             width: fit-content;
         }
         .user-avatar {
-            width: 30px;
-            height: 30px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             background: #2AABEE;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            font-size: 14px;
+            font-size: 13px;
         }
         .admin-badge {
             background: #fbbf24;
@@ -227,22 +213,6 @@
             padding: 3px 8px;
             border-radius: 10px;
             margin-left: 6px;
-            text-transform: uppercase;
-        }
-        .btn-logout {
-            margin-left: auto;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white;
-            padding: 8px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-        .btn-logout:active {
-            background: rgba(255, 255, 255, 0.2);
         }
 
         /* Tabs */
@@ -250,9 +220,9 @@
             display: flex;
             gap: 4px;
             padding: 16px 16px 0;
-            background: var(--tg-theme-bg-color);
+            background: #fff;
             position: sticky;
-            top: 110px;
+            top: 113px;
             z-index: 40;
         }
         .tab {
@@ -261,17 +231,17 @@
             text-align: center;
             font-weight: 600;
             font-size: 14px;
-            background: var(--tg-theme-secondary-bg-color);
+            background: #f1f5f9;
             border: none;
             border-radius: 12px 12px 0 0;
             cursor: pointer;
-            color: var(--tg-theme-hint-color);
-            transition: all 0.2s ease;
+            color: #94a3b8;
+            transition: all 0.2s;
         }
         .tab.active {
-            background: var(--tg-theme-bg-color);
-            color: var(--tg-theme-button-color);
-            box-shadow: 0 -2px 0 var(--tg-theme-button-color);
+            background: #fff;
+            color: #2AABEE;
+            box-shadow: 0 -2px 0 #2AABEE;
         }
 
         /* Screens */
@@ -300,7 +270,7 @@
             border-radius: var(--radius);
             overflow: hidden;
             margin-bottom: 16px;
-            box-shadow: var(--shadow);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             background: #000;
             position: relative;
             aspect-ratio: 1/1;
@@ -312,9 +282,6 @@
         }
         #qr-reader video {
             object-fit: cover;
-        }
-        #qr-reader__scan_region {
-            position: relative;
         }
         #qr-reader__scan_region img {
             display: none;
@@ -346,14 +313,13 @@
             border-radius: 20px;
             pointer-events: none;
             z-index: 10;
-            white-space: nowrap;
         }
         .btn-stop-scan {
             display: block;
             width: 100%;
             padding: 14px;
-            background: var(--tg-theme-secondary-bg-color);
-            color: var(--tg-theme-text-color);
+            background: #f1f5f9;
+            color: #1e293b;
             border: none;
             border-radius: var(--radius);
             font-size: 15px;
@@ -361,14 +327,37 @@
             cursor: pointer;
             margin-top: 8px;
         }
+        .manual-section {
+            margin-top: 12px;
+            text-align: center;
+        }
+        .manual-input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: var(--radius);
+            font-size: 16px;
+            text-align: center;
+            font-family: monospace;
+        }
+        .btn-manual {
+            margin-top: 8px;
+            width: 100%;
+            padding: 14px;
+            background: #f1f5f9;
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+        }
 
         /* Tool Card */
         .tool-card {
-            background: var(--tg-theme-secondary-bg-color);
+            background: #f8fafc;
             border-radius: var(--radius);
             padding: 20px;
             text-align: center;
-            box-shadow: var(--shadow);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             margin-bottom: 16px;
         }
         .tool-icon {
@@ -382,7 +371,7 @@
         }
         .tool-id {
             font-size: 12px;
-            color: var(--tg-theme-hint-color);
+            color: #94a3b8;
             background: rgba(0, 0, 0, 0.05);
             display: inline-block;
             padding: 4px 10px;
@@ -409,7 +398,7 @@
         }
         .holder-info {
             font-size: 14px;
-            color: var(--tg-theme-hint-color);
+            color: #94a3b8;
             margin-bottom: 16px;
         }
         .btn-action {
@@ -420,16 +409,15 @@
             border: none;
             border-radius: var(--radius);
             cursor: pointer;
-            transition: all 0.2s ease;
-            letter-spacing: 0.2px;
+            transition: all 0.2s;
         }
         .btn-take {
-            background: var(--tg-theme-button-color);
-            color: var(--tg-theme-button-text-color);
+            background: #2AABEE;
+            color: white;
             box-shadow: 0 4px 12px rgba(42, 171, 238, 0.35);
         }
         .btn-return {
-            background: var(--success);
+            background: #10b981;
             color: white;
             box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
         }
@@ -437,24 +425,21 @@
             background: #cbd5e1;
             color: #64748b;
             cursor: not-allowed;
-            box-shadow: none;
         }
         .btn-danger {
-            background: var(--danger);
+            background: #ef4444;
             color: white;
             font-size: 13px;
             padding: 10px;
             margin-top: 8px;
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
         }
-        .btn:active {
+        .btn-action:active {
             transform: scale(0.97);
-            opacity: 0.9;
         }
 
         /* History */
         .history-item {
-            background: var(--tg-theme-secondary-bg-color);
+            background: #f8fafc;
             border-radius: 12px;
             padding: 14px 16px;
             margin-bottom: 10px;
@@ -488,18 +473,15 @@
         }
         .history-tool {
             font-size: 13px;
-            color: var(--tg-theme-hint-color);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            color: #94a3b8;
         }
         .history-time {
             font-size: 11px;
-            color: var(--tg-theme-hint-color);
+            color: #94a3b8;
             margin-top: 2px;
         }
 
-        /* Admin Panel */
+        /* Admin */
         .admin-table {
             width: 100%;
             border-collapse: collapse;
@@ -511,15 +493,14 @@
             font-weight: 600;
             font-size: 11px;
             text-transform: uppercase;
-            color: var(--tg-theme-hint-color);
+            color: #94a3b8;
             border-bottom: 2px solid #e2e8f0;
         }
         .admin-table td {
             padding: 10px 8px;
             border-bottom: 1px solid #e2e8f0;
-            vertical-align: middle;
         }
-        .admin-table .status-dot {
+        .status-dot {
             display: inline-block;
             width: 8px;
             height: 8px;
@@ -527,10 +508,10 @@
             margin-right: 4px;
         }
         .dot-green {
-            background: var(--success);
+            background: #10b981;
         }
         .dot-red {
-            background: var(--danger);
+            background: #ef4444;
         }
         .btn-small {
             padding: 6px 12px;
@@ -539,14 +520,13 @@
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            background: var(--tg-theme-button-color);
+            background: #2AABEE;
             color: white;
-            white-space: nowrap;
         }
         .btn-outline {
             background: transparent;
-            border: 1px solid var(--tg-theme-button-color);
-            color: var(--tg-theme-button-color);
+            border: 1px solid #2AABEE;
+            color: #2AABEE;
         }
         .admin-actions {
             display: flex;
@@ -557,7 +537,7 @@
         .empty-state {
             text-align: center;
             padding: 40px 20px;
-            color: var(--tg-theme-hint-color);
+            color: #94a3b8;
         }
         .empty-state .icon {
             font-size: 64px;
@@ -579,7 +559,6 @@
             z-index: 999;
             transition: transform 0.3s ease;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            white-space: nowrap;
         }
         .toast.show {
             transform: translateX(-50%) translateY(0);
@@ -590,97 +569,50 @@
         .toast.error {
             background: #991b1b;
         }
-
-        /* Manual input */
-        .manual-section {
-            margin-top: 12px;
-            text-align: center;
-        }
-        .manual-input {
-            width: 100%;
-            padding: 14px;
-            border: 2px solid #e2e8f0;
-            border-radius: var(--radius);
-            font-size: 16px;
-            text-align: center;
-            letter-spacing: 1px;
-            font-family: monospace;
-        }
-        .btn-manual {
-            margin-top: 8px;
-            width: 100%;
-            padding: 14px;
-            background: var(--tg-theme-secondary-bg-color);
-            border: none;
-            border-radius: var(--radius);
-            font-weight: 600;
-            cursor: pointer;
-        }
     </style>
 </head>
 <body>
     <div class="app" id="app">
-        <!-- ==================== ЭКРАН ВХОДА ==================== -->
+        <!-- ЭКРАН ВХОДА -->
         <div class="login-screen" id="loginScreen">
             <div class="login-logo">🔧</div>
             <div class="login-title">ToolTracker</div>
             <div class="login-subtitle">Учет инструментов на предприятии</div>
-
-            <div class="login-features">
-                <div class="login-feature">
-                    <span class="icon">📷</span>
-                    <span>Сканирование QR-кодов инструментов</span>
-                </div>
-                <div class="login-feature">
-                    <span class="icon">🤚</span>
-                    <span>Фиксация выдачи и возврата</span>
-                </div>
-                <div class="login-feature">
-                    <span class="icon">📋</span>
-                    <span>Полная история операций</span>
-                </div>
-            </div>
-
-            <div class="login-error" id="loginError">
-                ⚠️ Авторизация доступна только внутри Telegram. Откройте приложение через бота.
-            </div>
-
+            <div class="login-error" id="loginError">⚠️ Авторизация доступна только внутри Telegram</div>
             <button class="btn-login" id="btnLogin">
-                <span class="tg-icon">✈</span>
-                Войти через Telegram
+                <span class="tg-icon">✈️</span> Войти через Telegram
             </button>
-
-            <div class="login-footer">
-                ToolTracker v1.0 · Telegram Mini App
+            <div class="dev-login-section" id="devSection">
+                <div class="dev-login-title">Режим разработчика</div>
+                <button class="btn-dev-login" id="btnDevUser">👤 Войти как Сотрудник</button>
+                <button class="btn-dev-login" id="btnDevAdmin">🛡️ Войти как Админ</button>
             </div>
         </div>
 
-        <!-- ==================== ОСНОВНОЕ ПРИЛОЖЕНИЕ ==================== -->
+        <!-- ОСНОВНОЕ ПРИЛОЖЕНИЕ -->
         <div class="main-app" id="mainApp">
-            <!-- Header -->
             <div class="header">
-                <div style="display:flex;align-items:center;justify-content:space-between;">
+                <div class="header-top">
                     <div>
                         <h1>🔧 Учет инструментов</h1>
                         <div class="subtitle">Сканируйте QR-код для работы</div>
                     </div>
                     <button class="btn-logout" id="btnLogout">🚪 Выйти</button>
                 </div>
-                <div class="user-badge" id="userBadge">
-                    <div class="user-avatar" id="userAvatar">👤</div>
+                <div class="user-badge">
+                    <div class="user-avatar" id="userAvatar">?</div>
                     <span id="userName">Пользователь</span>
                     <span class="admin-badge" id="adminBadge" style="display:none;">Админ</span>
                 </div>
             </div>
 
-            <!-- Tabs -->
-            <div class="tabs" id="tabsContainer">
+            <div class="tabs">
                 <button class="tab active" data-screen="scan">📷 Сканер</button>
                 <button class="tab" data-screen="history">📋 История</button>
                 <button class="tab" data-screen="admin" id="tabAdmin" style="display:none;">⚙️ Админ</button>
             </div>
 
-            <!-- Screen: Scanner -->
+            <!-- Экран Сканера -->
             <div class="screen active" id="screen-scan">
                 <div class="scanner-container" id="scannerContainer">
                     <div id="qr-reader"></div>
@@ -689,44 +621,36 @@
                 </div>
                 <button class="btn-stop-scan" id="btnStopScan" style="display:none;">⏹ Остановить сканер</button>
                 <div class="manual-section">
-                    <p style="font-size:13px;color:var(--tg-theme-hint-color);margin-bottom:8px;">Или введите код вручную:</p>
-                    <input type="text" class="manual-input" id="manualInput" placeholder="Например: TOOL-001" maxlength="20">
+                    <p style="font-size:13px;color:#94a3b8;margin-bottom:8px;">Или введите код вручную:</p>
+                    <input type="text" class="manual-input" id="manualInput" placeholder="TOOL-001" maxlength="20">
                     <button class="btn-manual" id="btnManual">🔍 Найти инструмент</button>
-                    <p style="font-size:11px;color:var(--tg-theme-hint-color);margin-top:8px;">
-                        Демо-коды: <strong>TOOL-001, TOOL-002, TOOL-003, TOOL-004</strong>
+                    <p style="font-size:11px;color:#94a3b8;margin-top:8px;">
+                        Коды: <strong>TOOL-001</strong>, <strong>TOOL-002</strong>, <strong>TOOL-003</strong>, <strong>TOOL-004</strong>
                     </p>
                 </div>
 
-                <!-- Tool Card -->
                 <div class="tool-card" id="toolCard" style="display:none;">
                     <div class="tool-icon" id="toolIcon">🔨</div>
-                    <div class="tool-name" id="toolName">Перфоратор Bosch</div>
-                    <div class="tool-id" id="toolId">TOOL-001</div>
-                    <div class="status-badge" id="statusBadge">
-                        <span id="statusText">На складе</span>
-                    </div>
-                    <div class="holder-info" id="holderInfo" style="display:none;">
-                        На руках у: <strong id="holderName">—</strong>
-                    </div>
-                    <button class="btn-action btn-take btn" id="btnTake" style="display:none;">🤚 Взять инструмент</button>
-                    <button class="btn-action btn-return btn" id="btnReturn" style="display:none;">✅ Вернуть на склад</button>
-                    <button class="btn-action btn-disabled btn" id="btnBlocked" style="display:none;" disabled>🔒 Инструмент занят</button>
-                    <button class="btn-action btn-danger btn" id="btnForceReturn" style="display:none;">⚡ Принудительный возврат (Админ)</button>
+                    <div class="tool-name" id="toolName"></div>
+                    <div class="tool-id" id="toolId"></div>
+                    <div class="status-badge" id="statusBadge"><span id="statusText"></span></div>
+                    <div class="holder-info" id="holderInfo" style="display:none;">На руках у: <strong id="holderName"></strong></div>
+                    <button class="btn-action btn-take" id="btnTake" style="display:none;">🤚 Взять инструмент</button>
+                    <button class="btn-action btn-return" id="btnReturn" style="display:none;">✅ Вернуть на склад</button>
+                    <button class="btn-action btn-disabled" id="btnBlocked" style="display:none;" disabled>🔒 Инструмент занят</button>
+                    <button class="btn-action btn-danger" id="btnForceReturn" style="display:none;">⚡ Принудительный возврат</button>
                 </div>
             </div>
 
-            <!-- Screen: History -->
+            <!-- Экран Истории -->
             <div class="screen" id="screen-history">
                 <h3 style="margin-bottom:12px;">📋 Последние операции</h3>
                 <div id="historyList">
-                    <div class="empty-state">
-                        <div class="icon">📭</div>
-                        <p>История операций пуста</p>
-                    </div>
+                    <div class="empty-state"><div class="icon">📭</div><p>История пуста</p></div>
                 </div>
             </div>
 
-            <!-- Screen: Admin -->
+            <!-- Экран Админа -->
             <div class="screen" id="screen-admin">
                 <h3 style="margin-bottom:12px;">⚙️ Панель администратора</h3>
                 <div class="admin-actions">
@@ -735,22 +659,13 @@
                 </div>
                 <div style="overflow-x:auto;">
                     <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>QR-код</th>
-                                <th>Название</th>
-                                <th>Статус</th>
-                                <th>У кого</th>
-                                <th></th>
-                            </tr>
-                        </thead>
+                        <thead><tr><th>QR-код</th><th>Название</th><th>Статус</th><th>У кого</th><th></th></tr></thead>
                         <tbody id="adminTableBody"></tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- Toast -->
         <div class="toast" id="toast"></div>
     </div>
 
@@ -763,40 +678,34 @@
             function getDefaultData() {
                 return {
                     users: [
-                        { telegram_id: 680208277, username: 'admin_user', full_name: 'Игнат',
+                        { telegram_id: 987654321, username: 'admin_user', full_name: 'Сергей Админов',
                             role: 'admin' },
                         { telegram_id: 123456789, username: 'ivan_petrov', full_name: 'Иван Петров',
                         role: 'user' },
-                        { telegram_id: 555555555, username: 'olga_smirnova', full_name: 'Ольга Смирнова',
-                            role: 'user' },
                     ],
                     tools: [
-                        { id: 'TOOL-001', name: 'Перфоратор Bosch GBH 2-28', icon: '🔨',
-                            description: 'Мощный перфоратор для бурения', status: 'available', current_holder: null },
-                        { id: 'TOOL-002', name: 'Шуруповерт Makita DF333', icon: '🔩',
-                            description: 'Аккумуляторный шуруповерт 12V', status: 'available', current_holder: null },
-                        { id: 'TOOL-003', name: 'УШМ (болгарка) DeWALT', icon: '⚙️',
-                            description: 'Угловая шлифмашина 125мм', status: 'available', current_holder: null },
-                        { id: 'TOOL-004', name: 'Лазерный нивелир Bosch', icon: '📐',
-                            description: 'Лазерный уровень 360°', status: 'taken', current_holder: 123456789 },
+                        { id: 'TOOL-001', name: 'Перфоратор Bosch GBH 2-28', icon: '🔨', status: 'available',
+                            current_holder: null },
+                        { id: 'TOOL-002', name: 'Шуруповерт Makita DF333', icon: '🔩', status: 'available',
+                            current_holder: null },
+                        { id: 'TOOL-003', name: 'УШМ DeWALT 125мм', icon: '⚙️', status: 'available',
+                            current_holder: null },
+                        { id: 'TOOL-004', name: 'Лазерный нивелир Bosch', icon: '📐', status: 'taken',
+                            current_holder: 123456789 },
                     ],
                     transactions: [
                         { id: 1, tool_id: 'TOOL-004', user_id: 123456789, action: 'take',
                             timestamp: new Date(Date.now() - 3600000).toISOString() },
-                        { id: 2, tool_id: 'TOOL-003', user_id: 123456789, action: 'take',
-                            timestamp: new Date(Date.now() - 7200000).toISOString() },
-                        { id: 3, tool_id: 'TOOL-003', user_id: 123456789, action: 'return',
-                            timestamp: new Date(Date.now() - 1800000).toISOString() },
                     ]
                 };
             }
 
             function loadData() {
                 const saved = localStorage.getItem(STORAGE_KEY);
-                if (saved) {
-                    try { return JSON.parse(saved); } catch (e) {}
-                }
-                return getDefaultData();
+                if (saved) { try { return JSON.parse(saved); } catch (e) {} }
+                const def = getDefaultData();
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(def));
+                return def;
             }
 
             function saveData() {
@@ -804,138 +713,16 @@
             }
 
             let DB = loadData();
-
-            // ==================== АВТОРИЗАЦИЯ ====================
             let currentUser = null;
 
-            function checkSavedAuth() {
-                const saved = localStorage.getItem(AUTH_KEY);
-                if (saved) {
-                    try {
-                        const authData = JSON.parse(saved);
-                        const user = DB.users.find(u => u.telegram_id === authData.telegram_id);
-                        if (user) {
-                            currentUser = user;
-                            return true;
-                        }
-                    } catch (e) {}
-                }
-                return false;
-            }
-
-            function saveAuth() {
-                if (currentUser) {
-                    localStorage.setItem(AUTH_KEY, JSON.stringify({
-                        telegram_id: currentUser.telegram_id,
-                        timestamp: Date.now()
-                    }));
-                }
-            }
-
-            function clearAuth() {
-                localStorage.removeItem(AUTH_KEY);
-                currentUser = null;
-            }
-
-            function isRunningInTelegram() {
-                return !!(window.Telegram && window.Telegram.WebApp);
-            }
-
-            function authenticateViaTelegram() {
-                if (!isRunningInTelegram()) {
-                    showLoginError();
-                    return false;
-                }
-
-                try {
-                    const tg = window.Telegram.WebApp;
-                    tg.ready();
-                    tg.expand();
-
-                    // Применяем тему Telegram
-                    document.documentElement.style.setProperty('--tg-theme-bg-color', tg.themeParams.bg_color ||
-                        '#ffffff');
-                    document.documentElement.style.setProperty('--tg-theme-text-color', tg.themeParams.text_color ||
-                        '#1e293b');
-                    document.documentElement.style.setProperty('--tg-theme-button-color', tg.themeParams
-                        .button_color || '#2AABEE');
-                    document.documentElement.style.setProperty('--tg-theme-secondary-bg-color', tg.themeParams
-                        .secondary_bg_color || '#f1f5f9');
-                    document.documentElement.style.setProperty('--tg-theme-hint-color', tg.themeParams.hint_color ||
-                        '#94a3b8');
-
-                    if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                        const u = tg.initDataUnsafe.user;
-                        const telegramId = u.id;
-                        const username = u.username || ('user_' + telegramId);
-                        const fullName = (u.first_name || '') + (u.last_name ? ' ' + u.last_name : '');
-                        const finalName = fullName.trim() || username;
-
-                        // Ищем или создаем пользователя
-                        let user = DB.users.find(dbU => dbU.telegram_id === telegramId);
-                        if (!user) {
-                            user = {
-                                telegram_id: telegramId,
-                                username: username,
-                                full_name: finalName,
-                                role: 'user'
-                            };
-                            DB.users.push(user);
-                            saveData();
-                            console.log('👤 Новый пользователь:', user.full_name);
-                        } else {
-                            // Обновляем данные, если изменились
-                            if (user.full_name !== finalName || user.username !== username) {
-                                user.full_name = finalName;
-                                user.username = username;
-                                saveData();
-                            }
-                        }
-
-                        currentUser = user;
-                        saveAuth();
-                        return true;
-                    } else {
-                        console.error('❌ Нет данных пользователя в Telegram');
-                        showLoginError();
-                        return false;
-                    }
-                } catch (e) {
-                    console.error('❌ Ошибка авторизации:', e);
-                    showLoginError();
-                    return false;
-                }
-            }
-
-            function showLoginError() {
-                const errorEl = document.getElementById('loginError');
-                errorEl.classList.add('show');
-                setTimeout(() => errorEl.classList.remove('show'), 5000);
-            }
-
-            function logout() {
-                if (confirm('Вы уверены, что хотите выйти?')) {
-                    // Останавливаем сканер если активен
-                    if (html5QrCode && html5QrCode.isScanning) {
-                        html5QrCode.stop().catch(() => {});
-                        html5QrCode = null;
-                    }
-                    clearAuth();
-                    hideToolCard();
-                    showLoginScreen();
-                    showToast('Вы вышли из системы');
-                }
-            }
-
-            // ==================== UI ЭЛЕМЕНТЫ ====================
-            const $ = (sel) => document.querySelector(sel);
-            const $$ = (sel) => document.querySelectorAll(sel);
+            // ==================== DOM ЭЛЕМЕНТЫ ====================
+            const $ = (s) => document.querySelector(s);
+            const $$ = (s) => document.querySelectorAll(s);
 
             const loginScreen = $('#loginScreen');
             const mainApp = $('#mainApp');
-            const btnLogin = $('#btnLogin');
-            const btnLogout = $('#btnLogout');
             const loginError = $('#loginError');
+            const devSection = $('#devSection');
             const userNameEl = $('#userName');
             const userAvatarEl = $('#userAvatar');
             const adminBadge = $('#adminBadge');
@@ -958,16 +745,71 @@
             const adminTableBody = $('#adminTableBody');
             const toast = $('#toast');
             const manualInput = $('#manualInput');
-            const btnManual = $('#btnManual');
 
             let html5QrCode = null;
             let currentScannedTool = null;
+            let toastTimer = null;
 
-            // ==================== УПРАВЛЕНИЕ ЭКРАНАМИ ====================
+            // ==================== ФУНКЦИИ ====================
+            function showToast(message, type = '') {
+                clearTimeout(toastTimer);
+                toast.textContent = message;
+                toast.className = 'toast ' + type + ' show';
+                toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
+            }
+
+            function saveAuth() {
+                if (currentUser) {
+                    localStorage.setItem(AUTH_KEY, JSON.stringify({
+                        telegram_id: currentUser.telegram_id,
+                        timestamp: Date.now()
+                    }));
+                }
+            }
+
+            function clearAuth() {
+                localStorage.removeItem(AUTH_KEY);
+                currentUser = null;
+            }
+
+            function loginAs(user) {
+                currentUser = user;
+                // Обновляем данные в БД если изменились
+                const dbUser = DB.users.find(u => u.telegram_id === user.telegram_id);
+                if (dbUser) {
+                    dbUser.full_name = user.full_name;
+                    dbUser.username = user.username;
+                } else {
+                    DB.users.push(user);
+                }
+                saveData();
+                saveAuth();
+                showMainApp();
+                showToast('✅ Добро пожаловать, ' + user.full_name + '!', 'success');
+            }
+
+            function logout() {
+                if (confirm('Вы уверены, что хотите выйти?')) {
+                    if (html5QrCode && html5QrCode.isScanning) {
+                        html5QrCode.stop().catch(() => {});
+                        html5QrCode = null;
+                    }
+                    clearAuth();
+                    hideToolCard();
+                    showLoginScreen();
+                    showToast('Вы вышли из системы');
+                }
+            }
+
             function showLoginScreen() {
                 loginScreen.style.display = 'flex';
                 mainApp.classList.remove('active');
                 loginError.classList.remove('show');
+                if (!isRunningInTelegram()) {
+                    devSection.style.display = 'block';
+                } else {
+                    devSection.style.display = 'none';
+                }
             }
 
             function showMainApp() {
@@ -976,13 +818,13 @@
                 updateUserUI();
                 renderAllTabs();
                 showScannerPlaceholder();
+                switchScreen('scan');
             }
 
             function updateUserUI() {
                 if (!currentUser) return;
                 userNameEl.textContent = currentUser.full_name;
-                const firstLetter = currentUser.full_name.trim().charAt(0).toUpperCase() || '?';
-                userAvatarEl.textContent = firstLetter;
+                userAvatarEl.textContent = currentUser.full_name.trim().charAt(0).toUpperCase() || '?';
                 if (currentUser.role === 'admin') {
                     adminBadge.style.display = 'inline';
                     tabAdmin.style.display = 'block';
@@ -990,6 +832,52 @@
                     adminBadge.style.display = 'none';
                     tabAdmin.style.display = 'none';
                 }
+            }
+
+            function isRunningInTelegram() {
+                return !!(window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe &&
+                    window.Telegram.WebApp.initDataUnsafe.user);
+            }
+
+            function authenticateViaTelegram() {
+                if (!isRunningInTelegram()) {
+                    loginError.classList.add('show');
+                    setTimeout(() => loginError.classList.remove('show'), 4000);
+                    return;
+                }
+                try {
+                    const tg = window.Telegram.WebApp;
+                    tg.ready();
+                    tg.expand();
+                    const u = tg.initDataUnsafe.user;
+                    const telegramId = u.id;
+                    const username = u.username || ('user_' + telegramId);
+                    const fullName = ((u.first_name || '') + ' ' + (u.last_name || '')).trim() || username;
+                    loginAs({
+                        telegram_id: telegramId,
+                        username: username,
+                        full_name: fullName,
+                        role: 'user'
+                    });
+                } catch (e) {
+                    console.error('Ошибка авторизации:', e);
+                    loginError.classList.add('show');
+                }
+            }
+
+            function checkSavedAuth() {
+                const saved = localStorage.getItem(AUTH_KEY);
+                if (saved) {
+                    try {
+                        const authData = JSON.parse(saved);
+                        const user = DB.users.find(u => u.telegram_id === authData.telegram_id);
+                        if (user) {
+                            currentUser = user;
+                            return true;
+                        }
+                    } catch (e) {}
+                }
+                return false;
             }
 
             // ==================== СКАНЕР ====================
@@ -1001,8 +889,7 @@
                         <div style="color:#94a3b8;font-size:13px;margin-top:4px;">QR-код инструмента</div>
                     </div>`;
                 btnStopScan.style.display = 'none';
-                const startBtn = document.getElementById('startScanBtn');
-                if (startBtn) startBtn.addEventListener('click', startScanner);
+                document.getElementById('startScanBtn').addEventListener('click', startScanner);
             }
 
             async function startScanner() {
@@ -1015,7 +902,7 @@
                         fps: 10,
                         qrbox: { width: 200, height: 200 },
                         aspectRatio: 1.0
-                    }, onScanSuccess, onScanFailure);
+                    }, onScanSuccess, () => {});
                 } catch (err) {
                     console.error('Ошибка камеры:', err);
                     showToast('Ошибка доступа к камере', 'error');
@@ -1034,12 +921,10 @@
             function onScanSuccess(decodedText) {
                 stopScanner();
                 showScannerPlaceholder();
-                processScannedCode(decodedText.trim());
+                processCode(decodedText.trim());
             }
 
-            function onScanFailure(error) {}
-
-            function processScannedCode(code) {
+            function processCode(code) {
                 const tool = DB.tools.find(t => t.id === code);
                 if (!tool) {
                     showToast('Инструмент не найден: ' + code, 'error');
@@ -1069,18 +954,16 @@
                     statusBadge.className = 'status-badge status-taken';
                     statusText.textContent = '❌ На руках';
                     const holder = DB.users.find(u => u.telegram_id === tool.current_holder);
-                    const holderNameStr = holder ? holder.full_name : 'Неизвестный';
+                    const name = holder ? holder.full_name : 'Неизвестный';
                     if (tool.current_holder === currentUser.telegram_id) {
                         holderInfo.style.display = 'block';
                         holderName.textContent = 'Вы';
                         btnReturn.style.display = 'block';
                     } else {
                         holderInfo.style.display = 'block';
-                        holderName.textContent = holderNameStr;
+                        holderName.textContent = name;
                         btnBlocked.style.display = 'block';
-                        if (currentUser.role === 'admin') {
-                            btnForceReturn.style.display = 'block';
-                        }
+                        if (currentUser.role === 'admin') btnForceReturn.style.display = 'block';
                     }
                 }
                 toolCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1091,12 +974,9 @@
                 currentScannedTool = null;
             }
 
-            // ==================== ДЕЙСТВИЯ С ИНСТРУМЕНТАМИ ====================
+            // ==================== ДЕЙСТВИЯ ====================
             function takeTool() {
-                if (!currentScannedTool || currentScannedTool.status !== 'available') {
-                    showToast('Инструмент уже занят', 'error');
-                    return;
-                }
+                if (!currentScannedTool || currentScannedTool.status !== 'available') return;
                 currentScannedTool.status = 'taken';
                 currentScannedTool.current_holder = currentUser.telegram_id;
                 DB.transactions.push({
@@ -1114,10 +994,7 @@
 
             function returnTool() {
                 if (!currentScannedTool || currentScannedTool.status !== 'taken' || currentScannedTool
-                    .current_holder !== currentUser.telegram_id) {
-                    showToast('Вы не можете вернуть этот инструмент', 'error');
-                    return;
-                }
+                    .current_holder !== currentUser.telegram_id) return;
                 currentScannedTool.status = 'available';
                 currentScannedTool.current_holder = null;
                 DB.transactions.push({
@@ -1133,7 +1010,7 @@
                 renderAllTabs();
             }
 
-            function forceReturnTool() {
+            function forceReturn() {
                 if (!currentScannedTool || currentUser.role !== 'admin') return;
                 currentScannedTool.status = 'available';
                 currentScannedTool.current_holder = null;
@@ -1143,10 +1020,10 @@
                     user_id: currentUser.telegram_id,
                     action: 'return',
                     timestamp: new Date().toISOString(),
-                    note: 'Принудительный возврат администратором'
+                    note: 'Принудительный возврат'
                 });
                 saveData();
-                showToast('⚡ Инструмент принудительно возвращен', 'success');
+                showToast('⚡ Возвращено принудительно', 'success');
                 showToolCard(currentScannedTool);
                 renderAllTabs();
             }
@@ -1156,22 +1033,16 @@
                 if (!name) return;
                 const icon = prompt('Эмодзи-иконка:', '🔧');
                 const id = 'TOOL-' + String(DB.tools.length + 1).padStart(3, '0');
-                DB.tools.push({
-                    id: id,
-                    name: name,
-                    icon: icon || '🔧',
-                    description: '',
-                    status: 'available',
-                    current_holder: null
-                });
+                DB.tools.push({ id, name, icon: icon || '🔧', description: '', status: 'available',
+                    current_holder: null });
                 saveData();
-                showToast('✅ Инструмент добавлен: ' + id, 'success');
+                showToast('✅ Добавлен: ' + id, 'success');
                 renderAllTabs();
             }
 
             function exportCSV() {
                 let csv = 'Дата;Инструмент;Пользователь;Действие\n';
-                DB.transactions.slice().reverse().forEach(t => {
+                [...DB.transactions].reverse().forEach(t => {
                     const tool = DB.tools.find(tl => tl.id === t.tool_id);
                     const user = DB.users.find(u => u.telegram_id === t.user_id);
                     csv +=
@@ -1187,51 +1058,7 @@
                 showToast('📥 Отчет скачан', 'success');
             }
 
-            // ==================== ОТРИСОВКА ====================
-            function renderAllTabs() {
-                renderHistory();
-                renderAdminTable();
-            }
-
-            function renderHistory() {
-                const transactions = DB.transactions.slice().reverse().slice(0, 20);
-                if (transactions.length === 0) {
-                    historyList.innerHTML =
-                        '<div class="empty-state"><div class="icon">📭</div><p>История пуста</p></div>';
-                    return;
-                }
-                historyList.innerHTML = transactions.map(t => {
-                    const tool = DB.tools.find(tl => tl.id === t.tool_id);
-                    const user = DB.users.find(u => u.telegram_id === t.user_id);
-                    const isTake = t.action === 'take';
-                    return `
-                    <div class="history-item">
-                        <div class="history-icon ${isTake ? 'icon-take' : 'icon-return'}">${isTake ? '🤚' : '✅'}</div>
-                        <div class="history-details">
-                            <div class="history-action">${isTake ? 'Взял' : 'Вернул'}: ${tool?.name || t.tool_id}</div>
-                            <div class="history-tool">${user?.full_name || 'Пользователь #'+t.user_id}</div>
-                            <div class="history-time">${new Date(t.timestamp).toLocaleString()}</div>
-                        </div>
-                    </div>`;
-                }).join('');
-            }
-
-            function renderAdminTable() {
-                adminTableBody.innerHTML = DB.tools.map(t => {
-                    const holder = t.current_holder ? DB.users.find(u => u.telegram_id === t.current_holder) :
-                        null;
-                    return `
-                    <tr>
-                        <td><code>${t.id}</code></td>
-                        <td>${t.icon} ${t.name}</td>
-                        <td><span class="status-dot ${t.status==='available'?'dot-green':'dot-red'}"></span>${t.status==='available'?'Склад':'Выдан'}</td>
-                        <td>${holder ? holder.full_name : '—'}</td>
-                        <td>${t.status==='taken' && currentUser.role==='admin' ? `<button class="btn-small btn-outline" onclick="window._forceReturnById('${t.id}')">Вернуть</button>` : ''}</td>
-                    </tr>`;
-                }).join('');
-            }
-
-            window._forceReturnById = function(toolId) {
+            function forceReturnById(toolId) {
                 const tool = DB.tools.find(t => t.id === toolId);
                 if (tool && tool.status === 'taken') {
                     tool.status = 'available';
@@ -1249,105 +1076,126 @@
                     renderAllTabs();
                     if (currentScannedTool && currentScannedTool.id === toolId) showToolCard(tool);
                 }
-            };
-
-            // ==================== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ====================
-            function showToast(message, type = '') {
-                toast.textContent = message;
-                toast.className = 'toast ' + type + ' show';
-                clearTimeout(toast._timeout);
-                toast._timeout = setTimeout(() => toast.classList.remove('show'), 2500);
             }
 
-            function switchScreen(screenName) {
+            // ==================== ОТРИСОВКА ====================
+            function renderAllTabs() {
+                renderHistory();
+                renderAdminTable();
+            }
+
+            function renderHistory() {
+                const transactions = DB.transactions.slice().reverse().slice(0, 30);
+                if (!transactions.length) {
+                    historyList.innerHTML =
+                        '<div class="empty-state"><div class="icon">📭</div><p>История пуста</p></div>';
+                    return;
+                }
+                historyList.innerHTML = transactions.map(t => {
+                    const tool = DB.tools.find(tl => tl.id === t.tool_id);
+                    const user = DB.users.find(u => u.telegram_id === t.user_id);
+                    const isTake = t.action === 'take';
+                    return `
+                    <div class="history-item">
+                        <div class="history-icon ${isTake ? 'icon-take' : 'icon-return'}">${isTake ? '🤚' : '✅'}</div>
+                        <div class="history-details">
+                            <div class="history-action">${isTake ? 'Взял' : 'Вернул'}: ${tool?.name || t.tool_id}</div>
+                            <div class="history-tool">${user?.full_name || 'ID: '+t.user_id}</div>
+                            <div class="history-time">${new Date(t.timestamp).toLocaleString()}</div>
+                        </div>
+                    </div>`;
+                }).join('');
+            }
+
+            function renderAdminTable() {
+                adminTableBody.innerHTML = DB.tools.map(t => {
+                    const holder = t.current_holder ? DB.users.find(u => u.telegram_id === t.current_holder) :
+                        null;
+                    return `
+                    <tr>
+                        <td><code>${t.id}</code></td>
+                        <td>${t.icon} ${t.name}</td>
+                        <td><span class="status-dot ${t.status==='available'?'dot-green':'dot-red'}"></span>${t.status==='available'?'Склад':'Выдан'}</td>
+                        <td>${holder ? holder.full_name : '—'}</td>
+                        <td>${t.status==='taken' && currentUser.role==='admin' ? `<button class="btn-small btn-outline" data-force="${t.id}">Вернуть</button>` : ''}</td>
+                    </tr>`;
+                }).join('');
+
+                // Навешиваем обработчики на кнопки в таблице
+                adminTableBody.querySelectorAll('[data-force]').forEach(btn => {
+                    btn.addEventListener('click', () => forceReturnById(btn.dataset.force));
+                });
+            }
+
+            function switchScreen(name) {
                 $$('.screen').forEach(s => s.classList.remove('active'));
-                const target = $('#screen-' + screenName);
+                const target = $('#screen-' + name);
                 if (target) target.classList.add('active');
                 $$('.tab').forEach(t => t.classList.remove('active'));
-                const activeTab = document.querySelector(`.tab[data-screen="${screenName}"]`);
-                if (activeTab) activeTab.classList.add('active');
-                if (screenName !== 'scan') {
+                const tab = document.querySelector(`.tab[data-screen="${name}"]`);
+                if (tab) tab.classList.add('active');
+                if (name !== 'scan') {
                     stopScanner();
-                    showScannerPlaceholder();
-                } else {
                     showScannerPlaceholder();
                 }
             }
 
-            // ==================== ОБРАБОТЧИКИ СОБЫТИЙ ====================
-            function setupEventListeners() {
-                // Кнопка входа
-                btnLogin.addEventListener('click', () => {
-                    if (authenticateViaTelegram()) {
-                        showMainApp();
-                        showToast('✅ Добро пожаловать, ' + currentUser.full_name + '!', 'success');
-                    }
-                });
-
-                // Кнопка выхода
-                btnLogout.addEventListener('click', logout);
+            // ==================== ИНИЦИАЛИЗАЦИЯ ====================
+            function init() {
+                // Обработчики событий
+                $('#btnLogin').addEventListener('click', authenticateViaTelegram);
+                $('#btnLogout').addEventListener('click', logout);
+                $('#btnDevUser').addEventListener('click', () => loginAs({
+                    telegram_id: 123456789,
+                    username: 'ivan_petrov',
+                    full_name: 'Иван Петров',
+                    role: 'user'
+                }));
+                $('#btnDevAdmin').addEventListener('click', () => loginAs({
+                    telegram_id: 987654321,
+                    username: 'admin_user',
+                    full_name: 'Сергей Админов',
+                    role: 'admin'
+                }));
 
                 // Табы
                 $$('.tab').forEach(tab => {
                     tab.addEventListener('click', () => switchScreen(tab.dataset.screen));
                 });
 
-                // Действия с инструментами
+                // Действия
                 btnTake.addEventListener('click', takeTool);
                 btnReturn.addEventListener('click', returnTool);
-                btnForceReturn.addEventListener('click', forceReturnTool);
-                btnStopScan.addEventListener('click', () => {
-                    stopScanner();
-                    showScannerPlaceholder();
-                });
+                btnForceReturn.addEventListener('click', forceReturn);
+                btnStopScan.addEventListener('click', () => { stopScanner();
+                    showScannerPlaceholder(); });
 
                 // Ручной ввод
-                btnManual.addEventListener('click', () => {
+                $('#btnManual').addEventListener('click', () => {
                     const code = manualInput.value.trim();
-                    if (code) {
-                        stopScanner();
-                        showScannerPlaceholder();
-                        processScannedCode(code);
-                        manualInput.value = '';
-                    }
+                    if (code) { processCode(code);
+                        manualInput.value = ''; }
                 });
-                manualInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') btnManual.click();
+                manualInput.addEventListener('keypress', e => {
+                    if (e.key === 'Enter') $('#btnManual').click();
                 });
 
-                // Админ-кнопки
-                const addBtn = $('#btnAddTool');
-                const exportBtn = $('#btnExportCSV');
-                if (addBtn) addBtn.addEventListener('click', addTool);
-                if (exportBtn) exportBtn.addEventListener('click', exportCSV);
+                // Админ
+                $('#btnAddTool').addEventListener('click', addTool);
+                $('#btnExportCSV').addEventListener('click', exportCSV);
 
-                // Делегирование для кнопки старта сканера
-                document.addEventListener('click', function(e) {
-                    if (e.target.closest('#startScanBtn')) startScanner();
-                });
-            }
-
-            // ==================== ИНИЦИАЛИЗАЦИЯ ====================
-            function init() {
-                setupEventListeners();
-
-                // Проверяем, есть ли сохраненная сессия
+                // Показываем экран входа или автовход
                 if (checkSavedAuth()) {
-                    // Пользователь уже авторизован
                     showMainApp();
-                    console.log('🔧 Автовход:', currentUser.full_name);
                 } else if (isRunningInTelegram()) {
-                    // Открыто в Telegram, но сессии нет — показываем кнопку входа
-                    showLoginScreen();
-                    console.log('🔧 Ожидание авторизации через Telegram');
+                    authenticateViaTelegram();
                 } else {
-                    // Обычный браузер — показываем экран входа
                     showLoginScreen();
-                    console.log('🔧 Браузерный режим. Нажмите "Войти через Telegram"');
                 }
             }
 
             init();
+            console.log('🔧 ToolTracker готов');
         })();
     </script>
 </body>
