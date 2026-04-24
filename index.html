@@ -47,7 +47,7 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         }
 
-        /* ЭКРАН ВХОДА */
+        /* ==================== ЭКРАН ВХОДА ==================== */
         .login-screen {
             display: flex;
             flex-direction: column;
@@ -56,23 +56,183 @@
             min-height: 100vh;
             padding: 40px 24px;
             text-align: center;
-            background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+            background: linear-gradient(180deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
             color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Анимированный фон */
+        .login-bg-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+            animation: floatParticle linear infinite;
+        }
+        @keyframes floatParticle {
+            0% {
+                transform: translateY(0) translateX(0) scale(1);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* Анимированная иконка */
+        .login-logo-container {
+            position: relative;
+            z-index: 1;
+            margin-bottom: 24px;
         }
         .login-logo {
             font-size: 80px;
-            margin-bottom: 24px;
+            animation: floatLogo 3s ease-in-out infinite;
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
+            display: block;
         }
+        @keyframes floatLogo {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-14px);
+            }
+        }
+        .login-logo-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            border: 2px solid rgba(42, 171, 238, 0.2);
+            border-radius: 50%;
+            animation: pulseRing 2.5s ease-out infinite;
+        }
+        .login-logo-ring:nth-child(2) {
+            animation-delay: 0.5s;
+            width: 140px;
+            height: 140px;
+        }
+        .login-logo-ring:nth-child(3) {
+            animation-delay: 1s;
+            width: 160px;
+            height: 160px;
+        }
+        @keyframes pulseRing {
+            0% {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 0.6;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.4);
+                opacity: 0;
+            }
+        }
+
         .login-title {
             font-size: 28px;
             font-weight: 800;
             margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+            letter-spacing: -0.5px;
         }
         .login-subtitle {
             font-size: 15px;
             opacity: 0.7;
             margin-bottom: 48px;
+            position: relative;
+            z-index: 1;
+            line-height: 1.5;
         }
+
+        /* Анимированные фичи */
+        .login-features {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 40px;
+            width: 100%;
+            max-width: 300px;
+            position: relative;
+            z-index: 1;
+        }
+        .login-feature {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 14px 18px;
+            border-radius: 14px;
+            font-size: 14px;
+            text-align: left;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+        }
+        .login-feature:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+        .login-feature:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .login-feature:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .login-feature .icon {
+            font-size: 24px;
+            flex-shrink: 0;
+            animation: bounceIcon 2s ease-in-out infinite;
+        }
+        .login-feature:nth-child(1) .icon {
+            animation-delay: 0s;
+        }
+        .login-feature:nth-child(2) .icon {
+            animation-delay: 0.3s;
+        }
+        .login-feature:nth-child(3) .icon {
+            animation-delay: 0.6s;
+        }
+        @keyframes bounceIcon {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.15);
+            }
+        }
+
+        /* Кнопка входа */
         .btn-login {
             display: flex;
             align-items: center;
@@ -88,11 +248,41 @@
             font-size: 17px;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             box-shadow: 0 8px 24px rgba(42, 171, 238, 0.4);
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+        .btn-login::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        .btn-login:hover::before {
+            left: 100%;
         }
         .btn-login:active {
             transform: scale(0.96);
+            box-shadow: 0 4px 12px rgba(42, 171, 238, 0.3);
+        }
+        .btn-login .tg-icon {
+            font-size: 22px;
+            animation: tgPulse 2s ease-in-out infinite;
+        }
+        @keyframes tgPulse {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
         }
         .login-error {
             background: rgba(239, 68, 68, 0.15);
@@ -104,16 +294,38 @@
             font-size: 13px;
             max-width: 300px;
             display: none;
+            position: relative;
+            z-index: 1;
+            animation: shake 0.5s ease;
         }
         .login-error.show {
             display: block;
         }
+        @keyframes shake {
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+            25% {
+                transform: translateX(-8px);
+            }
+            50% {
+                transform: translateX(8px);
+            }
+            75% {
+                transform: translateX(-4px);
+            }
+        }
+
+        /* Режим разработчика */
         .dev-login-section {
             margin-top: 24px;
             padding-top: 24px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             width: 100%;
             max-width: 300px;
+            position: relative;
+            z-index: 1;
         }
         .dev-login-title {
             font-size: 12px;
@@ -137,8 +349,15 @@
         .btn-dev-login:active {
             background: rgba(255, 255, 255, 0.12);
         }
+        .login-footer {
+            margin-top: 32px;
+            font-size: 12px;
+            opacity: 0.35;
+            position: relative;
+            z-index: 1;
+        }
 
-        /* ОСНОВНОЕ ПРИЛОЖЕНИЕ */
+        /* ==================== ОСНОВНОЕ ПРИЛОЖЕНИЕ ==================== */
         .main-app {
             display: none;
             flex-direction: column;
@@ -683,23 +902,53 @@
 </head>
 <body>
     <div class="app" id="app">
-        <!-- ЭКРАН ВХОДА -->
+        <!-- ==================== ЭКРАН ВХОДА ==================== -->
         <div class="login-screen" id="loginScreen">
-            <div class="login-logo">🔧</div>
+            <!-- Анимированные частицы фона -->
+            <div class="login-bg-particles" id="particles"></div>
+
+            <!-- Логотип с анимацией -->
+            <div class="login-logo-container">
+                <div class="login-logo-ring"></div>
+                <div class="login-logo-ring"></div>
+                <div class="login-logo-ring"></div>
+                <span class="login-logo">🔧</span>
+            </div>
+
             <div class="login-title">ToolTracker</div>
             <div class="login-subtitle">Учет инструментов на предприятии</div>
+
+            <!-- Анимированные фичи -->
+            <div class="login-features">
+                <div class="login-feature">
+                    <span class="icon">📷</span>
+                    <span>Сканирование QR-кодов инструментов</span>
+                </div>
+                <div class="login-feature">
+                    <span class="icon">🤚</span>
+                    <span>Фиксация выдачи и возврата</span>
+                </div>
+                <div class="login-feature">
+                    <span class="icon">📋</span>
+                    <span>Полная история операций</span>
+                </div>
+            </div>
+
             <div class="login-error" id="loginError">⚠️ Авторизация доступна только внутри Telegram</div>
             <button class="btn-login" id="btnLogin">
-                <span>✈️</span> Войти через Telegram
+                <span class="tg-icon">✈️</span> Войти через Telegram
             </button>
+
             <div class="dev-login-section" id="devSection">
                 <div class="dev-login-title">Режим разработчика</div>
                 <button class="btn-dev-login" id="btnDevUser">👤 Войти как Сотрудник</button>
                 <button class="btn-dev-login" id="btnDevAdmin">🛡️ Войти как Админ</button>
             </div>
+
+            <div class="login-footer">Ignasio Bercheli v2.0 · Telegram Mini App</div>
         </div>
 
-        <!-- ОСНОВНОЕ ПРИЛОЖЕНИЕ -->
+        <!-- ==================== ОСНОВНОЕ ПРИЛОЖЕНИЕ ==================== -->
         <div class="main-app" id="mainApp">
             <div class="header">
                 <div class="header-top">
@@ -851,9 +1100,7 @@
                 if (saved) {
                     try {
                         const data = JSON.parse(saved);
-                        if (!data.tools[0] || data.tools[0].serial === undefined) {
-                            return getDefaultData();
-                        }
+                        if (!data.tools[0] || data.tools[0].serial === undefined) return getDefaultData();
                         return data;
                     } catch (e) {}
                 }
@@ -862,17 +1109,13 @@
                 return def;
             }
 
-            function saveData() {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(DB));
-            }
-
+            function saveData() { localStorage.setItem(STORAGE_KEY, JSON.stringify(DB)); }
             let DB = loadData();
             let currentUser = null;
 
-            // ==================== DOM ЭЛЕМЕНТЫ ====================
+            // ==================== DOM ====================
             const $ = (s) => document.querySelector(s);
             const $$ = (s) => document.querySelectorAll(s);
-
             const loginScreen = $('#loginScreen');
             const mainApp = $('#mainApp');
             const loginError = $('#loginError');
@@ -899,18 +1142,34 @@
             const adminTableBody = $('#adminTableBody');
             const toast = $('#toast');
             const manualInput = $('#manualInput');
-
-            // Модалки
             const modalAddTool = $('#modalAddTool');
             const modalScanSerial = $('#modalScanSerial');
             const inputSerial = $('#inputSerial');
             const inputName = $('#inputName');
             const inputIcon = $('#inputIcon');
-
             let mainScanner = null;
             let serialScanner = null;
             let currentScannedTool = null;
             let toastTimer = null;
+
+            // ==================== АНИМИРОВАННЫЕ ЧАСТИЦЫ ====================
+            function createParticles() {
+                const container = $('#particles');
+                if (!container) return;
+                container.innerHTML = '';
+                for (let i = 0; i < 20; i++) {
+                    const particle = document.createElement('div');
+                    particle.classList.add('particle');
+                    const size = Math.random() * 60 + 10;
+                    particle.style.width = size + 'px';
+                    particle.style.height = size + 'px';
+                    particle.style.left = Math.random() * 100 + '%';
+                    particle.style.top = Math.random() * 100 + '%';
+                    particle.style.animationDuration = (Math.random() * 15 + 10) + 's';
+                    particle.style.animationDelay = (Math.random() * 10) + 's';
+                    container.appendChild(particle);
+                }
+            }
 
             // ==================== ФУНКЦИИ ====================
             function showToast(message, type = '') {
@@ -921,28 +1180,18 @@
             }
 
             function saveAuth() {
-                if (currentUser) {
-                    localStorage.setItem(AUTH_KEY, JSON.stringify({
-                        telegram_id: currentUser.telegram_id,
-                        timestamp: Date.now()
-                    }));
-                }
+                if (currentUser) localStorage.setItem(AUTH_KEY, JSON.stringify({ telegram_id: currentUser
+                        .telegram_id, timestamp: Date.now() }));
             }
 
-            function clearAuth() {
-                localStorage.removeItem(AUTH_KEY);
-                currentUser = null;
-            }
+            function clearAuth() { localStorage.removeItem(AUTH_KEY);
+                currentUser = null; }
 
             function loginAs(user) {
                 currentUser = user;
                 const dbUser = DB.users.find(u => u.telegram_id === user.telegram_id);
-                if (dbUser) {
-                    dbUser.full_name = user.full_name;
-                    dbUser.username = user.username;
-                } else {
-                    DB.users.push(user);
-                }
+                if (dbUser) { dbUser.full_name = user.full_name;
+                    dbUser.username = user.username; } else DB.users.push(user);
                 saveData();
                 saveAuth();
                 showMainApp();
@@ -967,6 +1216,7 @@
                 mainApp.classList.remove('active');
                 loginError.classList.remove('show');
                 devSection.style.display = isRunningInTelegram() ? 'none' : 'block';
+                createParticles();
             }
 
             function showMainApp() {
@@ -982,13 +1232,8 @@
                 if (!currentUser) return;
                 userNameEl.textContent = currentUser.full_name;
                 userAvatarEl.textContent = currentUser.full_name.trim().charAt(0).toUpperCase() || '?';
-                if (currentUser.role === 'admin') {
-                    adminBadge.style.display = 'inline';
-                    tabAdmin.style.display = 'block';
-                } else {
-                    adminBadge.style.display = 'none';
-                    tabAdmin.style.display = 'none';
-                }
+                adminBadge.style.display = currentUser.role === 'admin' ? 'inline' : 'none';
+                tabAdmin.style.display = currentUser.role === 'admin' ? 'block' : 'none';
             }
 
             function isRunningInTelegram() {
@@ -997,87 +1242,56 @@
             }
 
             function authenticateViaTelegram() {
-                if (!isRunningInTelegram()) {
-                    loginError.classList.add('show');
-                    setTimeout(() => loginError.classList.remove('show'), 4000);
-                    return;
-                }
+                if (!isRunningInTelegram()) { loginError.classList.add('show');
+                    setTimeout(() => loginError.classList.remove('show'), 4000); return; }
                 try {
                     const tg = window.Telegram.WebApp;
                     tg.ready();
                     tg.expand();
                     const u = tg.initDataUnsafe.user;
-                    const telegramId = u.id;
-                    const username = u.username || ('user_' + telegramId);
-                    const fullName = ((u.first_name || '') + ' ' + (u.last_name || '')).trim() || username;
-                    loginAs({ telegram_id: telegramId, username, full_name: fullName, role: 'user' });
-                } catch (e) {
-                    console.error(e);
-                    loginError.classList.add('show');
-                }
+                    loginAs({ telegram_id: u.id, username: u.username || ('user_' + u.id), full_name: ((u
+                            .first_name || '') + ' ' + (u.last_name || '')).trim() || u.username ||
+                        'User', role: 'user' });
+                } catch (e) { loginError.classList.add('show'); }
             }
 
             function checkSavedAuth() {
                 const saved = localStorage.getItem(AUTH_KEY);
-                if (saved) {
-                    try {
-                        const authData = JSON.parse(saved);
-                        const user = DB.users.find(u => u.telegram_id === authData.telegram_id);
-                        if (user) { currentUser = user; return true; }
-                    } catch (e) {}
-                }
+                if (saved) { try { const d = JSON.parse(saved); const u = DB.users.find(u => u
+                            .telegram_id === d.telegram_id); if (u) { currentUser = u; return true; } } catch (
+                        e) {} }
                 return false;
             }
 
-            // ==================== СКАНЕР (ОСНОВНОЙ) ====================
+            // ==================== СКАНЕР ====================
             function showScannerPlaceholder() {
-                qrReader.innerHTML = `
-                    <div style="display:flex;align-items:center;justify-content:center;height:100%;flex-direction:column;cursor:pointer;background:#1e293b;" id="startScanBtn">
-                        <div style="font-size:64px;margin-bottom:12px;">📷</div>
-                        <div style="color:white;font-weight:600;font-size:16px;">Нажмите, чтобы сканировать</div>
-                        <div style="color:#94a3b8;font-size:13px;margin-top:4px;">QR-код с серийным номером</div>
-                    </div>`;
+                qrReader.innerHTML =
+                    `<div style="display:flex;align-items:center;justify-content:center;height:100%;flex-direction:column;cursor:pointer;background:#1e293b;" id="startScanBtn"><div style="font-size:64px;margin-bottom:12px;">📷</div><div style="color:white;font-weight:600;font-size:16px;">Нажмите, чтобы сканировать</div><div style="color:#94a3b8;font-size:13px;margin-top:4px;">QR-код с серийным номером</div></div>`;
                 btnStopScan.style.display = 'none';
                 document.getElementById('startScanBtn').addEventListener('click', startMainScanner);
             }
-
             async function startMainScanner() {
                 if (mainScanner) await stopMainScanner();
                 qrReader.innerHTML = '<div id="qr-reader"></div>';
                 mainScanner = new Html5Qrcode("qr-reader");
                 btnStopScan.style.display = 'block';
                 try {
-                    await mainScanner.start({ facingMode: "environment" }, {
-                        fps: 10,
-                        qrbox: { width: 200, height: 200 },
-                        aspectRatio: 1.0
-                    }, (text) => {
-                        stopMainScanner();
+                    await mainScanner.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 200,
+                            height: 200 }, aspectRatio: 1.0 }, (text) => { stopMainScanner();
                         showScannerPlaceholder();
-                        processCode(text.trim());
-                    }, () => {});
-                } catch (err) {
-                    console.error(err);
-                    showToast('Ошибка доступа к камере', 'error');
-                    showScannerPlaceholder();
-                }
+                        processCode(text.trim()); }, () => {});
+                } catch (err) { showToast('Ошибка доступа к камере', 'error');
+                    showScannerPlaceholder(); }
             }
-
-            async function stopMainScanner() {
-                if (mainScanner && mainScanner.isScanning) {
-                    try { await mainScanner.stop(); } catch (e) {}
-                }
+            async function stopMainScanner() { if (mainScanner && mainScanner.isScanning) try { await mainScanner
+                    .stop(); } catch (e) {}
                 mainScanner = null;
-                btnStopScan.style.display = 'none';
-            }
+                btnStopScan.style.display = 'none'; }
 
             function processCode(code) {
                 const tool = DB.tools.find(t => t.serial === code);
-                if (!tool) {
-                    showToast('Инструмент не найден: ' + code, 'error');
-                    hideToolCard();
-                    return;
-                }
+                if (!tool) { showToast('Инструмент не найден: ' + code, 'error');
+                    hideToolCard(); return; }
                 currentScannedTool = tool;
                 showToolCard(tool);
             }
@@ -1092,117 +1306,73 @@
                 btnBlocked.style.display = 'none';
                 btnForceReturn.style.display = 'none';
                 holderInfo.style.display = 'none';
-
-                if (tool.status === 'available') {
-                    statusBadge.className = 'status-badge status-available';
+                if (tool.status === 'available') { statusBadge.className = 'status-badge status-available';
                     statusText.textContent = '✅ На складе';
-                    btnTake.style.display = 'block';
-                } else {
-                    statusBadge.className = 'status-badge status-taken';
-                    statusText.textContent = '❌ На руках';
-                    const holder = DB.users.find(u => u.telegram_id === tool.current_holder);
-                    const name = holder ? holder.full_name : 'Неизвестный';
-                    if (tool.current_holder === currentUser.telegram_id) {
-                        holderInfo.style.display = 'block';
+                    btnTake.style.display = 'block'; } else { statusBadge.className =
+                        'status-badge status-taken';
+                    statusText.textContent = '❌ На руках'; const holder = DB.users.find(u => u
+                        .telegram_id === tool.current_holder); const name = holder ? holder.full_name :
+                        'Неизвестный'; if (tool.current_holder === currentUser.telegram_id) { holderInfo
+                        .style.display = 'block';
                         holderName.textContent = 'Вы';
-                        btnReturn.style.display = 'block';
-                    } else {
-                        holderInfo.style.display = 'block';
+                        btnReturn.style.display = 'block'; } else { holderInfo.style.display = 'block';
                         holderName.textContent = name;
-                        btnBlocked.style.display = 'block';
-                        if (currentUser.role === 'admin') btnForceReturn.style.display = 'block';
-                    }
-                }
+                        btnBlocked.style.display = 'block'; if (currentUser.role === 'admin') btnForceReturn
+                            .style.display = 'block'; } }
                 toolCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
 
-            function hideToolCard() {
-                toolCard.style.display = 'none';
-                currentScannedTool = null;
-            }
+            function hideToolCard() { toolCard.style.display = 'none';
+                currentScannedTool = null; }
 
-            // ==================== ДЕЙСТВИЯ ====================
-            function takeTool() {
-                if (!currentScannedTool || currentScannedTool.status !== 'available') return;
+            function takeTool() { if (!currentScannedTool || currentScannedTool.status !== 'available') return;
                 currentScannedTool.status = 'taken';
                 currentScannedTool.current_holder = currentUser.telegram_id;
-                DB.transactions.push({
-                    id: Date.now(),
-                    tool_serial: currentScannedTool.serial,
-                    user_id: currentUser.telegram_id,
-                    action: 'take',
-                    timestamp: new Date().toISOString()
-                });
+                DB.transactions.push({ id: Date.now(), tool_serial: currentScannedTool.serial, user_id: currentUser
+                        .telegram_id, action: 'take', timestamp: new Date().toISOString() });
                 saveData();
                 showToast('✅ Инструмент взят!', 'success');
                 showToolCard(currentScannedTool);
-                renderAllTabs();
-            }
+                renderAllTabs(); }
 
-            function returnTool() {
-                if (!currentScannedTool || currentScannedTool.status !== 'taken' || currentScannedTool
-                    .current_holder !== currentUser.telegram_id) return;
+            function returnTool() { if (!currentScannedTool || currentScannedTool.status !== 'taken' ||
+                    currentScannedTool.current_holder !== currentUser.telegram_id) return;
                 currentScannedTool.status = 'available';
                 currentScannedTool.current_holder = null;
-                DB.transactions.push({
-                    id: Date.now(),
-                    tool_serial: currentScannedTool.serial,
-                    user_id: currentUser.telegram_id,
-                    action: 'return',
-                    timestamp: new Date().toISOString()
-                });
+                DB.transactions.push({ id: Date.now(), tool_serial: currentScannedTool.serial, user_id: currentUser
+                        .telegram_id, action: 'return', timestamp: new Date().toISOString() });
                 saveData();
                 showToast('✅ Инструмент возвращен!', 'success');
                 showToolCard(currentScannedTool);
-                renderAllTabs();
-            }
+                renderAllTabs(); }
 
-            function forceReturn() {
-                if (!currentScannedTool || currentUser.role !== 'admin') return;
+            function forceReturn() { if (!currentScannedTool || currentUser.role !== 'admin') return;
                 currentScannedTool.status = 'available';
                 currentScannedTool.current_holder = null;
-                DB.transactions.push({
-                    id: Date.now(),
-                    tool_serial: currentScannedTool.serial,
-                    user_id: currentUser.telegram_id,
-                    action: 'return',
-                    timestamp: new Date().toISOString(),
-                    note: 'Принудительный возврат'
-                });
+                DB.transactions.push({ id: Date.now(), tool_serial: currentScannedTool.serial, user_id: currentUser
+                        .telegram_id, action: 'return', timestamp: new Date().toISOString(),
+                    note: 'Принудительный возврат' });
                 saveData();
                 showToast('⚡ Возвращено принудительно', 'success');
                 showToolCard(currentScannedTool);
-                renderAllTabs();
-            }
+                renderAllTabs(); }
 
-            function forceReturnBySerial(serial) {
-                const tool = DB.tools.find(t => t.serial === serial);
-                if (tool && tool.status === 'taken') {
-                    tool.status = 'available';
+            function forceReturnBySerial(serial) { const tool = DB.tools.find(t => t.serial === serial); if (tool &&
+                    tool.status === 'taken') { tool.status = 'available';
                     tool.current_holder = null;
-                    DB.transactions.push({
-                        id: Date.now(),
-                        tool_serial: tool.serial,
-                        user_id: currentUser.telegram_id,
-                        action: 'return',
-                        timestamp: new Date().toISOString(),
-                        note: 'Принудительный возврат'
-                    });
+                    DB.transactions.push({ id: Date.now(), tool_serial: tool.serial, user_id: currentUser
+                            .telegram_id, action: 'return', timestamp: new Date().toISOString(),
+                        note: 'Принудительный возврат' });
                     saveData();
                     showToast('⚡ Инструмент возвращен', 'success');
-                    renderAllTabs();
-                    if (currentScannedTool && currentScannedTool.serial === serial) showToolCard(tool);
-                }
-            }
+                    renderAllTabs(); if (currentScannedTool && currentScannedTool.serial === serial) showToolCard(
+                        tool); } }
 
-            function exportCSV() {
-                let csv = 'Дата;Серийный номер;Инструмент;Пользователь;Действие\n';
-                [...DB.transactions].reverse().forEach(t => {
-                    const tool = DB.tools.find(tl => tl.serial === t.tool_serial);
-                    const user = DB.users.find(u => u.telegram_id === t.user_id);
+            function exportCSV() { let csv = 'Дата;Серийный номер;Инструмент;Пользователь;Действие\n';
+                [...DB.transactions].reverse().forEach(t => { const tool = DB.tools.find(tl => tl.serial === t
+                        .tool_serial); const user = DB.users.find(u => u.telegram_id === t.user_id);
                     csv +=
-                        `${new Date(t.timestamp).toLocaleString()};${t.tool_serial};${tool?.name||''};${user?.full_name||t.user_id};${t.action==='take'?'Взял':'Вернул'}\n`;
-                });
+                        `${new Date(t.timestamp).toLocaleString()};${t.tool_serial};${tool?.name||''};${user?.full_name||t.user_id};${t.action==='take'?'Взял':'Вернул'}\n`; });
                 const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
@@ -1210,96 +1380,53 @@
                 a.download = 'tooltracker_report.csv';
                 a.click();
                 URL.revokeObjectURL(url);
-                showToast('📥 Отчет скачан', 'success');
-            }
+                showToast('📥 Отчет скачан', 'success'); }
 
             // ==================== ДОБАВЛЕНИЕ ИНСТРУМЕНТА ====================
-            function openAddToolModal() {
-                inputSerial.value = '';
+            function openAddToolModal() { inputSerial.value = '';
                 inputName.value = '';
                 inputIcon.value = '🔧';
                 modalAddTool.classList.add('active');
-                inputName.focus();
-            }
+                inputName.focus(); }
 
-            function closeAddToolModal() {
-                modalAddTool.classList.remove('active');
-            }
+            function closeAddToolModal() { modalAddTool.classList.remove('active'); }
 
-            function submitNewTool() {
-                const serial = inputSerial.value.trim();
-                const name = inputName.value.trim();
-                const icon = inputIcon.value.trim() || '🔧';
-
-                if (!serial) { showToast('Введите серийный номер', 'error');
+            function submitNewTool() { const serial = inputSerial.value.trim(); const name = inputName.value.trim();
+                const icon = inputIcon.value.trim() || '🔧'; if (!serial) { showToast('Введите серийный номер',
+                    'error');
+                    inputSerial.focus(); return; } if (!name) { showToast('Введите название инструмента', 'error');
+                    inputName.focus(); return; } if (DB.tools.find(t => t.serial === serial)) { showToast(
+                        'Инструмент с таким серийным номером уже существует!', 'error');
                     inputSerial.focus(); return; }
-                if (!name) { showToast('Введите название инструмента', 'error');
-                    inputName.focus(); return; }
-                if (DB.tools.find(t => t.serial === serial)) {
-                    showToast('Инструмент с таким серийным номером уже существует!', 'error');
-                    inputSerial.focus();
-                    return;
-                }
-
                 DB.tools.push({ serial, name, icon, status: 'available', current_holder: null });
                 saveData();
                 closeAddToolModal();
                 showToast('✅ Инструмент добавлен: ' + serial, 'success');
-                renderAllTabs();
-            }
+                renderAllTabs(); }
 
-            // ==================== СКАНЕР ДЛЯ ДОБАВЛЕНИЯ ====================
-            function openSerialScanner() {
-                modalScanSerial.classList.add('active');
-                setTimeout(() => startSerialScanner(), 300);
-            }
+            function openSerialScanner() { modalScanSerial.classList.add('active');
+                setTimeout(() => startSerialScanner(), 300); }
 
-            function closeSerialScanner() {
-                if (serialScanner && serialScanner.isScanning) {
-                    serialScanner.stop().catch(() => {});
-                }
+            function closeSerialScanner() { if (serialScanner && serialScanner.isScanning) serialScanner.stop()
+                    .catch(() => {});
                 serialScanner = null;
-                modalScanSerial.classList.remove('active');
-            }
-
-            async function startSerialScanner() {
-                document.getElementById('serial-qr-reader').innerHTML = '';
-                serialScanner = new Html5Qrcode("serial-qr-reader");
-                try {
-                    await serialScanner.start({ facingMode: "environment" }, {
-                        fps: 10,
-                        qrbox: { width: 200, height: 200 },
-                        aspectRatio: 1.0
-                    }, (text) => {
-                        inputSerial.value = text.trim();
-                        closeSerialScanner();
-                        showToast('✅ Серийный номер считан!', 'success');
-                    }, () => {});
-                } catch (err) {
-                    console.error(err);
-                    showToast('Ошибка камеры', 'error');
+                modalScanSerial.classList.remove('active'); }
+            async function startSerialScanner() { document.getElementById('serial-qr-reader').innerHTML = '';
+                serialScanner = new Html5Qrcode("serial-qr-reader"); try { await serialScanner.start({ facingMode: "environment" }, { fps: 10,
+                        qrbox: { width: 200, height: 200 }, aspectRatio: 1.0 }, (text) => { inputSerial.value =
+                        text.trim();
                     closeSerialScanner();
-                }
-            }
+                    showToast('✅ Серийный номер считан!', 'success'); }, () => {}); } catch (err) { showToast(
+                        'Ошибка камеры', 'error');
+                    closeSerialScanner(); } }
 
-            // ==================== ОТРИСОВКА ====================
-            function renderAllTabs() {
-                renderHistory();
-                renderAdminTable();
-            }
+            function renderAllTabs() { renderHistory();
+                renderAdminTable(); }
 
-            function renderHistory() {
-                const transactions = DB.transactions.slice().reverse().slice(0, 30);
-                if (!transactions.length) {
-                    historyList.innerHTML =
-                        '<div class="empty-state"><div class="icon">📭</div><p>История пуста</p></div>';
-                    return;
-                }
-                historyList.innerHTML = transactions.map(t => {
-                    const tool = DB.tools.find(tl => tl.serial === t.tool_serial);
-                    const user = DB.users.find(u => u.telegram_id === t.user_id);
-                    const isTake = t.action === 'take';
-                    return `
+            function renderHistory() { const tx = DB.transactions.slice().reverse().slice(0, 30); if (!tx.length) { historyList
+                    .innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>История пуста</p></div>'; return; }
+                historyList.innerHTML = tx.map(t => { const tool = DB.tools.find(tl => tl.serial === t.tool_serial); const
+                        user = DB.users.find(u => u.telegram_id === t.user_id); const isTake = t.action === 'take'; return `
                     <div class="history-item">
                         <div class="history-icon ${isTake ? 'icon-take' : 'icon-return'}">${isTake ? '🤚' : '✅'}</div>
                         <div class="history-details">
@@ -1307,99 +1434,61 @@
                             <div class="history-tool">${user?.full_name || 'ID: '+t.user_id} · ${t.tool_serial}</div>
                             <div class="history-time">${new Date(t.timestamp).toLocaleString()}</div>
                         </div>
-                    </div>`;
-                }).join('');
-            }
+                    </div>`; }).join(''); }
 
-            function renderAdminTable() {
-                adminTableBody.innerHTML = DB.tools.map(t => {
-                    const holder = t.current_holder ? DB.users.find(u => u.telegram_id === t.current_holder) :
-                        null;
-                    return `
+            function renderAdminTable() { adminTableBody.innerHTML = DB.tools.map(t => { const holder = t.current_holder ? DB
+                        .users.find(u => u.telegram_id === t.current_holder) : null; return `
                     <tr>
                         <td><code>${t.serial}</code></td>
                         <td>${t.icon} ${t.name}</td>
                         <td><span class="status-dot ${t.status==='available'?'dot-green':'dot-red'}"></span>${t.status==='available'?'Склад':'Выдан'}</td>
                         <td>${holder ? holder.full_name : '—'}</td>
                         <td>${t.status==='taken' && currentUser.role==='admin' ? `<button class="btn-small btn-outline" data-force-serial="${t.serial}">Вернуть</button>` : ''}</td>
-                    </tr>`;
-                }).join('');
+                    </tr>`; }).join('');
+                adminTableBody.querySelectorAll('[data-force-serial]').forEach(b => b.addEventListener('click', () =>
+                    forceReturnBySerial(b.dataset.forceSerial))); }
 
-                adminTableBody.querySelectorAll('[data-force-serial]').forEach(btn => {
-                    btn.addEventListener('click', () => forceReturnBySerial(btn.dataset.forceSerial));
-                });
-            }
-
-            function switchScreen(name) {
-                $$('.screen').forEach(s => s.classList.remove('active'));
-                const target = $('#screen-' + name);
-                if (target) target.classList.add('active');
-                $$('.tab').forEach(t => t.classList.remove('active'));
-                const tab = document.querySelector(`.tab[data-screen="${name}"]`);
-                if (tab) tab.classList.add('active');
-                if (name !== 'scan') {
+            function switchScreen(name) { $$('.screen').forEach(s => s.classList.remove('active')); const t = $('#screen-' +
+                    name); if (t) t.classList.add('active');
+                $$('.tab').forEach(t => t.classList.remove('active')); const tab = document.querySelector(
+                    `.tab[data-screen="${name}"]`); if (tab) tab.classList.add('active'); if (name !== 'scan') {
                     stopMainScanner();
-                    showScannerPlaceholder();
-                }
-            }
+                    showScannerPlaceholder(); } }
 
             // ==================== ИНИЦИАЛИЗАЦИЯ ====================
             function init() {
-                // Авторизация
                 $('#btnLogin').addEventListener('click', authenticateViaTelegram);
                 $('#btnLogout').addEventListener('click', logout);
                 $('#btnDevUser').addEventListener('click', () => loginAs({ telegram_id: 123456789,
                     username: 'ivan_petrov', full_name: 'Иван Петров', role: 'user' }));
                 $('#btnDevAdmin').addEventListener('click', () => loginAs({ telegram_id: 680208277,
                     username: 'admin_user', full_name: 'Игнат', role: 'admin' }));
-
-                // Табы
-                $$('.tab').forEach(tab => tab.addEventListener('click', () => switchScreen(tab.dataset.screen)));
-
-                // Действия
+                $$('.tab').forEach(t => t.addEventListener('click', () => switchScreen(t.dataset.screen)));
                 btnTake.addEventListener('click', takeTool);
                 btnReturn.addEventListener('click', returnTool);
                 btnForceReturn.addEventListener('click', forceReturn);
                 btnStopScan.addEventListener('click', () => { stopMainScanner();
                     showScannerPlaceholder(); });
-
-                // Ручной ввод
-                $('#btnManual').addEventListener('click', () => {
-                    const code = manualInput.value.trim();
-                    if (code) { processCode(code);
-                        manualInput.value = ''; }
-                });
-                manualInput.addEventListener('keypress', e => { if (e.key === 'Enter') $('#btnManual')
-                    .click(); });
-
-                // Админ
+                $('#btnManual').addEventListener('click', () => { const c = manualInput.value.trim(); if (c) { processCode(
+                        c);
+                        manualInput.value = ''; } });
+                manualInput.addEventListener('keypress', e => { if (e.key === 'Enter') $('#btnManual').click(); });
                 $('#btnAddTool').addEventListener('click', openAddToolModal);
                 $('#btnExportCSV').addEventListener('click', exportCSV);
-
-                // Модалка добавления
                 $('#btnSubmitTool').addEventListener('click', submitNewTool);
                 $('#btnCancelTool').addEventListener('click', closeAddToolModal);
                 $('#btnScanSerial').addEventListener('click', openSerialScanner);
                 $('#btnCancelScan').addEventListener('click', closeSerialScanner);
-                modalAddTool.addEventListener('click', e => { if (e.target === modalAddTool)
-                    closeAddToolModal(); });
+                modalAddTool.addEventListener('click', e => { if (e.target === modalAddTool) closeAddToolModal(); });
                 modalScanSerial.addEventListener('click', e => { if (e.target === modalScanSerial)
                     closeSerialScanner(); });
-
-                // Enter в модалке
-                [inputSerial, inputName, inputIcon].forEach(inp => {
-                    inp.addEventListener('keypress', e => { if (e.key === 'Enter') submitNewTool
-                    (); });
-                });
-
-                // Старт
+                [inputSerial, inputName, inputIcon].forEach(i => i.addEventListener('keypress', e => { if (e.key ===
+                        'Enter') submitNewTool(); }));
                 if (checkSavedAuth()) showMainApp();
                 else if (isRunningInTelegram()) authenticateViaTelegram();
                 else showLoginScreen();
-
                 console.log('🔧 ToolTracker v2.0 готов');
             }
-
             init();
         })();
     </script>
