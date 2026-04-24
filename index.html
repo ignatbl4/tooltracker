@@ -16,6 +16,7 @@
             --tg-theme-secondary-bg-color: #f1f5f9;
             --success: #10b981;
             --danger: #ef4444;
+            --warning: #f59e0b;
             --radius: 16px;
         }
 
@@ -47,7 +48,7 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         }
 
-        /* ==================== ЭКРАН ВХОДА ==================== */
+        /* ЭКРАН ВХОДА */
         .login-screen {
             display: flex;
             flex-direction: column;
@@ -61,8 +62,6 @@
             position: relative;
             overflow: hidden;
         }
-
-        /* Анимированный фон */
         .login-bg-particles {
             position: absolute;
             top: 0;
@@ -94,8 +93,6 @@
                 opacity: 0;
             }
         }
-
-        /* Анимированная иконка */
         .login-logo-container {
             position: relative;
             z-index: 1;
@@ -147,7 +144,6 @@
                 opacity: 0;
             }
         }
-
         .login-title {
             font-size: 28px;
             font-weight: 800;
@@ -164,8 +160,6 @@
             z-index: 1;
             line-height: 1.5;
         }
-
-        /* Анимированные фичи */
         .login-features {
             display: flex;
             flex-direction: column;
@@ -213,15 +207,6 @@
             flex-shrink: 0;
             animation: bounceIcon 2s ease-in-out infinite;
         }
-        .login-feature:nth-child(1) .icon {
-            animation-delay: 0s;
-        }
-        .login-feature:nth-child(2) .icon {
-            animation-delay: 0.3s;
-        }
-        .login-feature:nth-child(3) .icon {
-            animation-delay: 0.6s;
-        }
         @keyframes bounceIcon {
             0%,
             100% {
@@ -231,8 +216,6 @@
                 transform: scale(1.15);
             }
         }
-
-        /* Кнопка входа */
         .btn-login {
             display: flex;
             align-items: center;
@@ -254,35 +237,9 @@
             z-index: 1;
             overflow: hidden;
         }
-        .btn-login::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s;
-        }
-        .btn-login:hover::before {
-            left: 100%;
-        }
         .btn-login:active {
             transform: scale(0.96);
             box-shadow: 0 4px 12px rgba(42, 171, 238, 0.3);
-        }
-        .btn-login .tg-icon {
-            font-size: 22px;
-            animation: tgPulse 2s ease-in-out infinite;
-        }
-        @keyframes tgPulse {
-            0%,
-            100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.2);
-            }
         }
         .login-error {
             background: rgba(239, 68, 68, 0.15);
@@ -296,28 +253,10 @@
             display: none;
             position: relative;
             z-index: 1;
-            animation: shake 0.5s ease;
         }
         .login-error.show {
             display: block;
         }
-        @keyframes shake {
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-            25% {
-                transform: translateX(-8px);
-            }
-            50% {
-                transform: translateX(8px);
-            }
-            75% {
-                transform: translateX(-4px);
-            }
-        }
-
-        /* Режим разработчика */
         .dev-login-section {
             margin-top: 24px;
             padding-top: 24px;
@@ -357,7 +296,7 @@
             z-index: 1;
         }
 
-        /* ==================== ОСНОВНОЕ ПРИЛОЖЕНИЕ ==================== */
+        /* ОСНОВНОЕ ПРИЛОЖЕНИЕ */
         .main-app {
             display: none;
             flex-direction: column;
@@ -592,9 +531,18 @@
             display: inline-block;
             padding: 5px 12px;
             border-radius: 12px;
-            margin-bottom: 12px;
+            margin-bottom: 4px;
             font-family: monospace;
             letter-spacing: 0.5px;
+        }
+        .tool-category {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-bottom: 12px;
+            background: rgba(42, 171, 238, 0.08);
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 10px;
         }
         .status-badge {
             display: inline-flex;
@@ -632,12 +580,10 @@
         .btn-take {
             background: #2AABEE;
             color: white;
-            box-shadow: 0 4px 12px rgba(42, 171, 238, 0.35);
         }
         .btn-return {
             background: #10b981;
             color: white;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
         }
         .btn-disabled {
             background: #cbd5e1;
@@ -700,6 +646,50 @@
         }
 
         /* Admin */
+        .category-section {
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            overflow: hidden;
+        }
+        .category-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            background: #f8fafc;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 15px;
+            gap: 10px;
+        }
+        .category-header .cat-icon {
+            font-size: 24px;
+        }
+        .category-header .cat-name {
+            flex: 1;
+        }
+        .category-header .cat-count {
+            background: #e2e8f0;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #64748b;
+            font-weight: 600;
+        }
+        .category-header .cat-toggle {
+            font-size: 14px;
+            transition: transform 0.2s;
+        }
+        .category-header.open .cat-toggle {
+            transform: rotate(90deg);
+        }
+        .category-tools {
+            display: none;
+        }
+        .category-tools.open {
+            display: block;
+        }
         .admin-table {
             width: 100%;
             border-collapse: collapse;
@@ -713,11 +703,13 @@
             text-transform: uppercase;
             color: #94a3b8;
             border-bottom: 2px solid #e2e8f0;
+            background: #fff;
         }
         .admin-table td {
             padding: 10px 8px;
             border-bottom: 1px solid #e2e8f0;
             vertical-align: middle;
+            background: #fff;
         }
         .status-dot {
             display: inline-block;
@@ -741,11 +733,15 @@
             cursor: pointer;
             background: #2AABEE;
             color: white;
+            white-space: nowrap;
         }
         .btn-outline {
             background: transparent;
             border: 1px solid #2AABEE;
             color: #2AABEE;
+        }
+        .btn-small-danger {
+            background: #ef4444;
         }
         .admin-actions {
             display: flex;
@@ -815,7 +811,8 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-        .modal input {
+        .modal input,
+        .modal select {
             width: 100%;
             padding: 14px;
             border: 2px solid #e2e8f0;
@@ -823,7 +820,8 @@
             font-size: 16px;
             font-family: inherit;
         }
-        .modal input:focus {
+        .modal input:focus,
+        .modal select:focus {
             outline: none;
             border-color: #2AABEE;
         }
@@ -898,57 +896,57 @@
         .toast.error {
             background: #991b1b;
         }
+
+        /* Хлебные крошки */
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #94a3b8;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        .breadcrumbs span {
+            cursor: pointer;
+            color: #2AABEE;
+            font-weight: 500;
+        }
+        .breadcrumbs .sep {
+            color: #cbd5e1;
+            cursor: default;
+        }
     </style>
 </head>
 <body>
     <div class="app" id="app">
-        <!-- ==================== ЭКРАН ВХОДА ==================== -->
+        <!-- ЭКРАН ВХОДА -->
         <div class="login-screen" id="loginScreen">
-            <!-- Анимированные частицы фона -->
             <div class="login-bg-particles" id="particles"></div>
-
-            <!-- Логотип с анимацией -->
             <div class="login-logo-container">
                 <div class="login-logo-ring"></div>
                 <div class="login-logo-ring"></div>
                 <div class="login-logo-ring"></div>
                 <span class="login-logo">🔧</span>
             </div>
-
             <div class="login-title">ToolTracker</div>
             <div class="login-subtitle">Учет инструментов на предприятии</div>
-
-            <!-- Анимированные фичи -->
             <div class="login-features">
-                <div class="login-feature">
-                    <span class="icon">📷</span>
-                    <span>Сканирование QR-кодов инструментов</span>
-                </div>
-                <div class="login-feature">
-                    <span class="icon">🤚</span>
-                    <span>Фиксация выдачи и возврата</span>
-                </div>
-                <div class="login-feature">
-                    <span class="icon">📋</span>
-                    <span>Полная история операций</span>
-                </div>
+                <div class="login-feature"><span class="icon">📷</span><span>Сканирование QR-кодов</span></div>
+                <div class="login-feature"><span class="icon">🤚</span><span>Фиксация выдачи и возврата</span></div>
+                <div class="login-feature"><span class="icon">📋</span><span>Полная история операций</span></div>
             </div>
-
             <div class="login-error" id="loginError">⚠️ Авторизация доступна только внутри Telegram</div>
-            <button class="btn-login" id="btnLogin">
-                <span class="tg-icon">✈️</span> Войти через Telegram
-            </button>
-
+            <button class="btn-login" id="btnLogin">✈️ Войти через Telegram</button>
             <div class="dev-login-section" id="devSection">
                 <div class="dev-login-title">Режим разработчика</div>
                 <button class="btn-dev-login" id="btnDevUser">👤 Войти как Сотрудник</button>
                 <button class="btn-dev-login" id="btnDevAdmin">🛡️ Войти как Админ</button>
             </div>
-
-            <div class="login-footer">Ignasio Bercheli v2.0 · Telegram Mini App</div>
+            <div class="login-footer">ToolTracker v3.0 · Telegram Mini App</div>
         </div>
 
-        <!-- ==================== ОСНОВНОЕ ПРИЛОЖЕНИЕ ==================== -->
+        <!-- ОСНОВНОЕ ПРИЛОЖЕНИЕ -->
         <div class="main-app" id="mainApp">
             <div class="header">
                 <div class="header-top">
@@ -980,23 +978,23 @@
                 </div>
                 <button class="btn-stop-scan" id="btnStopScan" style="display:none;">⏹ Остановить сканер</button>
                 <div class="manual-section">
-                    <p style="font-size:13px;color:#94a3b8;margin-bottom:8px;">Или введите серийный номер вручную:</p>
+                    <p style="font-size:13px;color:#94a3b8;margin-bottom:8px;">Или введите серийный номер:</p>
                     <input type="text" class="manual-input" id="manualInput" placeholder="SN-775533" maxlength="30">
                     <button class="btn-manual" id="btnManual">🔍 Найти инструмент</button>
                     <p style="font-size:11px;color:#94a3b8;margin-top:8px;">
                         Демо: <strong>SN-775533</strong>, <strong>SN-992211</strong>, <strong>SN-448899</strong>, <strong>SN-112266</strong>
                     </p>
                 </div>
-
                 <div class="tool-card" id="toolCard" style="display:none;">
                     <div class="tool-icon" id="toolIcon">🔨</div>
                     <div class="tool-name" id="toolName"></div>
                     <div class="tool-serial" id="toolSerial"></div>
+                    <div class="tool-category" id="toolCategory"></div>
                     <div class="status-badge" id="statusBadge"><span id="statusText"></span></div>
                     <div class="holder-info" id="holderInfo" style="display:none;">На руках у: <strong id="holderName"></strong></div>
-                    <button class="btn-action btn-take" id="btnTake" style="display:none;">🤚 Взять инструмент</button>
-                    <button class="btn-action btn-return" id="btnReturn" style="display:none;">✅ Вернуть на склад</button>
-                    <button class="btn-action btn-disabled" id="btnBlocked" style="display:none;" disabled>🔒 Инструмент занят</button>
+                    <button class="btn-action btn-take" id="btnTake" style="display:none;">🤚 Взять</button>
+                    <button class="btn-action btn-return" id="btnReturn" style="display:none;">✅ Вернуть</button>
+                    <button class="btn-action btn-disabled" id="btnBlocked" style="display:none;" disabled>🔒 Занят</button>
                     <button class="btn-action btn-danger" id="btnForceReturn" style="display:none;">⚡ Принудительный возврат</button>
                 </div>
             </div>
@@ -1004,38 +1002,37 @@
             <!-- Экран Истории -->
             <div class="screen" id="screen-history">
                 <h3 style="margin-bottom:12px;">📋 Последние операции</h3>
-                <div id="historyList">
-                    <div class="empty-state"><div class="icon">📭</div><p>История пуста</p></div>
-                </div>
+                <div id="historyList"><div class="empty-state"><div class="icon">📭</div><p>История пуста</p></div></div>
             </div>
 
             <!-- Экран Админа -->
             <div class="screen" id="screen-admin">
-                <h3 style="margin-bottom:12px;">⚙️ Панель администратора</h3>
-                <div class="admin-actions">
+                <div class="breadcrumbs" id="breadcrumbs"></div>
+                <h3 style="margin-bottom:12px;" id="adminTitle">📁 Категории инструментов</h3>
+                <div class="admin-actions" id="adminActions">
+                    <button class="btn-small" id="btnAddCategory">📁 Создать категорию</button>
                     <button class="btn-small" id="btnAddTool">➕ Добавить инструмент</button>
                     <button class="btn-small btn-outline" id="btnExportCSV">📥 Экспорт CSV</button>
                 </div>
-                <div style="overflow-x:auto;">
-                    <table class="admin-table">
-                        <thead><tr><th>Серийный №</th><th>Название</th><th>Статус</th><th>У кого</th><th></th></tr></thead>
-                        <tbody id="adminTableBody"></tbody>
-                    </table>
-                </div>
+                <div id="adminContent"></div>
             </div>
         </div>
 
-        <!-- Модальное окно добавления инструмента -->
+        <!-- Модальное окно: Добавление/редактирование инструмента -->
         <div class="modal-overlay" id="modalAddTool">
             <div class="modal">
-                <h3>➕ Добавить инструмент</h3>
+                <h3 id="modalToolTitle">➕ Добавить инструмент</h3>
+                <div class="form-group">
+                    <label>Категория</label>
+                    <select id="inputCategory"></select>
+                </div>
                 <div class="form-group">
                     <label>Серийный номер (QR-код)</label>
                     <div class="serial-input-group">
                         <input type="text" id="inputSerial" placeholder="SN-XXXXXX" maxlength="30">
                         <button class="btn-scan-serial" id="btnScanSerial" title="Сканировать QR-код">📷</button>
                     </div>
-                    <div class="serial-hint">Введите вручную или нажмите 📷 для сканирования</div>
+                    <div class="serial-hint">Введите вручную или нажмите 📷</div>
                 </div>
                 <div class="form-group">
                     <label>Название инструмента</label>
@@ -1045,12 +1042,29 @@
                     <label>Эмодзи-иконка</label>
                     <input type="text" id="inputIcon" placeholder="🔨" maxlength="4">
                 </div>
-                <button class="btn-submit" id="btnSubmitTool">✅ Сохранить инструмент</button>
+                <button class="btn-submit" id="btnSubmitTool">✅ Сохранить</button>
                 <button class="btn-cancel" id="btnCancelTool">Отмена</button>
             </div>
         </div>
 
-        <!-- Модальное окно сканирования серийного номера -->
+        <!-- Модальное окно: Создание категории -->
+        <div class="modal-overlay" id="modalAddCategory">
+            <div class="modal">
+                <h3>📁 Создать категорию</h3>
+                <div class="form-group">
+                    <label>Название категории</label>
+                    <input type="text" id="inputCatName" placeholder="Электроинструменты">
+                </div>
+                <div class="form-group">
+                    <label>Эмодзи-иконка</label>
+                    <input type="text" id="inputCatIcon" placeholder="🔌" maxlength="4">
+                </div>
+                <button class="btn-submit" id="btnSubmitCategory">✅ Создать</button>
+                <button class="btn-cancel" id="btnCancelCategory">Отмена</button>
+            </div>
+        </div>
+
+        <!-- Модальное окно: Сканирование серийного номера -->
         <div class="modal-overlay" id="modalScanSerial">
             <div class="modal">
                 <h3>📷 Сканируйте серийный номер</h3>
@@ -1066,27 +1080,33 @@
 
     <script>
         (function() {
-            // ==================== БАЗА ДАННЫХ ====================
-            const STORAGE_KEY = 'tooltracker_db';
+            const STORAGE_KEY = 'tooltracker_db_v3';
             const AUTH_KEY = 'tooltracker_auth';
 
             function getDefaultData() {
                 return {
                     users: [
                         { telegram_id: 987654321, username: 'admin_user', full_name: 'Сергей Админов',
-                            role: 'admin' },
+                        role: 'admin' },
                         { telegram_id: 123456789, username: 'ivan_petrov', full_name: 'Иван Петров',
-                        role: 'user' },
+                            role: 'user' },
+                    ],
+                    categories: [
+                        { id: 'cat_1', name: 'Электроинструменты', icon: '🔌' },
+                        { id: 'cat_2', name: 'Измерительные приборы', icon: '📐' },
+                        { id: 'cat_3', name: 'Ручной инструмент', icon: '🪛' },
                     ],
                     tools: [
-                        { serial: 'SN-775533', name: 'Перфоратор Bosch GBH 2-28', icon: '🔨', status: 'available',
-                            current_holder: null },
-                        { serial: 'SN-992211', name: 'Шуруповерт Makita DF333', icon: '🔩', status: 'available',
-                            current_holder: null },
-                        { serial: 'SN-448899', name: 'УШМ DeWALT 125мм', icon: '⚙️', status: 'available',
-                            current_holder: null },
-                        { serial: 'SN-112266', name: 'Лазерный нивелир Bosch', icon: '📐', status: 'taken',
-                            current_holder: 123456789 },
+                        { serial: 'SN-775533', name: 'Перфоратор Bosch GBH 2-28', icon: '🔨', category_id: 'cat_1',
+                            status: 'available', current_holder: null },
+                        { serial: 'SN-992211', name: 'Шуруповерт Makita DF333', icon: '🔩', category_id: 'cat_1',
+                            status: 'available', current_holder: null },
+                        { serial: 'SN-448899', name: 'УШМ DeWALT 125мм', icon: '⚙️', category_id: 'cat_1',
+                            status: 'available', current_holder: null },
+                        { serial: 'SN-112266', name: 'Лазерный нивелир Bosch', icon: '📐', category_id: 'cat_2',
+                            status: 'taken', current_holder: 123456789 },
+                        { serial: 'SN-556677', name: 'Набор отверток', icon: '🪛', category_id: 'cat_3',
+                            status: 'available', current_holder: null },
                     ],
                     transactions: [
                         { id: 1, tool_serial: 'SN-112266', user_id: 123456789, action: 'take',
@@ -1095,232 +1115,189 @@
                 };
             }
 
-            function loadData() {
-                const saved = localStorage.getItem(STORAGE_KEY);
-                if (saved) {
-                    try {
-                        const data = JSON.parse(saved);
-                        if (!data.tools[0] || data.tools[0].serial === undefined) return getDefaultData();
-                        return data;
-                    } catch (e) {}
-                }
-                const def = getDefaultData();
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(def));
-                return def;
-            }
+            function loadData() { const s = localStorage.getItem(STORAGE_KEY); if (s) try { const d = JSON.parse(
+                    s); if (d.categories) return d; } catch (e) {} const def = getDefaultData();
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(def)); return def; }
 
             function saveData() { localStorage.setItem(STORAGE_KEY, JSON.stringify(DB)); }
             let DB = loadData();
             let currentUser = null;
+            let currentAdminView = { type: 'categories', categoryId: null };
 
-            // ==================== DOM ====================
             const $ = (s) => document.querySelector(s);
             const $$ = (s) => document.querySelectorAll(s);
-            const loginScreen = $('#loginScreen');
-            const mainApp = $('#mainApp');
-            const loginError = $('#loginError');
-            const devSection = $('#devSection');
-            const userNameEl = $('#userName');
-            const userAvatarEl = $('#userAvatar');
-            const adminBadge = $('#adminBadge');
-            const tabAdmin = $('#tabAdmin');
-            const qrReader = $('#qr-reader');
-            const btnStopScan = $('#btnStopScan');
-            const toolCard = $('#toolCard');
-            const toolIcon = $('#toolIcon');
-            const toolName = $('#toolName');
-            const toolSerial = $('#toolSerial');
-            const statusBadge = $('#statusBadge');
-            const statusText = $('#statusText');
-            const holderInfo = $('#holderInfo');
-            const holderName = $('#holderName');
-            const btnTake = $('#btnTake');
-            const btnReturn = $('#btnReturn');
-            const btnBlocked = $('#btnBlocked');
-            const btnForceReturn = $('#btnForceReturn');
-            const historyList = $('#historyList');
-            const adminTableBody = $('#adminTableBody');
-            const toast = $('#toast');
-            const manualInput = $('#manualInput');
-            const modalAddTool = $('#modalAddTool');
-            const modalScanSerial = $('#modalScanSerial');
-            const inputSerial = $('#inputSerial');
-            const inputName = $('#inputName');
-            const inputIcon = $('#inputIcon');
-            let mainScanner = null;
-            let serialScanner = null;
-            let currentScannedTool = null;
-            let toastTimer = null;
+            const loginScreen = $('#loginScreen'),
+                mainApp = $('#mainApp'),
+                loginError = $('#loginError'),
+                devSection = $('#devSection');
+            const userNameEl = $('#userName'),
+                userAvatarEl = $('#userAvatar'),
+                adminBadge = $('#adminBadge'),
+                tabAdmin = $('#tabAdmin');
+            const qrReader = $('#qr-reader'),
+                btnStopScan = $('#btnStopScan');
+            const toolCard = $('#toolCard'),
+                toolIcon = $('#toolIcon'),
+                toolName = $('#toolName'),
+                toolSerial = $('#toolSerial'),
+                toolCategory = $('#toolCategory');
+            const statusBadge = $('#statusBadge'),
+                statusText = $('#statusText'),
+                holderInfo = $('#holderInfo'),
+                holderName = $('#holderName');
+            const btnTake = $('#btnTake'),
+                btnReturn = $('#btnReturn'),
+                btnBlocked = $('#btnBlocked'),
+                btnForceReturn = $('#btnForceReturn');
+            const historyList = $('#historyList'),
+                adminContent = $('#adminContent'),
+                adminActions = $('#adminActions'),
+                adminTitle = $('#adminTitle'),
+                breadcrumbs = $('#breadcrumbs');
+            const toast = $('#toast'),
+                manualInput = $('#manualInput');
+            const modalAddTool = $('#modalAddTool'),
+                modalAddCategory = $('#modalAddCategory'),
+                modalScanSerial = $('#modalScanSerial');
+            const inputCategory = $('#inputCategory'),
+                inputSerial = $('#inputSerial'),
+                inputName = $('#inputName'),
+                inputIcon = $('#inputIcon');
+            const inputCatName = $('#inputCatName'),
+                inputCatIcon = $('#inputCatIcon');
+            let mainScanner = null,
+                serialScanner = null,
+                currentScannedTool = null,
+                toastTimer = null;
+            let editingToolSerial = null;
 
-            // ==================== АНИМИРОВАННЫЕ ЧАСТИЦЫ ====================
-            function createParticles() {
-                const container = $('#particles');
-                if (!container) return;
-                container.innerHTML = '';
-                for (let i = 0; i < 20; i++) {
-                    const particle = document.createElement('div');
-                    particle.classList.add('particle');
-                    const size = Math.random() * 60 + 10;
-                    particle.style.width = size + 'px';
-                    particle.style.height = size + 'px';
-                    particle.style.left = Math.random() * 100 + '%';
-                    particle.style.top = Math.random() * 100 + '%';
-                    particle.style.animationDuration = (Math.random() * 15 + 10) + 's';
-                    particle.style.animationDelay = (Math.random() * 10) + 's';
-                    container.appendChild(particle);
-                }
-            }
+            // ==================== ЧАСТИЦЫ ====================
+            function createParticles() { const c = $('#particles'); if (!c) return;
+                c.innerHTML = ''; for (let i = 0; i < 20; i++) { const p = document.createElement('div');
+                    p.classList.add('particle'); const s = Math.random() * 60 + 10;
+                    p.style.width = s + 'px';
+                    p.style.height = s + 'px';
+                    p.style.left = Math.random() * 100 + '%';
+                    p.style.top = Math.random() * 100 + '%';
+                    p.style.animationDuration = (Math.random() * 15 + 10) + 's';
+                    p.style.animationDelay = (Math.random() * 10) + 's';
+                    c.appendChild(p); } }
 
-            // ==================== ФУНКЦИИ ====================
-            function showToast(message, type = '') {
-                clearTimeout(toastTimer);
-                toast.textContent = message;
-                toast.className = 'toast ' + type + ' show';
-                toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
-            }
+            // ==================== ТОСТ ====================
+            function showToast(m, t = '') { clearTimeout(toastTimer);
+                toast.textContent = m;
+                toast.className = 'toast ' + t + ' show';
+                toastTimer = setTimeout(() => toast.classList.remove('show'), 2500); }
 
-            function saveAuth() {
-                if (currentUser) localStorage.setItem(AUTH_KEY, JSON.stringify({ telegram_id: currentUser
-                        .telegram_id, timestamp: Date.now() }));
-            }
+            function saveAuth() { if (currentUser) localStorage.setItem(AUTH_KEY, JSON.stringify({ telegram_id: currentUser
+                        .telegram_id, timestamp: Date.now() })); }
 
             function clearAuth() { localStorage.removeItem(AUTH_KEY);
                 currentUser = null; }
 
-            function loginAs(user) {
-                currentUser = user;
-                const dbUser = DB.users.find(u => u.telegram_id === user.telegram_id);
-                if (dbUser) { dbUser.full_name = user.full_name;
-                    dbUser.username = user.username; } else DB.users.push(user);
+            function loginAs(u) { currentUser = u; const du = DB.users.find(x => x.telegram_id === u.telegram_id); if (
+                    du) { du.full_name = u.full_name;
+                    du.username = u.username; } else DB.users.push(u);
                 saveData();
                 saveAuth();
                 showMainApp();
-                showToast('✅ Добро пожаловать, ' + user.full_name + '!', 'success');
-            }
+                showToast('✅ Добро пожаловать, ' + u.full_name + '!', 'success'); }
 
-            function logout() {
-                if (confirm('Вы уверены, что хотите выйти?')) {
-                    if (mainScanner && mainScanner.isScanning) mainScanner.stop().catch(() => {});
-                    if (serialScanner && serialScanner.isScanning) serialScanner.stop().catch(() => {});
+            function logout() { if (confirm('Выйти?')) { if (mainScanner && mainScanner.isScanning) mainScanner.stop()
+                        .catch(() => {}); if (serialScanner && serialScanner.isScanning) serialScanner.stop()
+                    .catch(() => {});
                     mainScanner = null;
                     serialScanner = null;
                     clearAuth();
                     hideToolCard();
                     showLoginScreen();
-                    showToast('Вы вышли из системы');
-                }
-            }
+                    showToast('Вы вышли'); } }
 
-            function showLoginScreen() {
-                loginScreen.style.display = 'flex';
+            function showLoginScreen() { loginScreen.style.display = 'flex';
                 mainApp.classList.remove('active');
                 loginError.classList.remove('show');
                 devSection.style.display = isRunningInTelegram() ? 'none' : 'block';
-                createParticles();
-            }
+                createParticles(); }
 
-            function showMainApp() {
-                loginScreen.style.display = 'none';
+            function showMainApp() { loginScreen.style.display = 'none';
                 mainApp.classList.add('active');
                 updateUserUI();
                 renderAllTabs();
                 showScannerPlaceholder();
-                switchScreen('scan');
-            }
+                switchScreen('scan'); }
 
-            function updateUserUI() {
-                if (!currentUser) return;
+            function updateUserUI() { if (!currentUser) return;
                 userNameEl.textContent = currentUser.full_name;
                 userAvatarEl.textContent = currentUser.full_name.trim().charAt(0).toUpperCase() || '?';
                 adminBadge.style.display = currentUser.role === 'admin' ? 'inline' : 'none';
-                tabAdmin.style.display = currentUser.role === 'admin' ? 'block' : 'none';
-            }
+                tabAdmin.style.display = currentUser.role === 'admin' ? 'block' : 'none'; }
 
-            function isRunningInTelegram() {
-                return !!(window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe &&
-                    window.Telegram.WebApp.initDataUnsafe.user);
-            }
+            function isRunningInTelegram() { return !!(window.Telegram && window.Telegram.WebApp && window.Telegram
+                    .WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user); }
 
-            function authenticateViaTelegram() {
-                if (!isRunningInTelegram()) { loginError.classList.add('show');
-                    setTimeout(() => loginError.classList.remove('show'), 4000); return; }
-                try {
-                    const tg = window.Telegram.WebApp;
+            function authenticateViaTelegram() { if (!isRunningInTelegram()) { loginError.classList.add('show');
+                    setTimeout(() => loginError.classList.remove('show'), 4000); return; } try { const tg = window
+                        .Telegram.WebApp;
                     tg.ready();
-                    tg.expand();
-                    const u = tg.initDataUnsafe.user;
+                    tg.expand(); const u = tg.initDataUnsafe.user;
                     loginAs({ telegram_id: u.id, username: u.username || ('user_' + u.id), full_name: ((u
                             .first_name || '') + ' ' + (u.last_name || '')).trim() || u.username ||
-                        'User', role: 'user' });
-                } catch (e) { loginError.classList.add('show'); }
-            }
+                        'User', role: 'user' }); } catch (e) { loginError.classList.add('show'); } }
 
-            function checkSavedAuth() {
-                const saved = localStorage.getItem(AUTH_KEY);
-                if (saved) { try { const d = JSON.parse(saved); const u = DB.users.find(u => u
-                            .telegram_id === d.telegram_id); if (u) { currentUser = u; return true; } } catch (
-                        e) {} }
-                return false;
-            }
+            function checkSavedAuth() { const s = localStorage.getItem(AUTH_KEY); if (s) { try { const d = JSON.parse(
+                        s); const u = DB.users.find(x => x.telegram_id === d.telegram_id); if (u) { currentUser =
+                            u; return true; } } catch (e) {} } return false; }
 
             // ==================== СКАНЕР ====================
-            function showScannerPlaceholder() {
-                qrReader.innerHTML =
+            function showScannerPlaceholder() { qrReader.innerHTML =
                     `<div style="display:flex;align-items:center;justify-content:center;height:100%;flex-direction:column;cursor:pointer;background:#1e293b;" id="startScanBtn"><div style="font-size:64px;margin-bottom:12px;">📷</div><div style="color:white;font-weight:600;font-size:16px;">Нажмите, чтобы сканировать</div><div style="color:#94a3b8;font-size:13px;margin-top:4px;">QR-код с серийным номером</div></div>`;
                 btnStopScan.style.display = 'none';
-                document.getElementById('startScanBtn').addEventListener('click', startMainScanner);
-            }
-            async function startMainScanner() {
-                if (mainScanner) await stopMainScanner();
+                document.getElementById('startScanBtn').addEventListener('click', startMainScanner); }
+            async function startMainScanner() { if (mainScanner) await stopMainScanner();
                 qrReader.innerHTML = '<div id="qr-reader"></div>';
                 mainScanner = new Html5Qrcode("qr-reader");
-                btnStopScan.style.display = 'block';
-                try {
-                    await mainScanner.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 200,
-                            height: 200 }, aspectRatio: 1.0 }, (text) => { stopMainScanner();
+                btnStopScan.style.display = 'block'; try { await mainScanner.start({ facingMode: "environment" }, { fps: 10,
+                        qrbox: { width: 200, height: 200 }, aspectRatio: 1.0 }, (t) => { stopMainScanner();
                         showScannerPlaceholder();
-                        processCode(text.trim()); }, () => {});
-                } catch (err) { showToast('Ошибка доступа к камере', 'error');
-                    showScannerPlaceholder(); }
-            }
+                        processCode(t.trim()); }, () => {}); } catch (e) { showToast('Ошибка камеры',
+                    'error');
+                    showScannerPlaceholder(); } }
             async function stopMainScanner() { if (mainScanner && mainScanner.isScanning) try { await mainScanner
                     .stop(); } catch (e) {}
                 mainScanner = null;
                 btnStopScan.style.display = 'none'; }
 
-            function processCode(code) {
-                const tool = DB.tools.find(t => t.serial === code);
-                if (!tool) { showToast('Инструмент не найден: ' + code, 'error');
+            function processCode(code) { const tool = DB.tools.find(t => t.serial === code); if (!tool) { showToast(
+                        'Не найден: ' + code, 'error');
                     hideToolCard(); return; }
                 currentScannedTool = tool;
-                showToolCard(tool);
-            }
+                showToolCard(tool); }
 
-            function showToolCard(tool) {
-                toolCard.style.display = 'block';
+            function showToolCard(tool) { toolCard.style.display = 'block';
                 toolIcon.textContent = tool.icon || '🔧';
                 toolName.textContent = tool.name;
-                toolSerial.textContent = 'Серийный №: ' + tool.serial;
+                toolSerial.textContent = 'Серийный №: ' + tool.serial; const cat = DB.categories.find(c => c.id ===
+                    tool.category_id);
+                toolCategory.textContent = cat ? '📁 ' + cat.name : 'Без категории';
+                toolCategory.style.display = 'inline-block';
                 btnTake.style.display = 'none';
                 btnReturn.style.display = 'none';
                 btnBlocked.style.display = 'none';
                 btnForceReturn.style.display = 'none';
-                holderInfo.style.display = 'none';
-                if (tool.status === 'available') { statusBadge.className = 'status-badge status-available';
+                holderInfo.style.display = 'none'; if (tool.status === 'available') { statusBadge.className =
+                        'status-badge status-available';
                     statusText.textContent = '✅ На складе';
                     btnTake.style.display = 'block'; } else { statusBadge.className =
                         'status-badge status-taken';
-                    statusText.textContent = '❌ На руках'; const holder = DB.users.find(u => u
-                        .telegram_id === tool.current_holder); const name = holder ? holder.full_name :
-                        'Неизвестный'; if (tool.current_holder === currentUser.telegram_id) { holderInfo
-                        .style.display = 'block';
+                    statusText.textContent = '❌ На руках'; const h = DB.users.find(u => u.telegram_id === tool
+                        .current_holder); const nm = h ? h.full_name : 'Неизвестный'; if (tool
+                        .current_holder === currentUser.telegram_id) { holderInfo.style.display = 'block';
                         holderName.textContent = 'Вы';
                         btnReturn.style.display = 'block'; } else { holderInfo.style.display = 'block';
-                        holderName.textContent = name;
+                        holderName.textContent = nm;
                         btnBlocked.style.display = 'block'; if (currentUser.role === 'admin') btnForceReturn
                             .style.display = 'block'; } }
-                toolCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
+                toolCard.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
 
             function hideToolCard() { toolCard.style.display = 'none';
                 currentScannedTool = null; }
@@ -1331,7 +1308,7 @@
                 DB.transactions.push({ id: Date.now(), tool_serial: currentScannedTool.serial, user_id: currentUser
                         .telegram_id, action: 'take', timestamp: new Date().toISOString() });
                 saveData();
-                showToast('✅ Инструмент взят!', 'success');
+                showToast('✅ Взято!', 'success');
                 showToolCard(currentScannedTool);
                 renderAllTabs(); }
 
@@ -1342,7 +1319,7 @@
                 DB.transactions.push({ id: Date.now(), tool_serial: currentScannedTool.serial, user_id: currentUser
                         .telegram_id, action: 'return', timestamp: new Date().toISOString() });
                 saveData();
-                showToast('✅ Инструмент возвращен!', 'success');
+                showToast('✅ Возвращено!', 'success');
                 showToolCard(currentScannedTool);
                 renderAllTabs(); }
 
@@ -1351,107 +1328,242 @@
                 currentScannedTool.current_holder = null;
                 DB.transactions.push({ id: Date.now(), tool_serial: currentScannedTool.serial, user_id: currentUser
                         .telegram_id, action: 'return', timestamp: new Date().toISOString(),
-                    note: 'Принудительный возврат' });
+                    note: 'Принудительно' });
                 saveData();
-                showToast('⚡ Возвращено принудительно', 'success');
+                showToast('⚡ Возвращено', 'success');
                 showToolCard(currentScannedTool);
                 renderAllTabs(); }
 
-            function forceReturnBySerial(serial) { const tool = DB.tools.find(t => t.serial === serial); if (tool &&
-                    tool.status === 'taken') { tool.status = 'available';
-                    tool.current_holder = null;
-                    DB.transactions.push({ id: Date.now(), tool_serial: tool.serial, user_id: currentUser
-                            .telegram_id, action: 'return', timestamp: new Date().toISOString(),
-                        note: 'Принудительный возврат' });
+            function forceReturnBySerial(s) { const t = DB.tools.find(x => x.serial === s); if (t && t.status ===
+                    'taken') { t.status = 'available';
+                    t.current_holder = null;
+                    DB.transactions.push({ id: Date.now(), tool_serial: t.serial, user_id: currentUser.telegram_id,
+                        action: 'return', timestamp: new Date().toISOString(), note: 'Принудительно' });
                     saveData();
-                    showToast('⚡ Инструмент возвращен', 'success');
-                    renderAllTabs(); if (currentScannedTool && currentScannedTool.serial === serial) showToolCard(
-                        tool); } }
+                    showToast('⚡ Возвращено', 'success');
+                    renderAllTabs(); if (currentScannedTool && currentScannedTool.serial === s) showToolCard(
+                    t); } }
 
-            function exportCSV() { let csv = 'Дата;Серийный номер;Инструмент;Пользователь;Действие\n';
-                [...DB.transactions].reverse().forEach(t => { const tool = DB.tools.find(tl => tl.serial === t
-                        .tool_serial); const user = DB.users.find(u => u.telegram_id === t.user_id);
+            function exportCSV() { let csv = 'Дата;Серийный№;Инструмент;Категория;Пользователь;Действие\n';
+                [...DB.transactions].reverse().forEach(t => { const tool = DB.tools.find(x => x.serial === t
+                        .tool_serial); const user = DB.users.find(u => u.telegram_id === t.user_id); const cat =
+                        tool ? DB.categories.find(c => c.id === tool.category_id) : null;
                     csv +=
-                        `${new Date(t.timestamp).toLocaleString()};${t.tool_serial};${tool?.name||''};${user?.full_name||t.user_id};${t.action==='take'?'Взял':'Вернул'}\n`; });
-                const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
-                const url = URL.createObjectURL(blob);
+                        `${new Date(t.timestamp).toLocaleString()};${t.tool_serial};${tool?.name||''};${cat?.name||''};${user?.full_name||t.user_id};${t.action==='take'?'Взял':'Вернул'}\n`; });
+                const b = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+                const u = URL.createObjectURL(b);
                 const a = document.createElement('a');
-                a.href = url;
-                a.download = 'tooltracker_report.csv';
+                a.href = u;
+                a.download = 'tools_report.csv';
                 a.click();
-                URL.revokeObjectURL(url);
-                showToast('📥 Отчет скачан', 'success'); }
+                URL.revokeObjectURL(u);
+                showToast('📥 Скачан', 'success'); }
+
+            // ==================== КАТЕГОРИИ ====================
+            function openAddCategoryModal() { inputCatName.value = '';
+                inputCatIcon.value = '📁';
+                modalAddCategory.classList.add('active');
+                inputCatName.focus(); }
+
+            function closeAddCategoryModal() { modalAddCategory.classList.remove('active'); }
+
+            function submitCategory() { const name = inputCatName.value.trim(); const icon = inputCatIcon.value.trim() ||
+                    '📁'; if (!name) { showToast('Введите название', 'error'); return; } const id = 'cat_' + Date
+                    .now();
+                DB.categories.push({ id, name, icon });
+                saveData();
+                closeAddCategoryModal();
+                showToast('✅ Категория создана', 'success');
+                renderAdminView(); }
+
+            function deleteCategory(catId) { if (!confirm('Удалить категорию? Инструменты станут без категории.'))
+                return; const tools = DB.tools.filter(t => t.category_id === catId);
+                tools.forEach(t => t.category_id = null);
+                DB.categories = DB.categories.filter(c => c.id !== catId);
+                saveData();
+                showToast('Категория удалена', 'success');
+                renderAdminView(); }
 
             // ==================== ДОБАВЛЕНИЕ ИНСТРУМЕНТА ====================
-            function openAddToolModal() { inputSerial.value = '';
+            function openAddToolModal(categoryId = null) { editingToolSerial = null;
+                $('#modalToolTitle').textContent = '➕ Добавить инструмент';
+                inputCategory.innerHTML = '<option value="">Без категории</option>' + DB.categories.map(c =>
+                    `<option value="${c.id}" ${c.id===categoryId?'selected':''}>${c.icon} ${c.name}</option>`
+                    ).join('');
+                inputSerial.value = '';
                 inputName.value = '';
                 inputIcon.value = '🔧';
                 modalAddTool.classList.add('active');
                 inputName.focus(); }
 
-            function closeAddToolModal() { modalAddTool.classList.remove('active'); }
+            function openEditToolModal(serial) { const tool = DB.tools.find(t => t.serial === serial); if (!tool) return;
+                editingToolSerial = serial;
+                $('#modalToolTitle').textContent = '✏️ Редактировать инструмент';
+                inputCategory.innerHTML = '<option value="">Без категории</option>' + DB.categories.map(c =>
+                    `<option value="${c.id}" ${c.id===tool.category_id?'selected':''}>${c.icon} ${c.name}</option>`
+                    ).join('');
+                inputSerial.value = tool.serial;
+                inputName.value = tool.name;
+                inputIcon.value = tool.icon;
+                modalAddTool.classList.add('active'); }
 
-            function submitNewTool() { const serial = inputSerial.value.trim(); const name = inputName.value.trim();
-                const icon = inputIcon.value.trim() || '🔧'; if (!serial) { showToast('Введите серийный номер',
-                    'error');
-                    inputSerial.focus(); return; } if (!name) { showToast('Введите название инструмента', 'error');
-                    inputName.focus(); return; } if (DB.tools.find(t => t.serial === serial)) { showToast(
-                        'Инструмент с таким серийным номером уже существует!', 'error');
-                    inputSerial.focus(); return; }
-                DB.tools.push({ serial, name, icon, status: 'available', current_holder: null });
+            function closeAddToolModal() { modalAddTool.classList.remove('active');
+                editingToolSerial = null; }
+
+            function submitTool() { const catId = inputCategory.value || null; const serial = inputSerial.value.trim();
+                const name = inputName.value.trim(); const icon = inputIcon.value.trim() || '🔧'; if (!serial) { showToast(
+                        'Введите серийный номер', 'error'); return; } if (!name) { showToast(
+                        'Введите название', 'error'); return; } if (editingToolSerial) { const tool = DB.tools.find(
+                        t => t.serial === editingToolSerial); if (tool) { if (serial !== editingToolSerial && DB
+                        .tools.find(t => t.serial === serial)) { showToast('Такой номер уже есть!',
+                        'error'); return; }
+                    tool.serial = serial;
+                    tool.name = name;
+                    tool.icon = icon;
+                    tool.category_id = catId; } } else { if (DB.tools.find(t => t.serial === serial)) { showToast(
+                        'Инструмент с таким номером уже существует!', 'error'); return; }
+                DB.tools.push({ serial, name, icon, category_id: catId, status: 'available', current_holder: null }); }
                 saveData();
                 closeAddToolModal();
-                showToast('✅ Инструмент добавлен: ' + serial, 'success');
+                showToast('✅ Сохранено!', 'success');
+                renderAdminView();
                 renderAllTabs(); }
 
+            function deleteTool(serial) { if (!confirm('Удалить инструмент ' + serial + '?')) return;
+                DB.tools = DB.tools.filter(t => t.serial !== serial);
+                saveData();
+                showToast('Удален', 'success');
+                renderAdminView(); }
+
+            // ==================== СКАНЕР СЕРИЙНОГО НОМЕРА ====================
             function openSerialScanner() { modalScanSerial.classList.add('active');
                 setTimeout(() => startSerialScanner(), 300); }
 
-            function closeSerialScanner() { if (serialScanner && serialScanner.isScanning) serialScanner.stop()
-                    .catch(() => {});
+            function closeSerialScanner() { if (serialScanner && serialScanner.isScanning) serialScanner.stop().catch(
+                    () => {});
                 serialScanner = null;
                 modalScanSerial.classList.remove('active'); }
             async function startSerialScanner() { document.getElementById('serial-qr-reader').innerHTML = '';
                 serialScanner = new Html5Qrcode("serial-qr-reader"); try { await serialScanner.start({ facingMode: "environment" }, { fps: 10,
-                        qrbox: { width: 200, height: 200 }, aspectRatio: 1.0 }, (text) => { inputSerial.value =
-                        text.trim();
+                        qrbox: { width: 200, height: 200 }, aspectRatio: 1.0 }, (t) => { inputSerial.value = t
+                        .trim();
                     closeSerialScanner();
-                    showToast('✅ Серийный номер считан!', 'success'); }, () => {}); } catch (err) { showToast(
-                        'Ошибка камеры', 'error');
+                    showToast('✅ Считано!', 'success'); }, () => {}); } catch (e) { showToast(
+                    'Ошибка камеры', 'error');
                     closeSerialScanner(); } }
 
-            function renderAllTabs() { renderHistory();
-                renderAdminTable(); }
+            // ==================== АДМИН-ПАНЕЛЬ ====================
+            function renderAdminView() { if (currentAdminView.type === 'category') { renderCategoryDetail(currentAdminView
+                    .categoryId); } else { renderCategoriesList(); } }
+
+            function renderCategoriesList() { currentAdminView = { type: 'categories', categoryId: null };
+                adminTitle.textContent = '📁 Категории инструментов';
+                breadcrumbs.innerHTML = '';
+                adminActions.innerHTML = `
+                    <button class="btn-small" id="btnAddCategory">📁 Создать категорию</button>
+                    <button class="btn-small" id="btnAddTool">➕ Добавить инструмент</button>
+                    <button class="btn-small btn-outline" id="btnExportCSV">📥 Экспорт CSV</button>`;
+                document.getElementById('btnAddCategory').addEventListener('click', openAddCategoryModal);
+                document.getElementById('btnAddTool').addEventListener('click', () => openAddToolModal());
+                document.getElementById('btnExportCSV').addEventListener('click', exportCSV); let html = ''; if (DB
+                    .categories.length === 0) { html =
+                        '<div class="empty-state"><div class="icon">📁</div><p>Нет категорий</p></div>'; } else {
+                    DB.categories.forEach(cat => { const count = DB.tools.filter(t => t.category_id === cat.id)
+                            .length;
+                        html += `
+                    <div class="category-section">
+                        <div class="category-header" data-cat-id="${cat.id}">
+                            <span class="cat-icon">${cat.icon}</span>
+                            <span class="cat-name">${cat.name}</span>
+                            <span class="cat-count">${count} инстр.</span>
+                            <span class="cat-toggle">▶</span>
+                        </div>
+                    </div>`; }); } const noCat = DB.tools.filter(t => !t.category_id).length; if (noCat > 0) {
+                    html += `
+                    <div class="category-section" style="margin-top:12px;">
+                        <div class="category-header" style="opacity:0.7;" data-cat-id="">
+                            <span class="cat-icon">📦</span>
+                            <span class="cat-name">Без категории</span>
+                            <span class="cat-count">${noCat} инстр.</span>
+                            <span class="cat-toggle">▶</span>
+                        </div>
+                    </div>`; }
+                adminContent.innerHTML = html;
+                document.querySelectorAll('.category-header').forEach(h => { h.addEventListener('click', () => {
+                        const catId = h.dataset.catId;
+                        openCategoryDetail(catId); }); }); }
+
+            function openCategoryDetail(catId) { if (catId === '') { currentAdminView = { type: 'category',
+                    categoryId: '' }; renderCategoryDetail(''); return; }
+                currentAdminView = { type: 'category', categoryId: catId };
+                renderCategoryDetail(catId); }
+
+            function renderCategoryDetail(catId) { let cat = null; if (catId) cat = DB.categories.find(c => c.id ===
+                    catId);
+                adminTitle.textContent = cat ? `${cat.icon} ${cat.name}` : '📦 Без категории';
+                breadcrumbs.innerHTML =
+                    `<span id="backToCategories">📁 Все категории</span> <span class="sep">›</span> ${cat ? cat.name : 'Без категории'}`;
+                document.getElementById('backToCategories').addEventListener('click', renderCategoriesList);
+                adminActions.innerHTML = `
+                    <button class="btn-small" id="btnAddToolHere">➕ Добавить инструмент</button>
+                    <button class="btn-small" id="btnAddCategory">📁 Создать категорию</button>
+                    ${catId ? `<button class="btn-small btn-small-danger" id="btnDeleteCat">🗑 Удалить категорию</button>` : ''}
+                    <button class="btn-small btn-outline" id="btnExportCSV">📥 Экспорт CSV</button>`;
+                document.getElementById('btnAddToolHere').addEventListener('click', () => openAddToolModal(catId ||
+                    null));
+                document.getElementById('btnAddCategory').addEventListener('click', openAddCategoryModal);
+                document.getElementById('btnExportCSV').addEventListener('click', exportCSV); if (catId) document
+                    .getElementById('btnDeleteCat').addEventListener('click', () => { deleteCategory(catId);
+                        renderCategoriesList(); }); const tools = DB.tools.filter(t => (catId === '' ? !t.category_id :
+                        t.category_id === catId)); if (tools.length === 0) { adminContent.innerHTML =
+                        '<div class="empty-state"><div class="icon">📭</div><p>Нет инструментов</p></div>'; return; }
+                adminContent.innerHTML = `
+                <div class="category-section"><div class="category-tools open">
+                    <table class="admin-table">
+                        <thead><tr><th>Серийный №</th><th>Название</th><th>Статус</th><th>У кого</th><th></th></tr></thead>
+                        <tbody>${tools.map(t => { const h = t.current_holder ? DB.users.find(u => u.telegram_id === t.current_holder) : null; return `
+                            <tr>
+                                <td><code>${t.serial}</code></td>
+                                <td>${t.icon} ${t.name}</td>
+                                <td><span class="status-dot ${t.status==='available'?'dot-green':'dot-red'}"></span>${t.status==='available'?'Склад':'Выдан'}</td>
+                                <td>${h ? h.full_name : '—'}</td>
+                                <td style="white-space:nowrap;">
+                                    <button class="btn-small btn-outline" data-edit="${t.serial}" style="margin-right:4px;">✏️</button>
+                                    ${t.status==='taken' && currentUser.role==='admin' ? `<button class="btn-small btn-outline" data-force="${t.serial}" style="margin-right:4px;">↩</button>` : ''}
+                                    <button class="btn-small btn-small-danger" data-del="${t.serial}">🗑</button>
+                                </td>
+                            </tr>`; }).join('')}</tbody>
+                    </table>
+                </div></div>`;
+                adminContent.querySelectorAll('[data-edit]').forEach(b => b.addEventListener('click', () =>
+                    openEditToolModal(b.dataset.edit)));
+                adminContent.querySelectorAll('[data-force]').forEach(b => b.addEventListener('click', () =>
+                    forceReturnBySerial(b.dataset.force)));
+                adminContent.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', () => deleteTool(
+                    b.dataset.del))); }
+
+            // ==================== ОТРИСОВКА ====================
+            function renderAllTabs() { renderHistory(); if (currentUser && currentUser.role === 'admin')
+            renderAdminView(); }
 
             function renderHistory() { const tx = DB.transactions.slice().reverse().slice(0, 30); if (!tx.length) { historyList
                     .innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>История пуста</p></div>'; return; }
-                historyList.innerHTML = tx.map(t => { const tool = DB.tools.find(tl => tl.serial === t.tool_serial); const
+                historyList.innerHTML = tx.map(t => { const tool = DB.tools.find(x => x.serial === t.tool_serial); const
                         user = DB.users.find(u => u.telegram_id === t.user_id); const isTake = t.action === 'take'; return `
                     <div class="history-item">
                         <div class="history-icon ${isTake ? 'icon-take' : 'icon-return'}">${isTake ? '🤚' : '✅'}</div>
                         <div class="history-details">
                             <div class="history-action">${isTake ? 'Взял' : 'Вернул'}: ${tool?.name || t.tool_serial}</div>
-                            <div class="history-tool">${user?.full_name || 'ID: '+t.user_id} · ${t.tool_serial}</div>
+                            <div class="history-tool">${user?.full_name || 'ID:'+t.user_id} · ${t.tool_serial}</div>
                             <div class="history-time">${new Date(t.timestamp).toLocaleString()}</div>
                         </div>
                     </div>`; }).join(''); }
 
-            function renderAdminTable() { adminTableBody.innerHTML = DB.tools.map(t => { const holder = t.current_holder ? DB
-                        .users.find(u => u.telegram_id === t.current_holder) : null; return `
-                    <tr>
-                        <td><code>${t.serial}</code></td>
-                        <td>${t.icon} ${t.name}</td>
-                        <td><span class="status-dot ${t.status==='available'?'dot-green':'dot-red'}"></span>${t.status==='available'?'Склад':'Выдан'}</td>
-                        <td>${holder ? holder.full_name : '—'}</td>
-                        <td>${t.status==='taken' && currentUser.role==='admin' ? `<button class="btn-small btn-outline" data-force-serial="${t.serial}">Вернуть</button>` : ''}</td>
-                    </tr>`; }).join('');
-                adminTableBody.querySelectorAll('[data-force-serial]').forEach(b => b.addEventListener('click', () =>
-                    forceReturnBySerial(b.dataset.forceSerial))); }
-
-            function switchScreen(name) { $$('.screen').forEach(s => s.classList.remove('active')); const t = $('#screen-' +
-                    name); if (t) t.classList.add('active');
-                $$('.tab').forEach(t => t.classList.remove('active')); const tab = document.querySelector(
-                    `.tab[data-screen="${name}"]`); if (tab) tab.classList.add('active'); if (name !== 'scan') {
+            function switchScreen(name) { $$('.screen').forEach(s => s.classList.remove('active')); const t = $(
+                    '#screen-' + name); if (t) t.classList.add('active');
+                $$('.tab').forEach(t => t.classList.remove('active')); const tb = document.querySelector(
+                    `.tab[data-screen="${name}"]`); if (tb) tb.classList.add('active'); if (name ===
+                    'admin' && currentUser && currentUser.role === 'admin') renderAdminView(); if (name !== 'scan') {
                     stopMainScanner();
                     showScannerPlaceholder(); } }
 
@@ -1461,8 +1573,8 @@
                 $('#btnLogout').addEventListener('click', logout);
                 $('#btnDevUser').addEventListener('click', () => loginAs({ telegram_id: 123456789,
                     username: 'ivan_petrov', full_name: 'Иван Петров', role: 'user' }));
-                $('#btnDevAdmin').addEventListener('click', () => loginAs({ telegram_id: 680208277,
-                    username: 'admin_user', full_name: 'Игнат', role: 'admin' }));
+                $('#btnDevAdmin').addEventListener('click', () => loginAs({ telegram_id: 987654321,
+                    username: 'admin_user', full_name: 'Сергей Админов', role: 'admin' }));
                 $$('.tab').forEach(t => t.addEventListener('click', () => switchScreen(t.dataset.screen)));
                 btnTake.addEventListener('click', takeTool);
                 btnReturn.addEventListener('click', returnTool);
@@ -1473,21 +1585,26 @@
                         c);
                         manualInput.value = ''; } });
                 manualInput.addEventListener('keypress', e => { if (e.key === 'Enter') $('#btnManual').click(); });
-                $('#btnAddTool').addEventListener('click', openAddToolModal);
-                $('#btnExportCSV').addEventListener('click', exportCSV);
-                $('#btnSubmitTool').addEventListener('click', submitNewTool);
+                $('#btnSubmitTool').addEventListener('click', submitTool);
                 $('#btnCancelTool').addEventListener('click', closeAddToolModal);
                 $('#btnScanSerial').addEventListener('click', openSerialScanner);
                 $('#btnCancelScan').addEventListener('click', closeSerialScanner);
-                modalAddTool.addEventListener('click', e => { if (e.target === modalAddTool) closeAddToolModal(); });
+                $('#btnSubmitCategory').addEventListener('click', submitCategory);
+                $('#btnCancelCategory').addEventListener('click', closeAddCategoryModal);
+                modalAddTool.addEventListener('click', e => { if (e.target === modalAddTool) closeAddToolModal
+                (); });
+                modalAddCategory.addEventListener('click', e => { if (e.target === modalAddCategory)
+                    closeAddCategoryModal(); });
                 modalScanSerial.addEventListener('click', e => { if (e.target === modalScanSerial)
                     closeSerialScanner(); });
                 [inputSerial, inputName, inputIcon].forEach(i => i.addEventListener('keypress', e => { if (e.key ===
-                        'Enter') submitNewTool(); }));
+                        'Enter') submitTool(); }));
+                [inputCatName, inputCatIcon].forEach(i => i.addEventListener('keypress', e => { if (e.key ===
+                        'Enter') submitCategory(); }));
                 if (checkSavedAuth()) showMainApp();
                 else if (isRunningInTelegram()) authenticateViaTelegram();
                 else showLoginScreen();
-                console.log('🔧 ToolTracker v2.0 готов');
+                console.log('🔧 ToolTracker v3.0 с категориями готов');
             }
             init();
         })();
