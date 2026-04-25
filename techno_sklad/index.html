@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>ToolTrack Pro - Учёт инструмента</title>
-  <!-- Подключаем библиотеку для QR-сканирования -->
-  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js">
+  </script>
   <style>
     * {
       margin: 0;
@@ -24,9 +24,9 @@
     }
     .phone-frame {
       width: 100%;
-      max-width: 400px;
-      height: 90vh;
-      max-height: 780px;
+      max-width: 420px;
+      height: 92vh;
+      max-height: 820px;
       background: #ffffff;
       border-radius: 44px;
       overflow: hidden;
@@ -43,9 +43,18 @@
       align-items: center;
       justify-content: space-between;
       font-weight: 600;
-      font-size: 1.1rem;
+      font-size: 1rem;
       border-bottom: 1px solid #334155;
       flex-shrink: 0;
+    }
+    .logout-btn {
+      background: #ef4444;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      cursor: pointer;
     }
     .screen {
       flex: 1;
@@ -57,16 +66,18 @@
     .screen.active {
       display: block;
     }
-    /* Анимация авторизации */
+    
+    /* Стили авторизации */
     .login-screen {
       background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%);
-      display: flex;
+      display: none;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
       color: white;
       padding: 30px;
+      flex: 1;
     }
     .login-screen.active {
       display: flex;
@@ -82,13 +93,14 @@
       margin-bottom: 24px;
       animation: float 3s ease-in-out infinite;
       box-shadow: 0 20px 35px rgba(251,191,36,0.4);
+      font-size: 40px;
     }
     @keyframes float {
       0% { transform: translateY(0px); }
       50% { transform: translateY(-12px); }
       100% { transform: translateY(0px); }
     }
-    .login-input {
+    .login-input, .login-select {
       width: 100%;
       padding: 16px;
       margin: 8px 0;
@@ -99,6 +111,10 @@
       font-size: 16px;
       outline: none;
       backdrop-filter: blur(10px);
+    }
+    .login-select option {
+      background: #1e293b;
+      color: white;
     }
     .login-btn {
       background: #fbbf24;
@@ -116,23 +132,26 @@
     .login-btn:active { background: #f59e0b; transform: scale(0.97); }
     
     .bottom-nav {
-      display: flex;
+      display: none;
       background: white;
       border-top: 1px solid #e2e8f0;
       flex-shrink: 0;
+    }
+    .bottom-nav.visible {
+      display: flex;
     }
     .nav-item {
       flex: 1;
       padding: 10px 4px;
       text-align: center;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
       color: #64748b;
       cursor: pointer;
       transition: 0.2s;
     }
     .nav-item.active { color: #0f172a; }
-    .nav-icon { font-size: 22px; display: block; margin-bottom: 2px; }
+    .nav-icon { font-size: 20px; display: block; margin-bottom: 2px; }
     
     .card {
       background: white;
@@ -145,95 +164,215 @@
       background: #0f172a;
       color: white;
       border: none;
-      padding: 14px;
+      padding: 12px 16px;
       border-radius: 16px;
       font-weight: 600;
       width: 100%;
       margin-top: 8px;
       cursor: pointer;
+      font-size: 14px;
     }
     .btn-outline {
       background: white;
       border: 1.5px solid #0f172a;
       color: #0f172a;
     }
-    input, select {
+    .btn-small {
+      width: auto;
+      padding: 8px 14px;
+      font-size: 12px;
+    }
+    input, select, textarea {
       width: 100%;
-      padding: 14px;
-      margin: 6px 0 12px;
+      padding: 12px;
+      margin: 6px 0 10px;
       border-radius: 14px;
       border: 1px solid #cbd5e1;
       background: #f1f5f9;
-      font-size: 16px;
+      font-size: 15px;
     }
     .badge {
       background: #dbeafe;
       color: #1e40af;
-      padding: 4px 12px;
+      padding: 3px 10px;
       border-radius: 30px;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
+      display: inline-block;
     }
-    hr { margin: 16px 0; }
+    .badge-success { background: #dcfce7; color: #166534; }
+    .badge-warning { background: #fef3c7; color: #92400e; }
+    .badge-danger { background: #fee2e2; color: #991b1b; }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-top: 8px;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    th {
+      background: #f1f5f9;
+      padding: 10px 6px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 12px;
+      color: #475569;
+    }
+    td {
+      padding: 10px 6px;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 12px;
+    }
+    .tree-category {
+      background: #f1f5f9;
+      padding: 12px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .tree-category.active-tree {
+      background: #0f172a;
+      color: white;
+    }
+    .tree-children {
+      margin-left: 8px;
+      margin-bottom: 12px;
+      display: none;
+    }
+    .tree-children.open {
+      display: block;
+    }
+    .form-row {
+      display: flex;
+      gap: 8px;
+    }
+    .form-row > * {
+      flex: 1;
+    }
+    hr { margin: 16px 0; border-color: #e2e8f0; }
+    .section-title {
+      font-weight: 700;
+      font-size: 18px;
+      margin-bottom: 12px;
+      color: #0f172a;
+    }
   </style>
 </head>
 <body>
 <div class="phone-frame" id="app">
-  <div class="app-header" id="headerTitle">ToolTrack</div>
+  <div class="app-header" id="headerTitle">
+    <span>🔧 ToolTrack Pro</span>
+    <button class="logout-btn" id="logoutBtn" style="display:none;">Выйти</button>
+  </div>
 
-  <!-- Экраны -->
+  <!-- Экран авторизации -->
   <div class="login-screen active" id="loginScreen">
     <div class="logo-animation">🔧</div>
     <h2 style="margin-bottom:6px;">Учёт инструмента</h2>
     <p style="opacity:0.8; margin-bottom:20px;">Войдите под своим именем</p>
     <input class="login-input" id="loginName" placeholder="Имя пользователя" autocomplete="off">
-    <select class="login-input" id="loginRole" style="color:white; background:rgba(255,255,255,0.1);">
-      <option value="worker" style="color:black;">Сотрудник</option>
-      <option value="foreman" style="color:black;">Бригадир</option>
-      <option value="admin" style="color:black;">Администратор</option>
+    <input class="login-input" id="loginEmail" placeholder="Email" type="email" autocomplete="off">
+    <input class="login-input" id="loginPhone" placeholder="Телефон" type="tel" autocomplete="off">
+    <select class="login-select" id="loginRole">
+      <option value="worker">Сотрудник</option>
+      <option value="foreman">Бригадир</option>
+      <option value="admin">Администратор</option>
     </select>
-    <button class="login-btn" id="loginBtn">Войти</button>
+    <button class="login-btn" id="loginBtn">Войти / Зарегистрироваться</button>
     <p style="margin-top:16px; font-size:13px; opacity:0.6;">Демо: admin / Администратор</p>
   </div>
 
+  <!-- Экран Сканер -->
   <div class="screen" id="scannerScreen">
-    <h3>📷 Сканер / Поиск</h3>
+    <h3 class="section-title">📷 Сканер / Поиск инструмента</h3>
     <div id="qr-reader" style="width:100%; border-radius:20px; overflow:hidden; margin-bottom:12px;"></div>
-    <button class="btn-outline btn" id="stopScannerBtn" style="display:none;">Остановить сканер</button>
+    <button class="btn-outline btn" id="stopScannerBtn" style="display:none;">⏹️ Остановить сканер</button>
     <input type="text" id="manualSerialInput" placeholder="Или введите серийный номер вручную">
     <button class="btn" id="searchManualBtn">🔍 Найти и взять</button>
     <div id="scanResult" class="card" style="margin-top:12px;"></div>
+    <div style="margin-top:16px;">
+      <button class="btn btn-outline" id="returnToolBtn" style="display:none;">📥 Вернуть инструмент</button>
+    </div>
   </div>
 
-  <div class="screen" id="historyScreen"><h3>📋 История</h3><div id="historyList"></div></div>
-  <div class="screen" id="employeesScreen"><h3>👥 Сотрудники</h3><div id="employeesList"></div></div>
+  <!-- Экран История -->
+  <div class="screen" id="historyScreen">
+    <h3 class="section-title">📋 История операций</h3>
+    <div id="historyList"></div>
+  </div>
+
+  <!-- Экран Сотрудники -->
+  <div class="screen" id="employeesScreen">
+    <h3 class="section-title">👥 Сотрудники</h3>
+    <div style="overflow-x:auto;">
+      <table id="employeesTable">
+        <thead>
+          <tr>
+            <th>Имя</th>
+            <th>Должность</th>
+            <th>Email</th>
+            <th>Телефон</th>
+            <th>Дата регистрации</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Экран Админ -->
   <div class="screen" id="adminScreen">
-    <h3>⚙️ Администрирование</h3>
+    <h3 class="section-title">⚙️ Администрирование</h3>
+    
+    <!-- Создание категории -->
     <div class="card">
-      <strong>➕ Категория</strong>
+      <strong>➕ Новая категория</strong>
       <input id="categoryName" placeholder="Название категории">
       <button class="btn" id="addCategoryBtn">Создать категорию</button>
     </div>
+    
+    <!-- Добавление инструмента -->
     <div class="card">
-      <strong>🛠️ Инструмент</strong>
+      <strong>🛠️ Добавить инструмент</strong>
       <select id="toolCategorySelect"></select>
-      <input id="toolName" placeholder="Название инструмента">
-      <input id="toolSerial" placeholder="Серийный номер (QR)">
+      <input id="toolName" placeholder="Наименование инструмента">
+      <div class="form-row">
+        <input id="toolSerial" placeholder="Серийный номер">
+        <button class="btn btn-small" id="scanSerialBtn" style="margin-top:6px;">📷 Скан</button>
+      </div>
       <button class="btn" id="addToolBtn">Добавить инструмент</button>
     </div>
+    
+    <!-- Назначение бригадира -->
     <div class="card">
       <strong>👑 Назначить бригадира</strong>
       <select id="promoteUserSelect"></select>
       <button class="btn" id="promoteToForemanBtn">Назначить бригадиром</button>
     </div>
-    <div style="display:flex; gap:8px;">
+    
+    <!-- Дерево категорий и инструментов -->
+    <div class="card">
+      <strong>📂 Категории и инструменты</strong>
+      <div id="categoryTree"></div>
+    </div>
+    
+    <!-- Импорт/Экспорт -->
+    <div style="display:flex; gap:8px; margin-top:12px;">
       <button class="btn-outline btn" id="exportCsvBtn">📤 Экспорт CSV</button>
       <button class="btn-outline btn" id="importCsvBtn">📥 Импорт CSV</button>
     </div>
     <input type="file" id="csvFileInput" accept=".csv" style="display:none;">
   </div>
 
-  <div class="bottom-nav" id="bottomNav" style="display:none;">
+  <!-- Нижняя навигация -->
+  <div class="bottom-nav" id="bottomNav">
     <div class="nav-item" data-screen="scanner"><span class="nav-icon">📷</span>Сканер</div>
     <div class="nav-item" data-screen="history"><span class="nav-icon">🕒</span>История</div>
     <div class="nav-item" data-screen="employees" id="navEmployees"><span class="nav-icon">👥</span>Сотрудники</div>
@@ -243,23 +382,25 @@
 
 <script>
   (function() {
-    // ---------- БАЗА ДАННЫХ (IndexedDB) ----------
     const DB_NAME = "ToolTrackDB";
     let db;
     let currentUser = null;
     let html5QrCode = null;
+    let scanningForSerial = false; // флаг для кнопки "Скан" в админке
 
+    // ---------- БАЗА ДАННЫХ ----------
     function openDB() {
       return new Promise((resolve, reject) => {
-        const request = indexedDB.open(DB_NAME, 2);
+        const request = indexedDB.open(DB_NAME, 3);
         request.onupgradeneeded = (e) => {
           const db = e.target.result;
           if (!db.objectStoreNames.contains('users')) {
-            db.createObjectStore('users', { keyPath: 'username' });
+            const userStore = db.createObjectStore('users', { keyPath: 'username' });
+            userStore.createIndex('role', 'role', { unique: false });
           }
           if (!db.objectStoreNames.contains('tools')) {
-            const store = db.createObjectStore('tools', { keyPath: 'serial' });
-            store.createIndex('category', 'category', { unique: false });
+            const toolStore = db.createObjectStore('tools', { keyPath: 'serial' });
+            toolStore.createIndex('category', 'category', { unique: false });
           }
           if (!db.objectStoreNames.contains('categories')) {
             db.createObjectStore('categories', { keyPath: 'name' });
@@ -276,23 +417,26 @@
     }
 
     async function seedData() {
-      const tx = db.transaction(['users','categories','tools'], 'readwrite');
+      const tx = db.transaction(['users','categories','tools','transactions'], 'readwrite');
       const usersStore = tx.objectStore('users');
       const catStore = tx.objectStore('categories');
       const toolsStore = tx.objectStore('tools');
       
       if (!(await getOne(usersStore, 'admin'))) {
-        await usersStore.put({ username: 'admin', role: 'admin' });
-        await usersStore.put({ username: 'foreman1', role: 'foreman' });
-        await usersStore.put({ username: 'worker1', role: 'worker' });
+        await usersStore.put({ username: 'admin', role: 'admin', email: 'admin@tooltrack.ru', phone: '+79000000001', registeredAt: new Date().toISOString() });
+        await usersStore.put({ username: 'foreman1', role: 'foreman', email: 'foreman1@tooltrack.ru', phone: '+79000000002', registeredAt: new Date().toISOString() });
+        await usersStore.put({ username: 'worker1', role: 'worker', email: 'worker1@tooltrack.ru', phone: '+79000000003', registeredAt: new Date().toISOString() });
       }
       if (!(await getOne(catStore, 'Дрели'))) {
         await catStore.put({ name: 'Дрели' });
         await catStore.put({ name: 'Перфораторы' });
+        await catStore.put({ name: 'Шуруповерты' });
       }
       if (!(await getOne(toolsStore, 'DR-001'))) {
-        await toolsStore.put({ serial: 'DR-001', name: 'Дрель Makita', category: 'Дрели' });
-        await toolsStore.put({ serial: 'PR-100', name: 'Перфоратор Bosch', category: 'Перфораторы' });
+        await toolsStore.put({ serial: 'DR-001', name: 'Дрель Makita 6408', category: 'Дрели' });
+        await toolsStore.put({ serial: 'DR-002', name: 'Дрель Bosch GBM 13', category: 'Дрели' });
+        await toolsStore.put({ serial: 'PR-100', name: 'Перфоратор Bosch GBH 2-28', category: 'Перфораторы' });
+        await toolsStore.put({ serial: 'SH-500', name: 'Шуруповерт DeWalt DCD771', category: 'Шуруповерты' });
       }
       await tx.done;
     }
@@ -301,42 +445,63 @@
       return new Promise(res => { const r = store.get(key); r.onsuccess = () => res(r.result); });
     }
 
-    // ---------- ПОЛЬЗОВАТЕЛИ И РОЛИ ----------
-    async function login(username, role) {
+    // ---------- АВТОРИЗАЦИЯ ----------
+    async function login(username, email, phone, role) {
+      if (!username.trim()) { alert('Введите имя пользователя'); return; }
       const tx = db.transaction('users', 'readwrite');
       const store = tx.objectStore('users');
       let user = await getOne(store, username);
       if (!user) {
-        user = { username, role };
-        await store.put(user);
+        user = { 
+          username: username.trim(), 
+          role, 
+          email: email.trim() || 'не указан', 
+          phone: phone.trim() || 'не указан',
+          registeredAt: new Date().toISOString() 
+        };
       } else {
-        // обновим роль если нужно (для демо)
         user.role = role;
-        await store.put(user);
+        user.email = email.trim() || user.email || 'не указан';
+        user.phone = phone.trim() || user.phone || 'не указан';
       }
+      await store.put(user);
       await tx.done;
       currentUser = user;
+      
+      // Скрываем экран логина, показываем интерфейс
+      document.getElementById('loginScreen').classList.remove('active');
+      document.getElementById('bottomNav').classList.add('visible');
+      document.getElementById('logoutBtn').style.display = 'block';
+      document.getElementById('headerTitle').innerHTML = `<span>🔧 ToolTrack (${currentUser.username})</span>`;
+      
       updateUIForRole();
+      navigateTo('scanner');
       return user;
+    }
+
+    function logout() {
+      currentUser = null;
+      stopScanner();
+      document.getElementById('loginScreen').classList.add('active');
+      document.getElementById('bottomNav').classList.remove('visible');
+      document.getElementById('logoutBtn').style.display = 'none';
+      document.getElementById('headerTitle').innerHTML = '<span>🔧 ToolTrack Pro</span>';
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     }
 
     function updateUIForRole() {
       if (!currentUser) return;
-      document.getElementById('loginScreen').classList.remove('active');
-      document.getElementById('bottomNav').style.display = 'flex';
-      document.getElementById('headerTitle').innerText = `🔧 ToolTrack (${currentUser.username})`;
-      
       const navEmployees = document.getElementById('navEmployees');
       const navAdmin = document.getElementById('navAdmin');
       navEmployees.style.display = (currentUser.role === 'admin' || currentUser.role === 'foreman') ? 'block' : 'none';
       navAdmin.style.display = (currentUser.role === 'admin') ? 'block' : 'none';
-      
-      navigateTo('scanner');
     }
 
     function navigateTo(screenId) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      document.getElementById(screenId + 'Screen').classList.add('active');
+      const target = document.getElementById(screenId + 'Screen');
+      if (target) target.classList.add('active');
+      
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
       const navItem = document.querySelector(`.nav-item[data-screen="${screenId}"]`);
       if (navItem) navItem.classList.add('active');
@@ -348,22 +513,33 @@
       if (screenId === 'admin') loadAdminData();
     }
 
-    // ---------- СКАНЕР И ВЫДАЧА ----------
+    // ---------- СКАНЕР ----------
     function startScanner() {
       const readerEl = document.getElementById('qr-reader');
       if (!html5QrCode) {
         html5QrCode = new Html5Qrcode("qr-reader");
       }
+      if (html5QrCode.isScanning) return;
+      
       html5QrCode.start(
         { facingMode: "environment" },
         { fps: 10, qrbox: 250 },
         (decodedText) => {
-          handleSerialScan(decodedText);
+          if (scanningForSerial) {
+            document.getElementById('toolSerial').value = decodedText.trim();
+            scanningForSerial = false;
+            stopScanner();
+            alert('Серийный номер считан: ' + decodedText.trim());
+          } else {
+            handleSerialScan(decodedText.trim());
+          }
         },
         () => {}
       ).then(() => {
         document.getElementById('stopScannerBtn').style.display = 'block';
-      }).catch(err => console.log("Камера недоступна, используйте ручной ввод"));
+      }).catch(err => {
+        console.log("Камера недоступна, используйте ручной ввод");
+      });
     }
 
     function stopScanner() {
@@ -372,36 +548,73 @@
           document.getElementById('stopScannerBtn').style.display = 'none';
         }).catch(e => {});
       }
+      scanningForSerial = false;
     }
 
     async function handleSerialScan(serial) {
-      serial = serial.trim();
       const tool = await getToolBySerial(serial);
       const resultDiv = document.getElementById('scanResult');
+      const returnBtn = document.getElementById('returnToolBtn');
+      
       if (!tool) {
         resultDiv.innerHTML = `<p style="color:red;">❌ Инструмент с номером "${serial}" не найден</p>`;
+        returnBtn.style.display = 'none';
         return;
       }
-      // Проверяем, не у другого ли сотрудника
-      const activeTx = await getActiveTransaction(serial);
-      if (activeTx && activeTx.username !== currentUser.username && !activeTx.returnedAt) {
-        resultDiv.innerHTML = `<p style="color:orange;">⚠️ Инструмент уже у сотрудника ${activeTx.username}</p>`;
-        return;
+      
+      const status = await getToolStatus(serial);
+      
+      if (status.holder && status.holder !== currentUser.username) {
+        resultDiv.innerHTML = `
+          <p><b>${tool.name}</b> (${tool.serial})</p>
+          <p>Категория: ${tool.category}</p>
+          <p style="color:orange;">⚠️ Выдан: ${status.holder}</p>
+        `;
+        returnBtn.style.display = 'none';
+      } else if (status.holder === currentUser.username) {
+        resultDiv.innerHTML = `
+          <p><b>${tool.name}</b> (${tool.serial})</p>
+          <p>Категория: ${tool.category}</p>
+          <p style="color:green;">✅ У вас на руках</p>
+        `;
+        returnBtn.style.display = 'block';
+        returnBtn.onclick = () => returnTool(serial);
+      } else {
+        await takeTool(serial);
+        resultDiv.innerHTML = `
+          <p><b>${tool.name}</b> (${tool.serial})</p>
+          <p>Категория: ${tool.category}</p>
+          <p style="color:green;">✅ Вы успешно взяли инструмент!</p>
+        `;
+        returnBtn.style.display = 'block';
+        returnBtn.onclick = () => returnTool(serial);
       }
-      await takeTool(serial);
-      resultDiv.innerHTML = `<p style="color:green;">✅ Вы взяли: ${tool.name} (${serial})</p>`;
     }
 
     async function takeTool(serial) {
       const tx = db.transaction('transactions', 'readwrite');
-      const store = tx.objectStore('transactions');
-      await store.put({
+      await tx.objectStore('transactions').put({
         username: currentUser.username,
         serial: serial,
         takenAt: new Date().toISOString(),
         returnedAt: null
       });
       await tx.done;
+    }
+
+    async function returnTool(serial) {
+      const tx = db.transaction('transactions', 'readwrite');
+      const store = tx.objectStore('transactions');
+      const all = await new Promise(res => store.getAll().onsuccess = e => res(e.target.result));
+      const active = all.find(t => t.serial === serial && t.username === currentUser.username && !t.returnedAt);
+      if (active) {
+        active.returnedAt = new Date().toISOString();
+        await store.put(active);
+        await tx.done;
+        alert('Инструмент возвращен!');
+        document.getElementById('scanResult').innerHTML = '<p>Инструмент возвращен на склад.</p>';
+        document.getElementById('returnToolBtn').style.display = 'none';
+      }
     }
 
     async function getToolBySerial(serial) {
@@ -411,65 +624,157 @@
       });
     }
 
-    async function getActiveTransaction(serial) {
-      return new Promise(res => {
-        const tx = db.transaction('transactions','readonly');
-        const index = tx.objectStore('transactions').index('serial');
-        const req = index.getAll(serial);
-        req.onsuccess = () => {
-          const all = req.result.filter(t => !t.returnedAt).sort((a,b)=> new Date(b.takenAt)-new Date(a.takenAt));
-          res(all[0] || null);
-        };
-      });
+    async function getToolStatus(serial) {
+      const tx = db.transaction('transactions','readonly');
+      const all = await new Promise(res => tx.objectStore('transactions').getAll().onsuccess = e => res(e.target.result));
+      const toolTxs = all.filter(t => t.serial === serial).sort((a,b) => new Date(b.takenAt) - new Date(a.takenAt));
+      const active = toolTxs.find(t => !t.returnedAt);
+      return {
+        holder: active ? active.username : null,
+        history: toolTxs
+      };
     }
 
     // ---------- ИСТОРИЯ ----------
     async function loadHistory() {
       const tx = db.transaction('transactions','readonly');
-      let allTx = await new Promise(res => {
-        tx.objectStore('transactions').getAll().onsuccess = e => res(e.target.result);
-      });
+      let allTx = await new Promise(res => tx.objectStore('transactions').getAll().onsuccess = e => res(e.target.result));
       
       if (currentUser.role === 'worker') {
         allTx = allTx.filter(t => t.username === currentUser.username);
       }
+      
       allTx.sort((a,b) => new Date(b.takenAt) - new Date(a.takenAt));
       
       const container = document.getElementById('historyList');
-      container.innerHTML = allTx.map(t => {
-        const status = t.returnedAt ? '✅ Возвращено' : '⏳ На руках';
-        return `<div class="card"><b>${t.serial}</b> - ${t.username}<br><small>${new Date(t.takenAt).toLocaleString()}</small><br><span class="badge">${status}</span></div>`;
-      }).join('') || '<p>История пуста</p>';
+      if (allTx.length === 0) {
+        container.innerHTML = '<p>История пуста</p>';
+        return;
+      }
+      
+      container.innerHTML = `
+        <table>
+          <thead>
+            <tr><th>Сотрудник</th><th>Серийный №</th><th>Взял</th><th>Вернул</th><th>Статус</th></tr>
+          </thead>
+          <tbody>
+            ${allTx.map(t => `
+              <tr>
+                <td>${t.username}</td>
+                <td>${t.serial}</td>
+                <td>${new Date(t.takenAt).toLocaleString()}</td>
+                <td>${t.returnedAt ? new Date(t.returnedAt).toLocaleString() : '-'}</td>
+                <td><span class="badge ${t.returnedAt ? 'badge-success' : 'badge-warning'}">${t.returnedAt ? 'Возвращено' : 'На руках'}</span></td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
     }
 
+    // ---------- СОТРУДНИКИ (ТАБЛИЦА) ----------
     async function loadEmployees() {
       const tx = db.transaction('users','readonly');
       const users = await new Promise(res => tx.objectStore('users').getAll().onsuccess = e => res(e.target.result));
-      document.getElementById('employeesList').innerHTML = users.map(u => 
-        `<div class="card"><b>${u.username}</b> <span class="badge">${u.role}</span></div>`
-      ).join('');
+      const tbody = document.querySelector('#employeesTable tbody');
+      
+      const roleNames = { admin: 'Администратор', foreman: 'Бригадир', worker: 'Сотрудник' };
+      
+      tbody.innerHTML = users.map(u => `
+        <tr>
+          <td><b>${u.username}</b></td>
+          <td><span class="badge">${roleNames[u.role] || u.role}</span></td>
+          <td>${u.email || '—'}</td>
+          <td>${u.phone || '—'}</td>
+          <td>${u.registeredAt ? new Date(u.registeredAt).toLocaleDateString() : '—'}</td>
+        </tr>
+      `).join('');
     }
 
     // ---------- АДМИНКА ----------
     async function loadAdminData() {
+      // Загружаем категории в select
       const catTx = db.transaction('categories','readonly');
       const cats = await new Promise(res => catTx.objectStore('categories').getAll().onsuccess = e => res(e.target.result));
       const select = document.getElementById('toolCategorySelect');
       select.innerHTML = cats.map(c => `<option>${c.name}</option>`).join('');
       
+      // Загружаем пользователей для повышения
       const userTx = db.transaction('users','readonly');
       const users = await new Promise(res => userTx.objectStore('users').getAll().onsuccess = e => res(e.target.result));
       const promoteSelect = document.getElementById('promoteUserSelect');
       promoteSelect.innerHTML = users.map(u => `<option value="${u.username}">${u.username} (${u.role})</option>`).join('');
+      
+      // Строим дерево категорий с таблицами инструментов
+      await buildCategoryTree();
     }
 
+    async function buildCategoryTree() {
+      const catTx = db.transaction('categories','readonly');
+      const categories = await new Promise(res => catTx.objectStore('categories').getAll().onsuccess = e => res(e.target.result));
+      
+      const toolsTx = db.transaction('tools','readonly');
+      const tools = await new Promise(res => toolsTx.objectStore('tools').getAll().onsuccess = e => res(e.target.result));
+      
+      // Получаем статусы всех инструментов
+      const txTx = db.transaction('transactions','readonly');
+      const transactions = await new Promise(res => txTx.objectStore('transactions').getAll().onsuccess = e => res(e.target.result));
+      
+      const treeContainer = document.getElementById('categoryTree');
+      
+      treeContainer.innerHTML = categories.map(cat => {
+        const catTools = tools.filter(t => t.category === cat.name);
+        const toolRows = catTools.map(tool => {
+          const toolTxs = transactions.filter(tx => tx.serial === tool.serial).sort((a,b) => new Date(b.takenAt) - new Date(a.takenAt));
+          const active = toolTxs.find(tx => !tx.returnedAt);
+          const status = active ? 'Выдано' : 'На складе';
+          const holder = active ? active.username : 'Склад';
+          const statusClass = active ? 'badge-warning' : 'badge-success';
+          
+          return `
+            <tr>
+              <td>${tool.category}</td>
+              <td><b>${tool.serial}</b></td>
+              <td>${tool.name}</td>
+              <td><span class="badge ${statusClass}">${status}</span></td>
+              <td>${holder}</td>
+            </tr>
+          `;
+        }).join('');
+        
+        return `
+          <div class="tree-category" onclick="this.nextElementSibling.classList.toggle('open'); this.classList.toggle('active-tree');">
+            <span>📁 ${cat.name} (${catTools.length})</span>
+            <span>▼</span>
+          </div>
+          <div class="tree-children">
+            ${catTools.length > 0 ? `
+              <table>
+                <thead>
+                  <tr>
+                    <th>Категория</th>
+                    <th>Серийный №</th>
+                    <th>Наименование</th>
+                    <th>Статус</th>
+                    <th>Держатель</th>
+                  </tr>
+                </thead>
+                <tbody>${toolRows}</tbody>
+              </table>
+            ` : '<p style="padding:8px; color:#64748b;">Нет инструментов</p>'}
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Обработчики админки
     document.getElementById('addCategoryBtn').addEventListener('click', async () => {
       const name = document.getElementById('categoryName').value.trim();
       if (!name) return;
       const tx = db.transaction('categories','readwrite');
       await tx.objectStore('categories').put({ name });
       await tx.done;
-      alert('Категория добавлена');
+      document.getElementById('categoryName').value = '';
       loadAdminData();
     });
 
@@ -477,11 +782,18 @@
       const serial = document.getElementById('toolSerial').value.trim();
       const name = document.getElementById('toolName').value.trim();
       const category = document.getElementById('toolCategorySelect').value;
-      if (!serial || !name) return;
+      if (!serial || !name) { alert('Заполните серийный номер и название'); return; }
       const tx = db.transaction('tools','readwrite');
       await tx.objectStore('tools').put({ serial, name, category });
       await tx.done;
-      alert('Инструмент добавлен');
+      document.getElementById('toolSerial').value = '';
+      document.getElementById('toolName').value = '';
+      loadAdminData();
+    });
+
+    document.getElementById('scanSerialBtn').addEventListener('click', () => {
+      scanningForSerial = true;
+      startScanner();
     });
 
     document.getElementById('promoteToForemanBtn').addEventListener('click', async () => {
@@ -494,10 +806,11 @@
         await store.put(user);
       }
       await tx.done;
-      alert('Бригадир назначен');
+      alert(`${username} назначен бригадиром`);
+      loadAdminData();
     });
 
-    // CSV экспорт/импорт
+    // CSV
     document.getElementById('exportCsvBtn').addEventListener('click', async () => {
       const tx = db.transaction(['tools','users'],'readonly');
       const tools = await new Promise(res => tx.objectStore('tools').getAll().onsuccess = e => res(e.target.result));
@@ -516,17 +829,27 @@
       const lines = text.split('\n').slice(1);
       const tx = db.transaction('tools','readwrite');
       for (let line of lines) {
-        const [serial, name, category] = line.split(',');
-        if (serial && name) await tx.objectStore('tools').put({ serial: serial.trim(), name: name.trim(), category: category?.trim() || 'Без категории' });
+        const parts = line.split(',');
+        if (parts.length >= 3) {
+          await tx.objectStore('tools').put({ serial: parts[0].trim(), name: parts[1].trim(), category: parts[2].trim() });
+        }
       }
       await tx.done;
       alert('Импорт завершён');
+      loadAdminData();
     });
 
-    // Обработчики интерфейса
+    // Основные обработчики
     document.getElementById('loginBtn').addEventListener('click', () => {
-      login(document.getElementById('loginName').value.trim(), document.getElementById('loginRole').value);
+      login(
+        document.getElementById('loginName').value,
+        document.getElementById('loginEmail').value,
+        document.getElementById('loginPhone').value,
+        document.getElementById('loginRole').value
+      );
     });
+
+    document.getElementById('logoutBtn').addEventListener('click', logout);
 
     document.querySelectorAll('.nav-item').forEach(item => {
       item.addEventListener('click', () => navigateTo(item.dataset.screen));
@@ -535,12 +858,14 @@
     document.getElementById('searchManualBtn').addEventListener('click', () => {
       handleSerialScan(document.getElementById('manualSerialInput').value);
     });
+    
     document.getElementById('stopScannerBtn').addEventListener('click', stopScanner);
 
-    // Инициализация
+    // Инициализация приложения
     openDB().then(() => seedData()).then(() => {
-      console.log('База готова');
+      console.log('База данных готова, приложение запущено');
     });
+
   })();
 </script>
 </body>
