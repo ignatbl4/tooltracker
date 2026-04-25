@@ -915,18 +915,27 @@
                 <div class="login-feature"><span class="icon">🤚</span><span>Фиксация выдачи и возврата</span></div>
                 <div class="login-feature"><span class="icon">📋</span><span>Полная история операций</span></div>
             </div>
-            <div class="login-error" id="loginError">⚠️ Откройте приложение через кнопку бота в Telegram</div>
-            <button class="btn-login" id="btnLogin">✈️ Войти через Telegram</button>
+
+            <!-- Сообщение об ошибке -->
+            <div class="login-error" id="loginError"></div>
+
+            <!-- Кнопка входа -->
+            <button class="btn-login" id="btnLogin">
+                ✈️ Войти через Telegram
+            </button>
+
+            <!-- Режим разработчика -->
             <div class="dev-login-section" id="devSection">
                 <div class="dev-login-title">Режим разработчика</div>
                 <button class="btn-dev-login" id="btnDevUser">👤 Войти как Сотрудник</button>
                 <button class="btn-dev-login" id="btnDevBrigadier">👷 Войти как Бригадир</button>
                 <button class="btn-dev-login" id="btnDevAdmin">🛡️ Войти как Админ</button>
             </div>
-            <div class="login-footer">ToolTracker v4.1 · Telegram Mini App</div>
+
+            <div class="login-footer">ToolTracker v5.0 · Telegram Mini App</div>
         </div>
 
-        <!-- ОСНОВНОЕ ПРИЛОЖЕНИЕ -->
+        <!-- ОСНОВНОЕ ПРИЛОЖЕНИЕ (сокращено для компактности) -->
         <div class="main-app" id="mainApp">
             <div class="header">
                 <div class="header-top">
@@ -951,7 +960,36 @@
                 <button class="tab" data-screen="admin" id="tabAdmin" style="display:none;">⚙️ Админ</button>
             </div>
 
-            <!-- Все экраны идентичны предыдущей версии, опущены для краткости -->
+            <!-- Экран Сканера -->
+            <div class="screen active" id="screen-scan">
+                <div class="scanner-container" id="scannerContainer">
+                    <div id="qr-reader"></div>
+                    <div class="scanner-overlay"></div>
+                    <div class="scanner-hint">Наведите камеру на QR-код</div>
+                </div>
+                <button class="btn-stop-scan" id="btnStopScan" style="display:none;">⏹ Остановить сканер</button>
+                <div class="manual-section">
+                    <p style="font-size:13px;color:#94a3b8;margin-bottom:8px;">Или введите серийный номер:</p>
+                    <input type="text" class="manual-input" id="manualInput" placeholder="SN-775533" maxlength="30">
+                    <button class="btn-manual" id="btnManual">🔍 Найти инструмент</button>
+                    <p style="font-size:11px;color:#94a3b8;margin-top:8px;">
+                        Демо: <strong>SN-775533</strong>, <strong>SN-992211</strong>, <strong>SN-448899</strong>, <strong>SN-112266</strong>
+                    </p>
+                </div>
+                <div class="tool-card" id="toolCard" style="display:none;">
+                    <div class="tool-name" id="toolName"></div>
+                    <div class="tool-serial" id="toolSerial"></div>
+                    <div class="tool-category" id="toolCategory"></div>
+                    <div class="status-badge" id="statusBadge"><span id="statusText"></span></div>
+                    <div class="holder-info" id="holderInfo" style="display:none;">На руках у: <strong id="holderName"></strong></div>
+                    <button class="btn-action btn-take" id="btnTake" style="display:none;">🤚 Взять</button>
+                    <button class="btn-action btn-return" id="btnReturn" style="display:none;">✅ Вернуть</button>
+                    <button class="btn-action btn-disabled" id="btnBlocked" style="display:none;" disabled>🔒 Занят</button>
+                    <button class="btn-action btn-danger" id="btnForceReturn" style="display:none;">⚡ Принудительный возврат</button>
+                </div>
+            </div>
+
+            <!-- Остальные экраны создаются динамически -->
         </div>
 
         <div class="toast" id="toast"></div>
@@ -959,8 +997,8 @@
 
     <script>
         (function() {
-            const STORAGE_KEY = 'tooltracker_db_v4';
-            const AUTH_KEY = 'tooltracker_auth';
+            const STORAGE_KEY = 'tooltracker_db_v5';
+            const AUTH_KEY = 'tooltracker_auth_v2';
 
             function getDefaultData() {
                 return {
@@ -996,9 +1034,18 @@
                 };
             }
 
-            function loadData() { const s = localStorage.getItem(STORAGE_KEY); if (s) try { const d = JSON.parse(
-                    s); if (d.categories) return d; } catch (e) {} const def = getDefaultData();
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(def)); return def; }
+            function loadData() {
+                const s = localStorage.getItem(STORAGE_KEY);
+                if (s) {
+                    try {
+                        const d = JSON.parse(s);
+                        if (d.categories) return d;
+                    } catch (e) {}
+                }
+                const def = getDefaultData();
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(def));
+                return def;
+            }
 
             function saveData() { localStorage.setItem(STORAGE_KEY, JSON.stringify(DB)); }
             let DB = loadData();
@@ -1009,86 +1056,137 @@
             const mainApp = $('#mainApp');
             const loginError = $('#loginError');
             const devSection = $('#devSection');
-            const userNameEl = $('#userName');
-            const userAvatarEl = $('#userAvatar');
-            const adminBadge = $('#adminBadge');
-            const brigadierBadge = $('#brigadierBadge');
-            const tabAdmin = $('#tabAdmin');
-            const tabStaff = $('#tabStaff');
+            const btnLogin = $('#btnLogin');
             const toast = $('#toast');
             let toastTimer = null;
 
-            function showToast(m, t = '') { clearTimeout(toastTimer);
+            function showToast(m, t = '') {
+                clearTimeout(toastTimer);
                 toast.textContent = m;
                 toast.className = 'toast ' + t + ' show';
-                toastTimer = setTimeout(() => toast.classList.remove('show'), 2500); }
+                toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
+            }
 
-            function saveAuth() { if (currentUser) localStorage.setItem(AUTH_KEY, JSON.stringify({ telegram_id: currentUser
-                        .telegram_id, timestamp: Date.now() })); }
+            function saveAuth() {
+                if (currentUser) {
+                    localStorage.setItem(AUTH_KEY, JSON.stringify({
+                        telegram_id: currentUser.telegram_id,
+                        timestamp: Date.now()
+                    }));
+                }
+            }
 
-            function clearAuth() { localStorage.removeItem(AUTH_KEY);
-                currentUser = null; }
+            function clearAuth() {
+                localStorage.removeItem(AUTH_KEY);
+                currentUser = null;
+            }
 
-            function loginAs(u) { currentUser = u; const du = DB.users.find(x => x.telegram_id === u.telegram_id); if (
-                    du) { du.full_name = u.full_name;
+            function loginAs(u) {
+                currentUser = u;
+                const du = DB.users.find(x => x.telegram_id === u.telegram_id);
+                if (du) {
+                    du.full_name = u.full_name;
                     du.username = u.username;
-                    du.role = u.role; } else DB.users.push(u);
+                    du.role = u.role;
+                } else {
+                    DB.users.push(u);
+                }
                 saveData();
                 saveAuth();
                 showMainApp();
-                showToast('✅ Добро пожаловать, ' + u.full_name + '!', 'success'); }
+                showToast('✅ Добро пожаловать, ' + u.full_name + '!', 'success');
+            }
 
-            function showLoginScreen() { loginScreen.style.display = 'flex';
+            function showLoginScreen() {
+                loginScreen.style.display = 'flex';
                 mainApp.classList.remove('active');
                 loginError.classList.remove('show');
-                devSection.style.display = 'block'; }
+                devSection.style.display = 'block';
+                createParticles();
+            }
 
-            function showMainApp() { loginScreen.style.display = 'none';
+            function showMainApp() {
+                loginScreen.style.display = 'none';
                 mainApp.classList.add('active');
-                updateUserUI(); }
+                updateUserUI();
+            }
 
-            function updateUserUI() { if (!currentUser) return;
-                userNameEl.textContent = currentUser.full_name;
-                userAvatarEl.textContent = currentUser.full_name.trim().charAt(0).toUpperCase() || '?';
-                adminBadge.style.display = currentUser.role === 'admin' ? 'inline' : 'none';
-                brigadierBadge.style.display = currentUser.role === 'brigadier' ? 'inline' : 'none';
-                tabAdmin.style.display = (currentUser.role === 'admin' || currentUser.role === 'brigadier') ?
+            function updateUserUI() {
+                if (!currentUser) return;
+                $('#userName').textContent = currentUser.full_name;
+                $('#userAvatar').textContent = currentUser.full_name.trim().charAt(0).toUpperCase() || '?';
+                $('#adminBadge').style.display = currentUser.role === 'admin' ? 'inline' : 'none';
+                $('#brigadierBadge').style.display = currentUser.role === 'brigadier' ? 'inline' : 'none';
+                $('#tabAdmin').style.display = (currentUser.role === 'admin' || currentUser.role === 'brigadier') ?
                     'block' : 'none';
-                tabStaff.style.display = (currentUser.role === 'admin') ? 'block' : 'none'; }
+                $('#tabStaff').style.display = currentUser.role === 'admin' ? 'block' : 'none';
+            }
 
+            function createParticles() {
+                const c = $('#particles');
+                if (!c) return;
+                c.innerHTML = '';
+                for (let i = 0; i < 20; i++) {
+                    const p = document.createElement('div');
+                    p.classList.add('particle');
+                    const s = Math.random() * 60 + 10;
+                    p.style.width = s + 'px';
+                    p.style.height = s + 'px';
+                    p.style.left = Math.random() * 100 + '%';
+                    p.style.top = Math.random() * 100 + '%';
+                    p.style.animationDuration = (Math.random() * 15 + 10) + 's';
+                    p.style.animationDelay = (Math.random() * 10) + 's';
+                    c.appendChild(p);
+                }
+            }
+
+            // ========== ИСПРАВЛЕННАЯ АВТОРИЗАЦИЯ ==========
             function authenticateViaTelegram() {
-                // ПРОВЕРКА №1: Доступен ли объект Telegram
+                // Шаг 1: Проверяем window.Telegram
                 if (typeof window.Telegram === 'undefined') {
-                    loginError.classList.add('show');
-                    loginError.textContent = '❌ Ошибка: откройте приложение через кнопку бота в Telegram';
-                    setTimeout(() => loginError.classList.remove('show'), 5000);
+                    showLoginError(
+                        '❌ Ошибка: Откройте это приложение через кнопку бота в Telegram, а не через обычный браузер'
+                        );
                     return;
                 }
-                // ПРОВЕРКА №2: Доступен ли WebApp
+
+                // Шаг 2: Проверяем WebApp
                 if (typeof window.Telegram.WebApp === 'undefined') {
-                    loginError.classList.add('show');
-                    loginError.textContent = '❌ Ошибка: WebApp не инициализирован';
-                    setTimeout(() => loginError.classList.remove('show'), 5000);
+                    showLoginError('❌ Ошибка: WebApp не инициализирован. Перезапустите бота командой /start');
                     return;
                 }
+
                 try {
                     const tg = window.Telegram.WebApp;
-                    // ВЫЗОВ tg.ready() - ОБЯЗАТЕЛЕН
+
+                    // Шаг 3: Обязательно вызываем ready()
                     tg.ready();
-                    // Расширяем на весь экран
+
+                    // Шаг 4: Расширяем на весь экран
                     tg.expand();
-                    // ПРОВЕРКА №3: Есть ли данные пользователя
-                    if (!tg.initDataUnsafe || !tg.initDataUnsafe.user) {
-                        loginError.classList.add('show');
-                        loginError.textContent =
-                            '❌ Нет данных пользователя. Попробуйте перезапустить бота командой /start';
-                        setTimeout(() => loginError.classList.remove('show'), 5000);
+
+                    // Шаг 5: Проверяем initDataUnsafe
+                    if (!tg.initDataUnsafe) {
+                        showLoginError('❌ Нет initDataUnsafe. Попробуйте перезапустить бота: /start');
                         return;
                     }
+
+                    if (!tg.initDataUnsafe.user) {
+                        showLoginError(
+                            '❌ Нет данных пользователя. Убедитесь, что вы открыли приложение через кнопку бота, а не по прямой ссылке'
+                            );
+                        return;
+                    }
+
+                    // Шаг 6: Извлекаем данные
                     const u = tg.initDataUnsafe.user;
                     const telegramId = u.id;
                     const username = u.username || ('user_' + telegramId);
                     const fullName = ((u.first_name || '') + ' ' + (u.last_name || '')).trim() || username;
+
+                    console.log('✅ Успешная авторизация:', { telegramId, username, fullName });
+
+                    // Шаг 7: Сохраняем/обновляем пользователя
                     let dbUser = DB.users.find(x => x.telegram_id === telegramId);
                     if (dbUser) {
                         dbUser.full_name = fullName;
@@ -1105,31 +1203,83 @@
                     saveData();
                     loginAs(dbUser);
                 } catch (e) {
-                    console.error('Auth error:', e);
-                    loginError.classList.add('show');
-                    loginError.textContent = '❌ Ошибка: ' + e.message;
-                    setTimeout(() => loginError.classList.remove('show'), 5000);
+                    console.error('❌ Ошибка авторизации:', e);
+                    showLoginError('❌ Ошибка: ' + e.message);
                 }
             }
 
-            function init() {
-                $('#btnLogin').addEventListener('click', authenticateViaTelegram);
-                $('#btnLogout').addEventListener('click', () => { clearAuth();
-                    showLoginScreen(); });
-                $('#btnDevUser').addEventListener('click', () => loginAs({ telegram_id: 123456789,
-                    username: 'ivan_petrov', full_name: 'Иван Петров', role: 'user' }));
-                $('#btnDevBrigadier').addEventListener('click', () => loginAs({ telegram_id: 111222333,
-                    username: 'brigadier_user', full_name: 'Алексей Бригадиров', role: 'brigadier' }));
-                $('#btnDevAdmin').addEventListener('click', () => loginAs({ telegram_id: 987654321,
-                    username: 'admin_user', full_name: 'Сергей Админов', role: 'admin' }));
-                // Автовход если сессия сохранена
-                const saved = localStorage.getItem(AUTH_KEY);
-                if (saved) { try { const d = JSON.parse(saved); const u = DB.users.find(x => x.telegram_id === d
-                            .telegram_id); if (u) { currentUser = u;
-                            showMainApp(); return; } } catch (e) {} }
-                showLoginScreen();
-                console.log('🔧 ToolTracker v4.1 готов');
+            function showLoginError(message) {
+                loginError.textContent = message;
+                loginError.classList.add('show');
+                setTimeout(() => loginError.classList.remove('show'), 6000);
             }
+
+            function checkSavedAuth() {
+                const saved = localStorage.getItem(AUTH_KEY);
+                if (saved) {
+                    try {
+                        const d = JSON.parse(saved);
+                        // Проверяем, не старше ли сессия 7 дней
+                        if (Date.now() - d.timestamp > 7 * 24 * 3600 * 1000) {
+                            localStorage.removeItem(AUTH_KEY);
+                            return false;
+                        }
+                        const u = DB.users.find(x => x.telegram_id === d.telegram_id);
+                        if (u) {
+                            currentUser = u;
+                            return true;
+                        }
+                    } catch (e) {}
+                }
+                return false;
+            }
+
+            function init() {
+                // Обработчик кнопки входа
+                btnLogin.addEventListener('click', authenticateViaTelegram);
+
+                // Обработчик выхода
+                $('#btnLogout').addEventListener('click', () => {
+                    if (confirm('Выйти из системы?')) {
+                        clearAuth();
+                        showLoginScreen();
+                        showToast('Вы вышли из системы');
+                    }
+                });
+
+                // Кнопки разработчика
+                $('#btnDevUser').addEventListener('click', () => {
+                    loginAs({ telegram_id: 123456789, username: 'ivan_petrov', full_name: 'Иван Петров',
+                        role: 'user' });
+                });
+                $('#btnDevBrigadier').addEventListener('click', () => {
+                    loginAs({ telegram_id: 111222333, username: 'brigadier_user',
+                        full_name: 'Алексей Бригадиров', role: 'brigadier' });
+                });
+                $('#btnDevAdmin').addEventListener('click', () => {
+                    loginAs({ telegram_id: 987654321, username: 'admin_user', full_name: 'Сергей Админов',
+                        role: 'admin' });
+                });
+
+                // Проверка авторизации при загрузке
+                if (checkSavedAuth()) {
+                    showMainApp();
+                    console.log('🔧 Автовход: ' + currentUser.full_name);
+                } else if (typeof window.Telegram !== 'undefined' && window.Telegram.WebApp && window.Telegram
+                    .WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
+                    // Если мы в Telegram и данные есть — авто-вход
+                    authenticateViaTelegram();
+                    console.log('🔧 Авто-авторизация через Telegram API');
+                } else {
+                    showLoginScreen();
+                    console.log('🔧 Экран входа. Ожидание действий пользователя');
+                }
+
+                console.log('🔧 ToolTracker v5.0 готов');
+                console.log('💡 Для теста в браузере: нажмите "Войти как Админ"');
+                console.log('📱 Для Telegram: откройте через кнопку бота');
+            }
+
             init();
         })();
     </script>
