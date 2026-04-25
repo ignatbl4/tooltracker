@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Проверка Telegram API</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --green: #10b981;
+            --red: #ef4444;
+            --yellow: #f59e0b;
+            --blue: #2AABEE;
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+            --radius: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h1 {
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+        .subtitle {
+            text-align: center;
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 24px;
+        }
+
+        .status-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 14px;
+            border: 2px solid #334155;
+            transition: all 0.3s;
+        }
+        .status-card.success {
+            border-color: var(--green);
+            background: rgba(16, 185, 129, 0.05);
+        }
+        .status-card.error {
+            border-color: var(--red);
+            background: rgba(239, 68, 68, 0.05);
+        }
+        .status-card.warning {
+            border-color: var(--yellow);
+            background: rgba(245, 158, 11, 0.05);
+        }
+
+        .status-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-weight: 700;
+            font-size: 16px;
+        }
+        .status-icon {
+            font-size: 24px;
+        }
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse 2s infinite;
+        }
+        .dot-success {
+            background: var(--green);
+        }
+        .dot-error {
+            background: var(--red);
+        }
+        .dot-warning {
+            background: var(--yellow);
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.4;
+            }
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 13px;
+        }
+        .info-label {
+            color: var(--muted);
+            font-weight: 500;
+        }
+        .info-value {
+            font-weight: 600;
+            text-align: right;
+            word-break: break-all;
+            max-width: 60%;
+        }
+        .info-value.code {
+            font-family: monospace;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+        }
+
+        pre {
+            background: #0f172a;
+            border-radius: 12px;
+            padding: 14px;
+            overflow-x: auto;
+            font-size: 11px;
+            line-height: 1.6;
+            color: #a5b4fc;
+            margin-top: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #334155;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: var(--blue);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 12px;
+            transition: all 0.2s;
+        }
+        .btn:active {
+            transform: scale(0.97);
+            opacity: 0.9;
+        }
+        .btn-secondary {
+            background: #334155;
+            margin-top: 8px;
+        }
+
+        .summary {
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .summary.all-good {
+            color: var(--green);
+        }
+        .summary.has-issues {
+            color: var(--yellow);
+        }
+        .summary.bad {
+            color: var(--red);
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #334155;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Диагностика API</h1>
+        <div class="subtitle">Проверка Telegram Web App API</div>
+
+        <div id="results"></div>
+
+        <button class="btn" id="btnRefresh">🔄 Обновить проверку</button>
+        <button class="btn btn-secondary" id="btnCopyReport">📋 Скопировать отчёт</button>
+
+        <hr class="divider">
+        <p style="font-size:11px;color:var(--muted);text-align:center;">
+            Откройте эту страницу через бота Telegram, чтобы проверить API
+        </p>
+    </div>
+
+    <script>
+        (function() {
+            const resultsEl = document.getElementById('results');
+            let reportText = '';
+
+            function addCard(title, icon, status, details, rawData = null) {
+                const statusClass = status === 'success' ? 'success' : status === 'warning' ? 'warning' : 'error';
+                const dotClass = status === 'success' ? 'dot-success' : status === 'warning' ? 'dot-warning' :
+                    'dot-error';
+                const statusEmoji = status === 'success' ? '✅' : status === 'warning' ? '⚠️' : '❌';
+
+                let detailsHTML = '';
+                for (const [key, value] of Object.entries(details)) {
+                    const displayValue = value === null ? '❌ ОТСУТСТВУЕТ' :
+                        value === undefined ? '❌ НЕ ОПРЕДЕЛЕНО' :
+                        typeof value === 'boolean' ? (value ? '✅ Да' : '❌ Нет') :
+                        String(value);
+                    detailsHTML += `
+                    <div class="info-row">
+                        <span class="info-label">${key}</span>
+                        <span class="info-value ${typeof value === 'string' && value.length > 30 ? 'code' : ''}">${displayValue}</span>
+                    </div>`;
+                }
+
+                let rawHTML = '';
+                if (rawData) {
+                    rawHTML = `<pre>${JSON.stringify(rawData, null, 2)}</pre>`;
+                }
+
+                const cardHTML = `
+                <div class="status-card ${statusClass}">
+                    <div class="status-header">
+                        <span class="status-dot ${dotClass}"></span>
+                        <span class="status-icon">${icon}</span>
+                        <span>${title}</span>
+                        <span style="margin-left:auto;">${statusEmoji}</span>
+                    </div>
+                    ${detailsHTML}
+                    ${rawHTML}
+                </div>`;
+
+                resultsEl.innerHTML += cardHTML;
+                reportText += `${statusEmoji} ${title}\n`;
+                for (const [key, value] of Object.entries(details)) {
+                    reportText += `  ${key}: ${value}\n`;
+                }
+                reportText += '\n';
+            }
+
+            function runDiagnostics() {
+                resultsEl.innerHTML = '';
+                reportText = 'ОТЧЁТ ДИАГНОСТИКИ TELEGRAM API\n';
+                reportText += '='.repeat(50) + '\n';
+                reportText += `Время: ${new Date().toLocaleString()}\n`;
+                reportText += `User Agent: ${navigator.userAgent}\n\n`;
+
+                // Проверка 1: Наличие объекта Telegram
+                const hasTelegramGlobal = typeof window.Telegram !== 'undefined';
+                addCard(
+                    '1. Объект window.Telegram',
+                    '📦',
+                    hasTelegramGlobal ? 'success' : 'error',
+                    {
+                        'window.Telegram': hasTelegramGlobal,
+                        'Тип': typeof window.Telegram,
+                    },
+                    hasTelegramGlobal ? { Telegram: Object.keys(window.Telegram) } : null
+                );
+
+                // Проверка 2: Наличие WebApp
+                const hasWebApp = hasTelegramGlobal && typeof window.Telegram.WebApp !== 'undefined';
+                addCard(
+                    '2. Объект WebApp',
+                    '🌐',
+                    hasWebApp ? 'success' : 'error',
+                    {
+                        'Telegram.WebApp': hasWebApp,
+                        'Тип': hasWebApp ? typeof window.Telegram.WebApp : 'НЕДОСТУПЕН',
+                    },
+                    hasWebApp ? { WebApp_keys: Object.keys(window.Telegram.WebApp).slice(0, 15) } : null
+                );
+
+                // Проверка 3: initDataUnsafe
+                let userData = null;
+                let hasInitData = false;
+                if (hasWebApp) {
+                    hasInitData = typeof window.Telegram.WebApp.initDataUnsafe !== 'undefined';
+                    if (hasInitData && window.Telegram.WebApp.initDataUnsafe) {
+                        userData = window.Telegram.WebApp.initDataUnsafe.user;
+                    }
+                }
+                addCard(
+                    '3. Данные пользователя (initDataUnsafe)',
+                    '👤',
+                    userData ? 'success' : 'warning',
+                    {
+                        'initDataUnsafe': hasInitData ? '✅ Доступен' : '❌ Отсутствует',
+                        'user object': userData ? '✅ Получен' : '❌ Нет данных',
+                        'user.id': userData ? userData.id : 'НЕТ',
+                        'user.first_name': userData ? (userData.first_name || 'НЕ УКАЗАНО') : 'НЕТ',
+                        'user.last_name': userData ? (userData.last_name || 'НЕ УКАЗАНО') : 'НЕТ',
+                        'user.username': userData ? (userData.username || 'НЕ УКАЗАНО') : 'НЕТ',
+                        'user.language_code': userData ? (userData.language_code || 'НЕ УКАЗАНО') : 'НЕТ',
+                    },
+                    userData
+                );
+
+                // Проверка 4: Цветовая схема
+                let themeData = {};
+                if (hasWebApp) {
+                    try {
+                        themeData = {
+                            'bg_color': window.Telegram.WebApp.themeParams?.bg_color || 'НЕТ',
+                            'text_color': window.Telegram.WebApp.themeParams?.text_color || 'НЕТ',
+                            'button_color': window.Telegram.WebApp.themeParams?.button_color || 'НЕТ',
+                            'colorScheme': window.Telegram.WebApp.colorScheme || 'НЕТ',
+                        };
+                    } catch (e) {
+                        themeData = { 'Ошибка': e.message };
+                    }
+                }
+                addCard(
+                    '4. Цветовая схема Telegram',
+                    '🎨',
+                    hasWebApp ? 'success' : 'warning',
+                    themeData,
+                    hasWebApp ? window.Telegram.WebApp.themeParams : null
+                );
+
+                // Проверка 5: Версия и платформа
+                let platformData = {};
+                if (hasWebApp) {
+                    try {
+                        platformData = {
+                            'version': window.Telegram.WebApp.version || 'НЕТ',
+                            'platform': window.Telegram.WebApp.platform || 'НЕТ',
+                            'viewportHeight': window.Telegram.WebApp.viewportHeight || 'НЕТ',
+                            'viewportStableHeight': window.Telegram.WebApp.viewportStableHeight || 'НЕТ',
+                            'isExpanded': window.Telegram.WebApp.isExpanded || false,
+                        };
+                    } catch (e) {
+                        platformData = { 'Ошибка': e.message };
+                    }
+                }
+                addCard(
+                    '5. Платформа и версия',
+                    '📱',
+                    hasWebApp ? 'success' : 'warning',
+                    platformData
+                );
+
+                // Проверка 6: HTTPS
+                const isHTTPS = window.location.protocol === 'https:';
+                const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname ===
+                    '127.0.0.1';
+                addCard(
+                    '6. Протокол соединения',
+                    '🔒',
+                    isHTTPS ? 'success' : isLocalhost ? 'warning' : 'error',
+                    {
+                        'Протокол': window.location.protocol,
+                        'Хост': window.location.hostname,
+                        'HTTPS': isHTTPS,
+                        'localhost': isLocalhost,
+                        'Примечание': isHTTPS ? '✅ Камера будет работать' :
+                            isLocalhost ? '⚠️ Камера работает только на localhost' :
+                            '❌ Камера НЕ будет работать без HTTPS',
+                    }
+                );
+
+                // Итог
+                const allGood = hasTelegramGlobal && hasWebApp && userData;
+                const summaryClass = allGood ? 'all-good' : (hasTelegramGlobal ? 'has-issues' : 'bad');
+                const summaryText = allGood ?
+                    '✅ API работает корректно! Данные пользователя получены.' :
+                    hasTelegramGlobal ?
+                    '⚠️ API частично доступен. Откройте через Telegram Mini App.' :
+                    '❌ API недоступен. Откройте эту страницу через бота Telegram.';
+
+                const summaryHTML = `
+                <div class="status-card ${allGood ? 'success' : hasTelegramGlobal ? 'warning' : 'error'}">
+                    <div class="summary ${summaryClass}">${summaryText}</div>
+                </div>`;
+                resultsEl.innerHTML += summaryHTML;
+                reportText += '\n' + '='.repeat(50) + '\n';
+                reportText += 'ИТОГ: ' + summaryText + '\n';
+            }
+
+            function copyReport() {
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(reportText).then(() => {
+                        alert('📋 Отчёт скопирован в буфер обмена!');
+                    });
+                } else {
+                    alert('Копирование не поддерживается. Выделите текст вручную.');
+                }
+            }
+
+            document.getElementById('btnRefresh').addEventListener('click', runDiagnostics);
+            document.getElementById('btnCopyReport').addEventListener('click', copyReport);
+
+            // Запуск
+            runDiagnostics();
+        })();
+    </script>
+</body>
+</html>
