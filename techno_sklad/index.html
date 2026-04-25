@@ -1,872 +1,1876 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>ToolTrack Pro - Учёт инструмента</title>
-  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js">
-  </script>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-    }
-    body {
-      background: #0f172a;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-      padding: 12px;
-    }
-    .phone-frame {
-      width: 100%;
-      max-width: 420px;
-      height: 92vh;
-      max-height: 820px;
-      background: #ffffff;
-      border-radius: 44px;
-      overflow: hidden;
-      box-shadow: 0 30px 50px rgba(0,0,0,0.6), 0 0 0 8px #1e293b;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-    }
-    .app-header {
-      background: #0f172a;
-      color: white;
-      padding: 14px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-weight: 600;
-      font-size: 1rem;
-      border-bottom: 1px solid #334155;
-      flex-shrink: 0;
-    }
-    .logout-btn {
-      background: #ef4444;
-      color: white;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 20px;
-      font-size: 13px;
-      cursor: pointer;
-    }
-    .screen {
-      flex: 1;
-      overflow-y: auto;
-      padding: 16px;
-      background: #f8fafc;
-      display: none;
-    }
-    .screen.active {
-      display: block;
-    }
-    
-    /* Стили авторизации */
-    .login-screen {
-      background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%);
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      color: white;
-      padding: 30px;
-      flex: 1;
-    }
-    .login-screen.active {
-      display: flex;
-    }
-    .logo-animation {
-      width: 90px;
-      height: 90px;
-      background: #fbbf24;
-      border-radius: 28px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 24px;
-      animation: float 3s ease-in-out infinite;
-      box-shadow: 0 20px 35px rgba(251,191,36,0.4);
-      font-size: 40px;
-    }
-    @keyframes float {
-      0% { transform: translateY(0px); }
-      50% { transform: translateY(-12px); }
-      100% { transform: translateY(0px); }
-    }
-    .login-input, .login-select {
-      width: 100%;
-      padding: 16px;
-      margin: 8px 0;
-      border-radius: 18px;
-      border: none;
-      background: rgba(255,255,255,0.15);
-      color: white;
-      font-size: 16px;
-      outline: none;
-      backdrop-filter: blur(10px);
-    }
-    .login-select option {
-      background: #1e293b;
-      color: white;
-    }
-    .login-btn {
-      background: #fbbf24;
-      color: #0f172a;
-      font-weight: bold;
-      padding: 16px;
-      width: 100%;
-      border: none;
-      border-radius: 30px;
-      font-size: 18px;
-      margin-top: 20px;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .login-btn:active { background: #f59e0b; transform: scale(0.97); }
-    
-    .bottom-nav {
-      display: none;
-      background: white;
-      border-top: 1px solid #e2e8f0;
-      flex-shrink: 0;
-    }
-    .bottom-nav.visible {
-      display: flex;
-    }
-    .nav-item {
-      flex: 1;
-      padding: 10px 4px;
-      text-align: center;
-      font-size: 11px;
-      font-weight: 600;
-      color: #64748b;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .nav-item.active { color: #0f172a; }
-    .nav-icon { font-size: 20px; display: block; margin-bottom: 2px; }
-    
-    .card {
-      background: white;
-      border-radius: 20px;
-      padding: 16px;
-      margin-bottom: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-    }
-    .btn {
-      background: #0f172a;
-      color: white;
-      border: none;
-      padding: 12px 16px;
-      border-radius: 16px;
-      font-weight: 600;
-      width: 100%;
-      margin-top: 8px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-    .btn-outline {
-      background: white;
-      border: 1.5px solid #0f172a;
-      color: #0f172a;
-    }
-    .btn-small {
-      width: auto;
-      padding: 8px 14px;
-      font-size: 12px;
-    }
-    input, select, textarea {
-      width: 100%;
-      padding: 12px;
-      margin: 6px 0 10px;
-      border-radius: 14px;
-      border: 1px solid #cbd5e1;
-      background: #f1f5f9;
-      font-size: 15px;
-    }
-    .badge {
-      background: #dbeafe;
-      color: #1e40af;
-      padding: 3px 10px;
-      border-radius: 30px;
-      font-size: 12px;
-      font-weight: 600;
-      display: inline-block;
-    }
-    .badge-success { background: #dcfce7; color: #166534; }
-    .badge-warning { background: #fef3c7; color: #92400e; }
-    .badge-danger { background: #fee2e2; color: #991b1b; }
-    
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
-      margin-top: 8px;
-      background: white;
-      border-radius: 12px;
-      overflow: hidden;
-    }
-    th {
-      background: #f1f5f9;
-      padding: 10px 6px;
-      text-align: left;
-      font-weight: 600;
-      font-size: 12px;
-      color: #475569;
-    }
-    td {
-      padding: 10px 6px;
-      border-bottom: 1px solid #e2e8f0;
-      font-size: 12px;
-    }
-    .tree-category {
-      background: #f1f5f9;
-      padding: 12px;
-      border-radius: 12px;
-      margin-bottom: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .tree-category.active-tree {
-      background: #0f172a;
-      color: white;
-    }
-    .tree-children {
-      margin-left: 8px;
-      margin-bottom: 12px;
-      display: none;
-    }
-    .tree-children.open {
-      display: block;
-    }
-    .form-row {
-      display: flex;
-      gap: 8px;
-    }
-    .form-row > * {
-      flex: 1;
-    }
-    hr { margin: 16px 0; border-color: #e2e8f0; }
-    .section-title {
-      font-weight: 700;
-      font-size: 18px;
-      margin-bottom: 12px;
-      color: #0f172a;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Учет инструментов | ToolTracker</title>
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js">
+    </script>
+    <style>
+        :root {
+            --tg-theme-bg-color: #ffffff;
+            --tg-theme-text-color: #1e293b;
+            --tg-theme-hint-color: #94a3b8;
+            --tg-theme-button-color: #2AABEE;
+            --tg-theme-button-text-color: #ffffff;
+            --tg-theme-secondary-bg-color: #f1f5f9;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --radius: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        .app {
+            width: 100%;
+            max-width: 480px;
+            min-height: 100vh;
+            background: #ffffff;
+            position: relative;
+            overflow-x: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        /* ЭКРАН ВХОДА */
+        .login-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 40px 24px;
+            text-align: center;
+            background: linear-gradient(180deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        .login-bg-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+            animation: floatParticle linear infinite;
+        }
+        @keyframes floatParticle {
+            0% {
+                transform: translateY(0) translateX(0) scale(1);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px) scale(0);
+                opacity: 0;
+            }
+        }
+        .login-logo-container {
+            position: relative;
+            z-index: 1;
+            margin-bottom: 24px;
+        }
+        .login-logo {
+            font-size: 80px;
+            animation: floatLogo 3s ease-in-out infinite;
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
+            display: block;
+        }
+        @keyframes floatLogo {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-14px);
+            }
+        }
+        .login-logo-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            border: 2px solid rgba(42, 171, 238, 0.2);
+            border-radius: 50%;
+            animation: pulseRing 2.5s ease-out infinite;
+        }
+        .login-logo-ring:nth-child(2) {
+            animation-delay: 0.5s;
+            width: 140px;
+            height: 140px;
+        }
+        .login-logo-ring:nth-child(3) {
+            animation-delay: 1s;
+            width: 160px;
+            height: 160px;
+        }
+        @keyframes pulseRing {
+            0% {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 0.6;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.4);
+                opacity: 0;
+            }
+        }
+        .login-title {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+            letter-spacing: -0.5px;
+        }
+        .login-subtitle {
+            font-size: 15px;
+            opacity: 0.7;
+            margin-bottom: 48px;
+            position: relative;
+            z-index: 1;
+            line-height: 1.5;
+        }
+        .login-features {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 40px;
+            width: 100%;
+            max-width: 300px;
+            position: relative;
+            z-index: 1;
+        }
+        .login-feature {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 14px 18px;
+            border-radius: 14px;
+            font-size: 14px;
+            text-align: left;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+        }
+        .login-feature:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+        .login-feature:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .login-feature:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .login-feature .icon {
+            font-size: 24px;
+            flex-shrink: 0;
+            animation: bounceIcon 2s ease-in-out infinite;
+        }
+        @keyframes bounceIcon {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.15);
+            }
+        }
+        .btn-login {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            max-width: 300px;
+            padding: 16px 24px;
+            background: #2AABEE;
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 24px rgba(42, 171, 238, 0.4);
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+        .btn-login:active {
+            transform: scale(0.96);
+            box-shadow: 0 4px 12px rgba(42, 171, 238, 0.3);
+        }
+        .login-error {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+            padding: 12px 18px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            max-width: 300px;
+            display: none;
+            position: relative;
+            z-index: 1;
+        }
+        .login-error.show {
+            display: block;
+        }
+        .dev-login-section {
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+            max-width: 300px;
+            position: relative;
+            z-index: 1;
+        }
+        .dev-login-title {
+            font-size: 12px;
+            opacity: 0.5;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .btn-dev-login {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: white;
+            border-radius: 12px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-bottom: 6px;
+            transition: all 0.2s;
+        }
+        .btn-dev-login:active {
+            background: rgba(255, 255, 255, 0.12);
+        }
+        .login-footer {
+            margin-top: 32px;
+            font-size: 12px;
+            opacity: 0.35;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ОСНОВНОЕ ПРИЛОЖЕНИЕ */
+        .main-app {
+            display: none;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .main-app.active {
+            display: flex;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            padding: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        .header h1 {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        .header .subtitle {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+        .btn-logout {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 14px;
+            border-radius: 25px;
+            font-size: 14px;
+            width: fit-content;
+        }
+        .user-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #2AABEE;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 13px;
+        }
+        .admin-badge {
+            background: #fbbf24;
+            color: #000;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 10px;
+            margin-left: 6px;
+        }
+        .brigadier-badge {
+            background: #a78bfa;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 10px;
+            margin-left: 6px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            padding: 16px 16px 0;
+            background: #fff;
+            position: sticky;
+            top: 113px;
+            z-index: 40;
+            flex-wrap: wrap;
+        }
+        .tab {
+            flex: 1;
+            min-width: 70px;
+            padding: 10px 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 13px;
+            background: #f1f5f9;
+            border: none;
+            border-radius: 12px 12px 0 0;
+            cursor: pointer;
+            color: #94a3b8;
+            transition: all 0.2s;
+        }
+        .tab.active {
+            background: #fff;
+            color: #2AABEE;
+            box-shadow: 0 -2px 0 #2AABEE;
+        }
+
+        /* Screens */
+        .screen {
+            display: none;
+            padding: 16px;
+            padding-bottom: 100px;
+            animation: fadeIn 0.25s ease;
+        }
+        .screen.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Scanner */
+        .scanner-container {
+            border-radius: var(--radius);
+            overflow: hidden;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            background: #000;
+            position: relative;
+            aspect-ratio: 1/1;
+            max-height: 350px;
+        }
+        #qr-reader {
+            width: 100% !important;
+            height: 100% !important;
+        }
+        #qr-reader video {
+            object-fit: cover;
+        }
+        #qr-reader__scan_region img {
+            display: none;
+        }
+        #qr-reader__dashboard {
+            display: none;
+        }
+        .scanner-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            border: 3px solid rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            pointer-events: none;
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.4);
+        }
+        .scanner-hint {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 13px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 8px 16px;
+            border-radius: 20px;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .btn-stop-scan {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: #f1f5f9;
+            color: #1e293b;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+        .manual-section {
+            margin-top: 12px;
+            text-align: center;
+        }
+        .manual-input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: var(--radius);
+            font-size: 16px;
+            text-align: center;
+            font-family: monospace;
+        }
+        .btn-manual {
+            margin-top: 8px;
+            width: 100%;
+            padding: 14px;
+            background: #f1f5f9;
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Tool Card */
+        .tool-card {
+            background: #f8fafc;
+            border-radius: var(--radius);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 16px;
+        }
+        .tool-name {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .tool-serial {
+            font-size: 13px;
+            color: #64748b;
+            background: rgba(0, 0, 0, 0.04);
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 12px;
+            margin-bottom: 4px;
+            font-family: monospace;
+            letter-spacing: 0.5px;
+        }
+        .tool-category {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-bottom: 12px;
+            background: rgba(42, 171, 238, 0.08);
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 10px;
+        }
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+        .status-available {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .status-taken {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .holder-info {
+            font-size: 14px;
+            color: #94a3b8;
+            margin-bottom: 16px;
+        }
+        .btn-action {
+            width: 100%;
+            padding: 16px;
+            font-size: 17px;
+            font-weight: 700;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-take {
+            background: #2AABEE;
+            color: white;
+        }
+        .btn-return {
+            background: #10b981;
+            color: white;
+        }
+        .btn-disabled {
+            background: #cbd5e1;
+            color: #64748b;
+            cursor: not-allowed;
+        }
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+            font-size: 13px;
+            padding: 10px;
+            margin-top: 8px;
+        }
+        .btn-action:active {
+            transform: scale(0.97);
+        }
+
+        /* History */
+        .history-item {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .history-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        .icon-take {
+            background: #dbeafe;
+        }
+        .icon-return {
+            background: #d1fae5;
+        }
+        .history-details {
+            flex: 1;
+            min-width: 0;
+        }
+        .history-action {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .history-tool {
+            font-size: 13px;
+            color: #94a3b8;
+        }
+        .history-time {
+            font-size: 11px;
+            color: #94a3b8;
+            margin-top: 2px;
+        }
+
+        /* Admin */
+        .category-section {
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            overflow: hidden;
+        }
+        .category-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            background: #f8fafc;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 15px;
+            gap: 10px;
+        }
+        .category-header .cat-name {
+            flex: 1;
+        }
+        .category-header .cat-count {
+            background: #e2e8f0;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #64748b;
+            font-weight: 600;
+        }
+        .category-header .cat-toggle {
+            font-size: 14px;
+            transition: transform 0.2s;
+        }
+        .category-tools {
+            display: none;
+        }
+        .category-tools.open {
+            display: block;
+        }
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        .admin-table th {
+            text-align: left;
+            padding: 10px 8px;
+            font-weight: 600;
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #94a3b8;
+            border-bottom: 2px solid #e2e8f0;
+            background: #fff;
+        }
+        .admin-table td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: middle;
+            background: #fff;
+        }
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 4px;
+        }
+        .dot-green {
+            background: #10b981;
+        }
+        .dot-red {
+            background: #ef4444;
+        }
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: #2AABEE;
+            color: white;
+            white-space: nowrap;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #2AABEE;
+            color: #2AABEE;
+        }
+        .btn-small-danger {
+            background: #ef4444;
+        }
+        .btn-small-success {
+            background: #10b981;
+        }
+        .admin-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #94a3b8;
+        }
+        .empty-state .icon {
+            font-size: 64px;
+            margin-bottom: 12px;
+        }
+
+        /* Модальное окно */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 100;
+            justify-content: center;
+            align-items: flex-end;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: white;
+            border-radius: 20px 20px 0 0;
+            padding: 24px 20px 32px;
+            width: 100%;
+            max-width: 480px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+        .modal h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .modal .form-group {
+            margin-bottom: 16px;
+        }
+        .modal label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #64748b;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .modal input,
+        .modal select {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: inherit;
+        }
+        .modal input:focus,
+        .modal select:focus {
+            outline: none;
+            border-color: #2AABEE;
+        }
+        .modal .serial-input-group {
+            display: flex;
+            gap: 8px;
+        }
+        .modal .serial-input-group input {
+            flex: 1;
+            font-family: monospace;
+            letter-spacing: 1px;
+        }
+        .modal .btn-scan-serial {
+            padding: 14px 16px;
+            background: #f1f5f9;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 20px;
+            white-space: nowrap;
+        }
+        .modal .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: #2AABEE;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+        .modal .btn-cancel {
+            width: 100%;
+            padding: 14px;
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 4px;
+        }
+        .serial-hint {
+            font-size: 11px;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+
+        /* Breadcrumbs */
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #94a3b8;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        .breadcrumbs span {
+            cursor: pointer;
+            color: #2AABEE;
+            font-weight: 500;
+        }
+        .breadcrumbs .sep {
+            color: #cbd5e1;
+            cursor: default;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1e293b;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 14px;
+            z-index: 999;
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+        .toast.success {
+            background: #065f46;
+        }
+        .toast.error {
+            background: #991b1b;
+        }
+    </style>
 </head>
 <body>
-<div class="phone-frame" id="app">
-  <div class="app-header" id="headerTitle">
-    <span>🔧 ToolTrack Pro</span>
-    <button class="logout-btn" id="logoutBtn" style="display:none;">Выйти</button>
-  </div>
+    <div class="app" id="app">
+        <!-- ЭКРАН ВХОДА -->
+        <div class="login-screen" id="loginScreen">
+            <div class="login-bg-particles" id="particles"></div>
+            <div class="login-logo-container">
+                <div class="login-logo-ring"></div>
+                <div class="login-logo-ring"></div>
+                <div class="login-logo-ring"></div>
+                <span class="login-logo">🔧</span>
+            </div>
+            <div class="login-title">ToolTracker</div>
+            <div class="login-subtitle">Учет инструментов на предприятии</div>
+            <div class="login-features">
+                <div class="login-feature"><span class="icon">📷</span><span>Сканирование QR-кодов</span></div>
+                <div class="login-feature"><span class="icon">🤚</span><span>Фиксация выдачи и возврата</span></div>
+                <div class="login-feature"><span class="icon">📋</span><span>Полная история операций</span></div>
+            </div>
+            <div class="login-error" id="loginError">⚠️ Авторизация доступна только внутри Telegram</div>
+            <button class="btn-login" id="btnLogin">✈️ Войти через Telegram</button>
+            <div class="dev-login-section" id="devSection">
+                <div class="dev-login-title">Режим разработчика</div>
+                <button class="btn-dev-login" id="btnDevUser">👤 Войти как Сотрудник</button>
+                <button class="btn-dev-login" id="btnDevBrigadier">👷 Войти как Бригадир</button>
+                <button class="btn-dev-login" id="btnDevAdmin">🛡️ Войти как Админ</button>
+            </div>
+            <div class="login-footer">ToolTracker v4.0 · Telegram Mini App</div>
+        </div>
 
-  <!-- Экран авторизации -->
-  <div class="login-screen active" id="loginScreen">
-    <div class="logo-animation">🔧</div>
-    <h2 style="margin-bottom:6px;">Учёт инструмента</h2>
-    <p style="opacity:0.8; margin-bottom:20px;">Войдите под своим именем</p>
-    <input class="login-input" id="loginName" placeholder="Имя пользователя" autocomplete="off">
-    <input class="login-input" id="loginEmail" placeholder="Email" type="email" autocomplete="off">
-    <input class="login-input" id="loginPhone" placeholder="Телефон" type="tel" autocomplete="off">
-    <select class="login-select" id="loginRole">
-      <option value="worker">Сотрудник</option>
-      <option value="foreman">Бригадир</option>
-      <option value="admin">Администратор</option>
-    </select>
-    <button class="login-btn" id="loginBtn">Войти / Зарегистрироваться</button>
-    <p style="margin-top:16px; font-size:13px; opacity:0.6;">Демо: admin / Администратор</p>
-  </div>
+        <!-- ОСНОВНОЕ ПРИЛОЖЕНИЕ -->
+        <div class="main-app" id="mainApp">
+            <div class="header">
+                <div class="header-top">
+                    <div>
+                        <h1>🔧 Учет инструментов</h1>
+                        <div class="subtitle">Сканируйте QR-код для работы</div>
+                    </div>
+                    <button class="btn-logout" id="btnLogout">🚪 Выйти</button>
+                </div>
+                <div class="user-badge">
+                    <div class="user-avatar" id="userAvatar">?</div>
+                    <span id="userName">Пользователь</span>
+                    <span class="admin-badge" id="adminBadge" style="display:none;">Админ</span>
+                    <span class="brigadier-badge" id="brigadierBadge" style="display:none;">Бригадир</span>
+                </div>
+            </div>
 
-  <!-- Экран Сканер -->
-  <div class="screen" id="scannerScreen">
-    <h3 class="section-title">📷 Сканер / Поиск инструмента</h3>
-    <div id="qr-reader" style="width:100%; border-radius:20px; overflow:hidden; margin-bottom:12px;"></div>
-    <button class="btn-outline btn" id="stopScannerBtn" style="display:none;">⏹️ Остановить сканер</button>
-    <input type="text" id="manualSerialInput" placeholder="Или введите серийный номер вручную">
-    <button class="btn" id="searchManualBtn">🔍 Найти и взять</button>
-    <div id="scanResult" class="card" style="margin-top:12px;"></div>
-    <div style="margin-top:16px;">
-      <button class="btn btn-outline" id="returnToolBtn" style="display:none;">📥 Вернуть инструмент</button>
+            <div class="tabs" id="tabsContainer">
+                <button class="tab active" data-screen="scan">📷 Сканер</button>
+                <button class="tab" data-screen="history">📋 История</button>
+                <button class="tab" data-screen="staff" id="tabStaff" style="display:none;">👥 Сотрудники</button>
+                <button class="tab" data-screen="admin" id="tabAdmin" style="display:none;">⚙️ Админ</button>
+            </div>
+
+            <!-- Экран Сканера -->
+            <div class="screen active" id="screen-scan">
+                <div class="scanner-container" id="scannerContainer">
+                    <div id="qr-reader"></div>
+                    <div class="scanner-overlay"></div>
+                    <div class="scanner-hint">Наведите камеру на QR-код</div>
+                </div>
+                <button class="btn-stop-scan" id="btnStopScan" style="display:none;">⏹ Остановить сканер</button>
+                <div class="manual-section">
+                    <p style="font-size:13px;color:#94a3b8;margin-bottom:8px;">Или введите серийный номер:</p>
+                    <input type="text" class="manual-input" id="manualInput" placeholder="SN-775533" maxlength="30">
+                    <button class="btn-manual" id="btnManual">🔍 Найти инструмент</button>
+                    <p style="font-size:11px;color:#94a3b8;margin-top:8px;">
+                        Демо: <strong>SN-775533</strong>, <strong>SN-992211</strong>, <strong>SN-448899</strong>, <strong>SN-112266</strong>
+                    </p>
+                </div>
+                <div class="tool-card" id="toolCard" style="display:none;">
+                    <div class="tool-name" id="toolName"></div>
+                    <div class="tool-serial" id="toolSerial"></div>
+                    <div class="tool-category" id="toolCategory"></div>
+                    <div class="status-badge" id="statusBadge"><span id="statusText"></span></div>
+                    <div class="holder-info" id="holderInfo" style="display:none;">На руках у: <strong id="holderName"></strong></div>
+                    <button class="btn-action btn-take" id="btnTake" style="display:none;">🤚 Взять</button>
+                    <button class="btn-action btn-return" id="btnReturn" style="display:none;">✅ Вернуть</button>
+                    <button class="btn-action btn-disabled" id="btnBlocked" style="display:none;" disabled>🔒 Занят</button>
+                    <button class="btn-action btn-danger" id="btnForceReturn" style="display:none;">⚡ Принудительный возврат</button>
+                </div>
+            </div>
+
+            <!-- Экран Истории -->
+            <div class="screen" id="screen-history">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                    <h3 style="margin:0;">📋 Операции</h3>
+                    <div id="historyActions"></div>
+                </div>
+                <div id="historyList"><div class="empty-state"><div class="icon">📭</div><p>История пуста</p></div></div>
+            </div>
+
+            <!-- Экран Сотрудников -->
+            <div class="screen" id="screen-staff">
+                <h3 style="margin-bottom:12px;">👥 Управление сотрудниками</h3>
+                <div class="admin-actions">
+                    <button class="btn-small btn-outline" id="btnExportStaffCSV">📥 Экспорт CSV</button>
+                </div>
+                <div id="staffList"></div>
+            </div>
+
+            <!-- Экран Админа -->
+            <div class="screen" id="screen-admin">
+                <div class="breadcrumbs" id="breadcrumbs"></div>
+                <h3 style="margin-bottom:12px;" id="adminTitle">📁 Категории инструментов</h3>
+                <div class="admin-actions" id="adminActions">
+                    <button class="btn-small" id="btnAddCategory">📁 Создать категорию</button>
+                    <button class="btn-small" id="btnAddTool">➕ Добавить инструмент</button>
+                    <button class="btn-small btn-outline" id="btnExportCSV">📥 Экспорт CSV</button>
+                    <button class="btn-small btn-outline" id="btnImportCSV">📤 Импорт CSV</button>
+                </div>
+                <input type="file" id="importFileInput" accept=".csv" style="display:none;">
+                <div id="adminContent"></div>
+            </div>
+        </div>
+
+        <!-- Модальное окно: Добавление инструмента -->
+        <div class="modal-overlay" id="modalAddTool">
+            <div class="modal">
+                <h3 id="modalToolTitle">➕ Добавить инструмент</h3>
+                <div class="form-group">
+                    <label>Категория</label>
+                    <select id="inputCategory"></select>
+                </div>
+                <div class="form-group">
+                    <label>Серийный номер (QR-код)</label>
+                    <div class="serial-input-group">
+                        <input type="text" id="inputSerial" placeholder="SN-XXXXXX" maxlength="30">
+                        <button class="btn-scan-serial" id="btnScanSerial" title="Сканировать QR-код">📷</button>
+                    </div>
+                    <div class="serial-hint">Введите вручную или нажмите 📷</div>
+                </div>
+                <div class="form-group">
+                    <label>Название инструмента</label>
+                    <input type="text" id="inputName" placeholder="Перфоратор Bosch GBH 2-28">
+                </div>
+                <button class="btn-submit" id="btnSubmitTool">✅ Сохранить</button>
+                <button class="btn-cancel" id="btnCancelTool">Отмена</button>
+            </div>
+        </div>
+
+        <!-- Модальное окно: Создание категории -->
+        <div class="modal-overlay" id="modalAddCategory">
+            <div class="modal">
+                <h3>📁 Создать категорию</h3>
+                <div class="form-group">
+                    <label>Название категории</label>
+                    <input type="text" id="inputCatName" placeholder="Электроинструменты">
+                </div>
+                <button class="btn-submit" id="btnSubmitCategory">✅ Создать</button>
+                <button class="btn-cancel" id="btnCancelCategory">Отмена</button>
+            </div>
+        </div>
+
+        <!-- Модальное окно: Сканирование серийного номера -->
+        <div class="modal-overlay" id="modalScanSerial">
+            <div class="modal">
+                <h3>📷 Сканируйте серийный номер</h3>
+                <div class="scanner-container" id="serialScannerContainer" style="max-height:300px;">
+                    <div id="serial-qr-reader"></div>
+                </div>
+                <button class="btn-cancel" id="btnCancelScan">Отмена</button>
+            </div>
+        </div>
+
+        <div class="toast" id="toast"></div>
     </div>
-  </div>
 
-  <!-- Экран История -->
-  <div class="screen" id="historyScreen">
-    <h3 class="section-title">📋 История операций</h3>
-    <div id="historyList"></div>
-  </div>
+    <script>
+        (function() {
+            const STORAGE_KEY = 'tooltracker_db_v4';
+            const AUTH_KEY = 'tooltracker_auth';
 
-  <!-- Экран Сотрудники -->
-  <div class="screen" id="employeesScreen">
-    <h3 class="section-title">👥 Сотрудники</h3>
-    <div style="overflow-x:auto;">
-      <table id="employeesTable">
-        <thead>
-          <tr>
-            <th>Имя</th>
-            <th>Должность</th>
-            <th>Email</th>
-            <th>Телефон</th>
-            <th>Дата регистрации</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-  </div>
+            function getDefaultData() {
+                return {
+                    users: [
+                        { telegram_id: 987654321, username: 'admin_user', full_name: 'Сергей Админов',
+                            role: 'admin' },
+                        { telegram_id: 111222333, username: 'brigadier_user', full_name: 'Алексей Бригадиров',
+                            role: 'brigadier' },
+                        { telegram_id: 123456789, username: 'ivan_petrov', full_name: 'Иван Петров',
+                        role: 'user' },
+                    ],
+                    categories: [
+                        { id: 'cat_1', name: 'Электроинструменты' },
+                        { id: 'cat_2', name: 'Измерительные приборы' },
+                        { id: 'cat_3', name: 'Ручной инструмент' },
+                    ],
+                    tools: [
+                        { serial: 'SN-775533', name: 'Перфоратор Bosch GBH 2-28', category_id: 'cat_1',
+                            status: 'available', current_holder: null },
+                        { serial: 'SN-992211', name: 'Шуруповерт Makita DF333', category_id: 'cat_1',
+                            status: 'available', current_holder: null },
+                        { serial: 'SN-448899', name: 'УШМ DeWALT 125мм', category_id: 'cat_1',
+                        status: 'available', current_holder: null },
+                        { serial: 'SN-112266', name: 'Лазерный нивелир Bosch', category_id: 'cat_2',
+                            status: 'taken', current_holder: 123456789 },
+                        { serial: 'SN-556677', name: 'Набор отверток', category_id: 'cat_3',
+                        status: 'available', current_holder: null },
+                    ],
+                    transactions: [
+                        { id: 1, tool_serial: 'SN-112266', user_id: 123456789, action: 'take',
+                            timestamp: new Date(Date.now() - 3600000).toISOString() },
+                        { id: 2, tool_serial: 'SN-775533', user_id: 111222333, action: 'take',
+                            timestamp: new Date(Date.now() - 7200000).toISOString() },
+                        { id: 3, tool_serial: 'SN-775533', user_id: 111222333, action: 'return',
+                            timestamp: new Date(Date.now() - 1800000).toISOString() },
+                    ]
+                };
+            }
 
-  <!-- Экран Админ -->
-  <div class="screen" id="adminScreen">
-    <h3 class="section-title">⚙️ Администрирование</h3>
-    
-    <!-- Создание категории -->
-    <div class="card">
-      <strong>➕ Новая категория</strong>
-      <input id="categoryName" placeholder="Название категории">
-      <button class="btn" id="addCategoryBtn">Создать категорию</button>
-    </div>
-    
-    <!-- Добавление инструмента -->
-    <div class="card">
-      <strong>🛠️ Добавить инструмент</strong>
-      <select id="toolCategorySelect"></select>
-      <input id="toolName" placeholder="Наименование инструмента">
-      <div class="form-row">
-        <input id="toolSerial" placeholder="Серийный номер">
-        <button class="btn btn-small" id="scanSerialBtn" style="margin-top:6px;">📷 Скан</button>
-      </div>
-      <button class="btn" id="addToolBtn">Добавить инструмент</button>
-    </div>
-    
-    <!-- Назначение бригадира -->
-    <div class="card">
-      <strong>👑 Назначить бригадира</strong>
-      <select id="promoteUserSelect"></select>
-      <button class="btn" id="promoteToForemanBtn">Назначить бригадиром</button>
-    </div>
-    
-    <!-- Дерево категорий и инструментов -->
-    <div class="card">
-      <strong>📂 Категории и инструменты</strong>
-      <div id="categoryTree"></div>
-    </div>
-    
-    <!-- Импорт/Экспорт -->
-    <div style="display:flex; gap:8px; margin-top:12px;">
-      <button class="btn-outline btn" id="exportCsvBtn">📤 Экспорт CSV</button>
-      <button class="btn-outline btn" id="importCsvBtn">📥 Импорт CSV</button>
-    </div>
-    <input type="file" id="csvFileInput" accept=".csv" style="display:none;">
-  </div>
+            function loadData() { const s = localStorage.getItem(STORAGE_KEY); if (s) try { const d = JSON.parse(
+                    s); if (d.categories) return d; } catch (e) {} const def = getDefaultData();
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(def)); return def; }
 
-  <!-- Нижняя навигация -->
-  <div class="bottom-nav" id="bottomNav">
-    <div class="nav-item" data-screen="scanner"><span class="nav-icon">📷</span>Сканер</div>
-    <div class="nav-item" data-screen="history"><span class="nav-icon">🕒</span>История</div>
-    <div class="nav-item" data-screen="employees" id="navEmployees"><span class="nav-icon">👥</span>Сотрудники</div>
-    <div class="nav-item" data-screen="admin" id="navAdmin"><span class="nav-icon">⚙️</span>Админ</div>
-  </div>
-</div>
+            function saveData() { localStorage.setItem(STORAGE_KEY, JSON.stringify(DB)); }
+            let DB = loadData();
+            let currentUser = null;
+            let currentAdminView = { type: 'categories', categoryId: null };
 
-<script>
-  (function() {
-    const DB_NAME = "ToolTrackDB";
-    let db;
-    let currentUser = null;
-    let html5QrCode = null;
-    let scanningForSerial = false; // флаг для кнопки "Скан" в админке
+            const $ = (s) => document.querySelector(s);
+            const $$ = (s) => document.querySelectorAll(s);
+            const loginScreen = $('#loginScreen'),
+                mainApp = $('#mainApp'),
+                loginError = $('#loginError'),
+                devSection = $('#devSection');
+            const userNameEl = $('#userName'),
+                userAvatarEl = $('#userAvatar'),
+                adminBadge = $('#adminBadge'),
+                brigadierBadge = $('#brigadierBadge'),
+                tabAdmin = $('#tabAdmin'),
+                tabStaff = $('#tabStaff');
+            const qrReader = $('#qr-reader'),
+                btnStopScan = $('#btnStopScan');
+            const toolCard = $('#toolCard'),
+                toolName = $('#toolName'),
+                toolSerial = $('#toolSerial'),
+                toolCategory = $('#toolCategory');
+            const statusBadge = $('#statusBadge'),
+                statusText = $('#statusText'),
+                holderInfo = $('#holderInfo'),
+                holderName = $('#holderName');
+            const btnTake = $('#btnTake'),
+                btnReturn = $('#btnReturn'),
+                btnBlocked = $('#btnBlocked'),
+                btnForceReturn = $('#btnForceReturn');
+            const historyList = $('#historyList'),
+                historyActions = $('#historyActions');
+            const adminContent = $('#adminContent'),
+                adminActions = $('#adminActions'),
+                adminTitle = $('#adminTitle'),
+                breadcrumbs = $('#breadcrumbs');
+            const staffList = $('#staffList');
+            const toast = $('#toast'),
+                manualInput = $('#manualInput');
+            const modalAddTool = $('#modalAddTool'),
+                modalAddCategory = $('#modalAddCategory'),
+                modalScanSerial = $('#modalScanSerial');
+            const inputCategory = $('#inputCategory'),
+                inputSerial = $('#inputSerial'),
+                inputName = $('#inputName');
+            const inputCatName = $('#inputCatName');
+            const importFileInput = $('#importFileInput');
+            let mainScanner = null,
+                serialScanner = null,
+                currentScannedTool = null,
+                toastTimer = null;
+            let editingToolSerial = null;
 
-    // ---------- БАЗА ДАННЫХ ----------
-    function openDB() {
-      return new Promise((resolve, reject) => {
-        const request = indexedDB.open(DB_NAME, 3);
-        request.onupgradeneeded = (e) => {
-          const db = e.target.result;
-          if (!db.objectStoreNames.contains('users')) {
-            const userStore = db.createObjectStore('users', { keyPath: 'username' });
-            userStore.createIndex('role', 'role', { unique: false });
-          }
-          if (!db.objectStoreNames.contains('tools')) {
-            const toolStore = db.createObjectStore('tools', { keyPath: 'serial' });
-            toolStore.createIndex('category', 'category', { unique: false });
-          }
-          if (!db.objectStoreNames.contains('categories')) {
-            db.createObjectStore('categories', { keyPath: 'name' });
-          }
-          if (!db.objectStoreNames.contains('transactions')) {
-            const txStore = db.createObjectStore('transactions', { keyPath: 'id', autoIncrement: true });
-            txStore.createIndex('username', 'username', { unique: false });
-            txStore.createIndex('serial', 'serial', { unique: false });
-          }
-        };
-        request.onsuccess = (e) => { db = e.target.result; resolve(db); };
-        request.onerror = () => reject();
-      });
-    }
+            // ==================== ЧАСТИЦЫ ====================
+            function createParticles() { const c = $('#particles'); if (!c) return;
+                c.innerHTML = ''; for (let i = 0; i < 20; i++) { const p = document.createElement('div');
+                    p.classList.add('particle'); const s = Math.random() * 60 + 10;
+                    p.style.width = s + 'px';
+                    p.style.height = s + 'px';
+                    p.style.left = Math.random() * 100 + '%';
+                    p.style.top = Math.random() * 100 + '%';
+                    p.style.animationDuration = (Math.random() * 15 + 10) + 's';
+                    p.style.animationDelay = (Math.random() * 10) + 's';
+                    c.appendChild(p); } }
 
-    async function seedData() {
-      const tx = db.transaction(['users','categories','tools','transactions'], 'readwrite');
-      const usersStore = tx.objectStore('users');
-      const catStore = tx.objectStore('categories');
-      const toolsStore = tx.objectStore('tools');
-      
-      if (!(await getOne(usersStore, 'admin'))) {
-        await usersStore.put({ username: 'admin', role: 'admin', email: 'admin@tooltrack.ru', phone: '+79000000001', registeredAt: new Date().toISOString() });
-        await usersStore.put({ username: 'foreman1', role: 'foreman', email: 'foreman1@tooltrack.ru', phone: '+79000000002', registeredAt: new Date().toISOString() });
-        await usersStore.put({ username: 'worker1', role: 'worker', email: 'worker1@tooltrack.ru', phone: '+79000000003', registeredAt: new Date().toISOString() });
-      }
-      if (!(await getOne(catStore, 'Дрели'))) {
-        await catStore.put({ name: 'Дрели' });
-        await catStore.put({ name: 'Перфораторы' });
-        await catStore.put({ name: 'Шуруповерты' });
-      }
-      if (!(await getOne(toolsStore, 'DR-001'))) {
-        await toolsStore.put({ serial: 'DR-001', name: 'Дрель Makita 6408', category: 'Дрели' });
-        await toolsStore.put({ serial: 'DR-002', name: 'Дрель Bosch GBM 13', category: 'Дрели' });
-        await toolsStore.put({ serial: 'PR-100', name: 'Перфоратор Bosch GBH 2-28', category: 'Перфораторы' });
-        await toolsStore.put({ serial: 'SH-500', name: 'Шуруповерт DeWalt DCD771', category: 'Шуруповерты' });
-      }
-      await tx.done;
-    }
+            // ==================== ТОСТ ====================
+            function showToast(m, t = '') { clearTimeout(toastTimer);
+                toast.textContent = m;
+                toast.className = 'toast ' + t + ' show';
+                toastTimer = setTimeout(() => toast.classList.remove('show'), 2500); }
 
-    function getOne(store, key) {
-      return new Promise(res => { const r = store.get(key); r.onsuccess = () => res(r.result); });
-    }
+            function saveAuth() { if (currentUser) localStorage.setItem(AUTH_KEY, JSON.stringify({ telegram_id: currentUser
+                        .telegram_id, timestamp: Date.now() })); }
 
-    // ---------- АВТОРИЗАЦИЯ ----------
-    async function login(username, email, phone, role) {
-      if (!username.trim()) { alert('Введите имя пользователя'); return; }
-      const tx = db.transaction('users', 'readwrite');
-      const store = tx.objectStore('users');
-      let user = await getOne(store, username);
-      if (!user) {
-        user = { 
-          username: username.trim(), 
-          role, 
-          email: email.trim() || 'не указан', 
-          phone: phone.trim() || 'не указан',
-          registeredAt: new Date().toISOString() 
-        };
-      } else {
-        user.role = role;
-        user.email = email.trim() || user.email || 'не указан';
-        user.phone = phone.trim() || user.phone || 'не указан';
-      }
-      await store.put(user);
-      await tx.done;
-      currentUser = user;
-      
-      // Скрываем экран логина, показываем интерфейс
-      document.getElementById('loginScreen').classList.remove('active');
-      document.getElementById('bottomNav').classList.add('visible');
-      document.getElementById('logoutBtn').style.display = 'block';
-      document.getElementById('headerTitle').innerHTML = `<span>🔧 ToolTrack (${currentUser.username})</span>`;
-      
-      updateUIForRole();
-      navigateTo('scanner');
-      return user;
-    }
+            function clearAuth() { localStorage.removeItem(AUTH_KEY);
+                currentUser = null; }
 
-    function logout() {
-      currentUser = null;
-      stopScanner();
-      document.getElementById('loginScreen').classList.add('active');
-      document.getElementById('bottomNav').classList.remove('visible');
-      document.getElementById('logoutBtn').style.display = 'none';
-      document.getElementById('headerTitle').innerHTML = '<span>🔧 ToolTrack Pro</span>';
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    }
+            function loginAs(u) { currentUser = u; const du = DB.users.find(x => x.telegram_id === u.telegram_id); if (
+                    du) { du.full_name = u.full_name;
+                    du.username = u.username;
+                    du.role = u.role; } else DB.users.push(u);
+                saveData();
+                saveAuth();
+                showMainApp();
+                showToast('✅ Добро пожаловать, ' + u.full_name + '!', 'success'); }
 
-    function updateUIForRole() {
-      if (!currentUser) return;
-      const navEmployees = document.getElementById('navEmployees');
-      const navAdmin = document.getElementById('navAdmin');
-      navEmployees.style.display = (currentUser.role === 'admin' || currentUser.role === 'foreman') ? 'block' : 'none';
-      navAdmin.style.display = (currentUser.role === 'admin') ? 'block' : 'none';
-    }
+            function logout() { if (confirm('Выйти?')) { if (mainScanner && mainScanner.isScanning) mainScanner.stop()
+                        .catch(() => {}); if (serialScanner && serialScanner.isScanning) serialScanner.stop()
+                    .catch(() => {});
+                    mainScanner = null;
+                    serialScanner = null;
+                    clearAuth();
+                    hideToolCard();
+                    showLoginScreen();
+                    showToast('Вы вышли'); } }
 
-    function navigateTo(screenId) {
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      const target = document.getElementById(screenId + 'Screen');
-      if (target) target.classList.add('active');
-      
-      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-      const navItem = document.querySelector(`.nav-item[data-screen="${screenId}"]`);
-      if (navItem) navItem.classList.add('active');
-      
-      if (screenId === 'scanner') startScanner();
-      else stopScanner();
-      if (screenId === 'history') loadHistory();
-      if (screenId === 'employees') loadEmployees();
-      if (screenId === 'admin') loadAdminData();
-    }
+            function showLoginScreen() { loginScreen.style.display = 'flex';
+                mainApp.classList.remove('active');
+                loginError.classList.remove('show');
+                devSection.style.display = isRunningInTelegram() ? 'none' : 'block';
+                createParticles(); }
 
-    // ---------- СКАНЕР ----------
-    function startScanner() {
-      const readerEl = document.getElementById('qr-reader');
-      if (!html5QrCode) {
-        html5QrCode = new Html5Qrcode("qr-reader");
-      }
-      if (html5QrCode.isScanning) return;
-      
-      html5QrCode.start(
-        { facingMode: "environment" },
-        { fps: 10, qrbox: 250 },
-        (decodedText) => {
-          if (scanningForSerial) {
-            document.getElementById('toolSerial').value = decodedText.trim();
-            scanningForSerial = false;
-            stopScanner();
-            alert('Серийный номер считан: ' + decodedText.trim());
-          } else {
-            handleSerialScan(decodedText.trim());
-          }
-        },
-        () => {}
-      ).then(() => {
-        document.getElementById('stopScannerBtn').style.display = 'block';
-      }).catch(err => {
-        console.log("Камера недоступна, используйте ручной ввод");
-      });
-    }
+            function showMainApp() { loginScreen.style.display = 'none';
+                mainApp.classList.add('active');
+                updateUserUI();
+                renderAllTabs();
+                showScannerPlaceholder();
+                switchScreen('scan'); }
 
-    function stopScanner() {
-      if (html5QrCode && html5QrCode.isScanning) {
-        html5QrCode.stop().then(() => {
-          document.getElementById('stopScannerBtn').style.display = 'none';
-        }).catch(e => {});
-      }
-      scanningForSerial = false;
-    }
+            function updateUserUI() { if (!currentUser) return;
+                userNameEl.textContent = currentUser.full_name;
+                userAvatarEl.textContent = currentUser.full_name.trim().charAt(0).toUpperCase() || '?';
+                adminBadge.style.display = currentUser.role === 'admin' ? 'inline' : 'none';
+                brigadierBadge.style.display = currentUser.role === 'brigadier' ? 'inline' : 'none';
+                tabAdmin.style.display = (currentUser.role === 'admin' || currentUser.role === 'brigadier') ?
+                    'block' : 'none';
+                tabStaff.style.display = (currentUser.role === 'admin') ? 'block' : 'none'; }
 
-    async function handleSerialScan(serial) {
-      const tool = await getToolBySerial(serial);
-      const resultDiv = document.getElementById('scanResult');
-      const returnBtn = document.getElementById('returnToolBtn');
-      
-      if (!tool) {
-        resultDiv.innerHTML = `<p style="color:red;">❌ Инструмент с номером "${serial}" не найден</p>`;
-        returnBtn.style.display = 'none';
-        return;
-      }
-      
-      const status = await getToolStatus(serial);
-      
-      if (status.holder && status.holder !== currentUser.username) {
-        resultDiv.innerHTML = `
-          <p><b>${tool.name}</b> (${tool.serial})</p>
-          <p>Категория: ${tool.category}</p>
-          <p style="color:orange;">⚠️ Выдан: ${status.holder}</p>
-        `;
-        returnBtn.style.display = 'none';
-      } else if (status.holder === currentUser.username) {
-        resultDiv.innerHTML = `
-          <p><b>${tool.name}</b> (${tool.serial})</p>
-          <p>Категория: ${tool.category}</p>
-          <p style="color:green;">✅ У вас на руках</p>
-        `;
-        returnBtn.style.display = 'block';
-        returnBtn.onclick = () => returnTool(serial);
-      } else {
-        await takeTool(serial);
-        resultDiv.innerHTML = `
-          <p><b>${tool.name}</b> (${tool.serial})</p>
-          <p>Категория: ${tool.category}</p>
-          <p style="color:green;">✅ Вы успешно взяли инструмент!</p>
-        `;
-        returnBtn.style.display = 'block';
-        returnBtn.onclick = () => returnTool(serial);
-      }
-    }
+            function canManageUsers() { return currentUser && currentUser.role === 'admin'; }
 
-    async function takeTool(serial) {
-      const tx = db.transaction('transactions', 'readwrite');
-      await tx.objectStore('transactions').put({
-        username: currentUser.username,
-        serial: serial,
-        takenAt: new Date().toISOString(),
-        returnedAt: null
-      });
-      await tx.done;
-    }
+            function canAddTools() { return currentUser && (currentUser.role === 'admin' || currentUser.role ===
+                    'brigadier'); }
 
-    async function returnTool(serial) {
-      const tx = db.transaction('transactions', 'readwrite');
-      const store = tx.objectStore('transactions');
-      const all = await new Promise(res => store.getAll().onsuccess = e => res(e.target.result));
-      const active = all.find(t => t.serial === serial && t.username === currentUser.username && !t.returnedAt);
-      if (active) {
-        active.returnedAt = new Date().toISOString();
-        await store.put(active);
-        await tx.done;
-        alert('Инструмент возвращен!');
-        document.getElementById('scanResult').innerHTML = '<p>Инструмент возвращен на склад.</p>';
-        document.getElementById('returnToolBtn').style.display = 'none';
-      }
-    }
+            function canForceReturn() { return currentUser && (currentUser.role === 'admin' || currentUser.role ===
+                    'brigadier'); }
 
-    async function getToolBySerial(serial) {
-      return new Promise(res => {
-        const tx = db.transaction('tools','readonly');
-        tx.objectStore('tools').get(serial).onsuccess = e => res(e.target.result);
-      });
-    }
+            function isRunningInTelegram() { return !!(window.Telegram && window.Telegram.WebApp && window.Telegram
+                    .WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user); }
 
-    async function getToolStatus(serial) {
-      const tx = db.transaction('transactions','readonly');
-      const all = await new Promise(res => tx.objectStore('transactions').getAll().onsuccess = e => res(e.target.result));
-      const toolTxs = all.filter(t => t.serial === serial).sort((a,b) => new Date(b.takenAt) - new Date(a.takenAt));
-      const active = toolTxs.find(t => !t.returnedAt);
-      return {
-        holder: active ? active.username : null,
-        history: toolTxs
-      };
-    }
+            function authenticateViaTelegram() {
+                if (!isRunningInTelegram()) {
+                    loginError.classList.add('show');
+                    setTimeout(() => loginError.classList.remove('show'), 4000);
+                    return;
+                }
+                try {
+                    const tg = window.Telegram.WebApp;
+                    tg.ready();
+                    tg.expand();
+                    const u = tg.initDataUnsafe.user;
+                    const telegramId = u.id;
+                    const username = u.username || ('user_' + telegramId);
+                    const fullName = ((u.first_name || '') + ' ' + (u.last_name || '')).trim() || username;
 
-    // ---------- ИСТОРИЯ ----------
-    async function loadHistory() {
-      const tx = db.transaction('transactions','readonly');
-      let allTx = await new Promise(res => tx.objectStore('transactions').getAll().onsuccess = e => res(e.target.result));
-      
-      if (currentUser.role === 'worker') {
-        allTx = allTx.filter(t => t.username === currentUser.username);
-      }
-      
-      allTx.sort((a,b) => new Date(b.takenAt) - new Date(a.takenAt));
-      
-      const container = document.getElementById('historyList');
-      if (allTx.length === 0) {
-        container.innerHTML = '<p>История пуста</p>';
-        return;
-      }
-      
-      container.innerHTML = `
-        <table>
-          <thead>
-            <tr><th>Сотрудник</th><th>Серийный №</th><th>Взял</th><th>Вернул</th><th>Статус</th></tr>
-          </thead>
-          <tbody>
-            ${allTx.map(t => `
-              <tr>
-                <td>${t.username}</td>
-                <td>${t.serial}</td>
-                <td>${new Date(t.takenAt).toLocaleString()}</td>
-                <td>${t.returnedAt ? new Date(t.returnedAt).toLocaleString() : '-'}</td>
-                <td><span class="badge ${t.returnedAt ? 'badge-success' : 'badge-warning'}">${t.returnedAt ? 'Возвращено' : 'На руках'}</span></td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-      `;
-    }
+                    // Ищем пользователя в БД или создаем нового
+                    let dbUser = DB.users.find(x => x.telegram_id === telegramId);
+                    if (dbUser) {
+                        dbUser.full_name = fullName;
+                        dbUser.username = username;
+                    } else {
+                        dbUser = {
+                            telegram_id: telegramId,
+                            username: username,
+                            full_name: fullName,
+                            role: 'user'
+                        };
+                        DB.users.push(dbUser);
+                    }
+                    saveData();
+                    loginAs(dbUser);
+                } catch (e) {
+                    console.error('Auth error:', e);
+                    loginError.classList.add('show');
+                }
+            }
 
-    // ---------- СОТРУДНИКИ (ТАБЛИЦА) ----------
-    async function loadEmployees() {
-      const tx = db.transaction('users','readonly');
-      const users = await new Promise(res => tx.objectStore('users').getAll().onsuccess = e => res(e.target.result));
-      const tbody = document.querySelector('#employeesTable tbody');
-      
-      const roleNames = { admin: 'Администратор', foreman: 'Бригадир', worker: 'Сотрудник' };
-      
-      tbody.innerHTML = users.map(u => `
-        <tr>
-          <td><b>${u.username}</b></td>
-          <td><span class="badge">${roleNames[u.role] || u.role}</span></td>
-          <td>${u.email || '—'}</td>
-          <td>${u.phone || '—'}</td>
-          <td>${u.registeredAt ? new Date(u.registeredAt).toLocaleDateString() : '—'}</td>
-        </tr>
-      `).join('');
-    }
+            function checkSavedAuth() { const s = localStorage.getItem(AUTH_KEY); if (s) { try { const d = JSON.parse(
+                        s); const u = DB.users.find(x => x.telegram_id === d.telegram_id); if (u) { currentUser =
+                            u; return true; } } catch (e) {} } return false; }
 
-    // ---------- АДМИНКА ----------
-    async function loadAdminData() {
-      // Загружаем категории в select
-      const catTx = db.transaction('categories','readonly');
-      const cats = await new Promise(res => catTx.objectStore('categories').getAll().onsuccess = e => res(e.target.result));
-      const select = document.getElementById('toolCategorySelect');
-      select.innerHTML = cats.map(c => `<option>${c.name}</option>`).join('');
-      
-      // Загружаем пользователей для повышения
-      const userTx = db.transaction('users','readonly');
-      const users = await new Promise(res => userTx.objectStore('users').getAll().onsuccess = e => res(e.target.result));
-      const promoteSelect = document.getElementById('promoteUserSelect');
-      promoteSelect.innerHTML = users.map(u => `<option value="${u.username}">${u.username} (${u.role})</option>`).join('');
-      
-      // Строим дерево категорий с таблицами инструментов
-      await buildCategoryTree();
-    }
+            // ==================== СКАНЕР ====================
+            function showScannerPlaceholder() { qrReader.innerHTML =
+                    `<div style="display:flex;align-items:center;justify-content:center;height:100%;flex-direction:column;cursor:pointer;background:#1e293b;" id="startScanBtn"><div style="font-size:64px;margin-bottom:12px;">📷</div><div style="color:white;font-weight:600;font-size:16px;">Нажмите, чтобы сканировать</div><div style="color:#94a3b8;font-size:13px;margin-top:4px;">QR-код с серийным номером</div></div>`;
+                btnStopScan.style.display = 'none';
+                document.getElementById('startScanBtn').addEventListener('click', startMainScanner); }
+            async function startMainScanner() { if (mainScanner) await stopMainScanner();
+                qrReader.innerHTML = '<div id="qr-reader"></div>';
+                mainScanner = new Html5Qrcode("qr-reader");
+                btnStopScan.style.display = 'block'; try { await mainScanner.start({ facingMode: "environment" }, { fps: 10,
+                        qrbox: { width: 200, height: 200 }, aspectRatio: 1.0 }, (t) => { stopMainScanner();
+                        showScannerPlaceholder();
+                        processCode(t.trim()); }, () => {}); } catch (e) { showToast('Ошибка камеры',
+                    'error');
+                    showScannerPlaceholder(); } }
+            async function stopMainScanner() { if (mainScanner && mainScanner.isScanning) try { await mainScanner
+                    .stop(); } catch (e) {}
+                mainScanner = null;
+                btnStopScan.style.display = 'none'; }
 
-    async function buildCategoryTree() {
-      const catTx = db.transaction('categories','readonly');
-      const categories = await new Promise(res => catTx.objectStore('categories').getAll().onsuccess = e => res(e.target.result));
-      
-      const toolsTx = db.transaction('tools','readonly');
-      const tools = await new Promise(res => toolsTx.objectStore('tools').getAll().onsuccess = e => res(e.target.result));
-      
-      // Получаем статусы всех инструментов
-      const txTx = db.transaction('transactions','readonly');
-      const transactions = await new Promise(res => txTx.objectStore('transactions').getAll().onsuccess = e => res(e.target.result));
-      
-      const treeContainer = document.getElementById('categoryTree');
-      
-      treeContainer.innerHTML = categories.map(cat => {
-        const catTools = tools.filter(t => t.category === cat.name);
-        const toolRows = catTools.map(tool => {
-          const toolTxs = transactions.filter(tx => tx.serial === tool.serial).sort((a,b) => new Date(b.takenAt) - new Date(a.takenAt));
-          const active = toolTxs.find(tx => !tx.returnedAt);
-          const status = active ? 'Выдано' : 'На складе';
-          const holder = active ? active.username : 'Склад';
-          const statusClass = active ? 'badge-warning' : 'badge-success';
-          
-          return `
-            <tr>
-              <td>${tool.category}</td>
-              <td><b>${tool.serial}</b></td>
-              <td>${tool.name}</td>
-              <td><span class="badge ${statusClass}">${status}</span></td>
-              <td>${holder}</td>
-            </tr>
-          `;
-        }).join('');
-        
-        return `
-          <div class="tree-category" onclick="this.nextElementSibling.classList.toggle('open'); this.classList.toggle('active-tree');">
-            <span>📁 ${cat.name} (${catTools.length})</span>
-            <span>▼</span>
-          </div>
-          <div class="tree-children">
-            ${catTools.length > 0 ? `
-              <table>
-                <thead>
-                  <tr>
-                    <th>Категория</th>
-                    <th>Серийный №</th>
-                    <th>Наименование</th>
-                    <th>Статус</th>
-                    <th>Держатель</th>
-                  </tr>
-                </thead>
-                <tbody>${toolRows}</tbody>
-              </table>
-            ` : '<p style="padding:8px; color:#64748b;">Нет инструментов</p>'}
-          </div>
-        `;
-      }).join('');
-    }
+            function processCode(code) { const tool = DB.tools.find(t => t.serial === code); if (!tool) { showToast(
+                        'Не найден: ' + code, 'error');
+                    hideToolCard(); return; }
+                currentScannedTool = tool;
+                showToolCard(tool); }
 
-    // Обработчики админки
-    document.getElementById('addCategoryBtn').addEventListener('click', async () => {
-      const name = document.getElementById('categoryName').value.trim();
-      if (!name) return;
-      const tx = db.transaction('categories','readwrite');
-      await tx.objectStore('categories').put({ name });
-      await tx.done;
-      document.getElementById('categoryName').value = '';
-      loadAdminData();
-    });
+            function showToolCard(tool) { toolCard.style.display = 'block';
+                toolName.textContent = tool.name;
+                toolSerial.textContent = 'Серийный №: ' + tool.serial; const cat = DB.categories.find(c => c.id ===
+                    tool.category_id);
+                toolCategory.textContent = cat ? '📁 ' + cat.name : 'Без категории';
+                toolCategory.style.display = 'inline-block';
+                btnTake.style.display = 'none';
+                btnReturn.style.display = 'none';
+                btnBlocked.style.display = 'none';
+                btnForceReturn.style.display = 'none';
+                holderInfo.style.display = 'none'; if (tool.status === 'available') { statusBadge.className =
+                        'status-badge status-available';
+                    statusText.textContent = '✅ На складе';
+                    btnTake.style.display = 'block'; } else { statusBadge.className =
+                        'status-badge status-taken';
+                    statusText.textContent = '❌ На руках'; const h = DB.users.find(u => u.telegram_id === tool
+                        .current_holder); const nm = h ? h.full_name : 'Неизвестный'; if (tool
+                        .current_holder === currentUser.telegram_id) { holderInfo.style.display = 'block';
+                        holderName.textContent = 'Вы';
+                        btnReturn.style.display = 'block'; } else { holderInfo.style.display = 'block';
+                        holderName.textContent = nm;
+                        btnBlocked.style.display = 'block'; if (canForceReturn()) btnForceReturn.style
+                            .display = 'block'; } }
+                toolCard.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
 
-    document.getElementById('addToolBtn').addEventListener('click', async () => {
-      const serial = document.getElementById('toolSerial').value.trim();
-      const name = document.getElementById('toolName').value.trim();
-      const category = document.getElementById('toolCategorySelect').value;
-      if (!serial || !name) { alert('Заполните серийный номер и название'); return; }
-      const tx = db.transaction('tools','readwrite');
-      await tx.objectStore('tools').put({ serial, name, category });
-      await tx.done;
-      document.getElementById('toolSerial').value = '';
-      document.getElementById('toolName').value = '';
-      loadAdminData();
-    });
+            function hideToolCard() { toolCard.style.display = 'none';
+                currentScannedTool = null; }
 
-    document.getElementById('scanSerialBtn').addEventListener('click', () => {
-      scanningForSerial = true;
-      startScanner();
-    });
+            function takeTool() { if (!currentScannedTool || currentScannedTool.status !== 'available') return;
+                currentScannedTool.status = 'taken';
+                currentScannedTool.current_holder = currentUser.telegram_id;
+                DB.transactions.push({ id: Date.now(), tool_serial: currentScannedTool.serial, user_id: currentUser
+                        .telegram_id, action: 'take', timestamp: new Date().toISOString() });
+                saveData();
+                showToast('✅ Взято!', 'success');
+                showToolCard(currentScannedTool);
+                renderAllTabs(); }
 
-    document.getElementById('promoteToForemanBtn').addEventListener('click', async () => {
-      const username = document.getElementById('promoteUserSelect').value;
-      const tx = db.transaction('users','readwrite');
-      const store = tx.objectStore('users');
-      const user = await getOne(store, username);
-      if (user) {
-        user.role = 'foreman';
-        await store.put(user);
-      }
-      await tx.done;
-      alert(`${username} назначен бригадиром`);
-      loadAdminData();
-    });
+            function returnTool() { if (!currentScannedTool || currentScannedTool.status !== 'taken' ||
+                    currentScannedTool.current_holder !== currentUser.telegram_id) return;
+                currentScannedTool.status = 'available';
+                currentScannedTool.current_holder = null;
+                DB.transactions.push({ id: Date.now(), tool_serial: currentScannedTool.serial, user_id: currentUser
+                        .telegram_id, action: 'return', timestamp: new Date().toISOString() });
+                saveData();
+                showToast('✅ Возвращено!', 'success');
+                showToolCard(currentScannedTool);
+                renderAllTabs(); }
 
-    // CSV
-    document.getElementById('exportCsvBtn').addEventListener('click', async () => {
-      const tx = db.transaction(['tools','users'],'readonly');
-      const tools = await new Promise(res => tx.objectStore('tools').getAll().onsuccess = e => res(e.target.result));
-      let csv = "serial,name,category\n";
-      tools.forEach(t => csv += `${t.serial},${t.name},${t.category}\n`);
-      const blob = new Blob([csv], {type: 'text/csv'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = 'tools.csv'; a.click();
-    });
+            function forceReturn() { if (!currentScannedTool || !canForceReturn()) return;
+                currentScannedTool.status = 'available';
+                currentScannedTool.current_holder = null;
+                DB.transactions.push({ id: Date.now(), tool_serial: currentScannedTool.serial, user_id: currentUser
+                        .telegram_id, action: 'return', timestamp: new Date().toISOString(),
+                    note: 'Принудительно' });
+                saveData();
+                showToast('⚡ Возвращено', 'success');
+                showToolCard(currentScannedTool);
+                renderAllTabs(); }
 
-    document.getElementById('importCsvBtn').addEventListener('click', () => document.getElementById('csvFileInput').click());
-    document.getElementById('csvFileInput').addEventListener('change', async (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      const text = await file.text();
-      const lines = text.split('\n').slice(1);
-      const tx = db.transaction('tools','readwrite');
-      for (let line of lines) {
-        const parts = line.split(',');
-        if (parts.length >= 3) {
-          await tx.objectStore('tools').put({ serial: parts[0].trim(), name: parts[1].trim(), category: parts[2].trim() });
-        }
-      }
-      await tx.done;
-      alert('Импорт завершён');
-      loadAdminData();
-    });
+            function forceReturnBySerial(s) { if (!canForceReturn()) return; const t = DB.tools.find(x => x.serial ===
+                    s); if (t && t.status === 'taken') { t.status = 'available';
+                    t.current_holder = null;
+                    DB.transactions.push({ id: Date.now(), tool_serial: t.serial, user_id: currentUser.telegram_id,
+                        action: 'return', timestamp: new Date().toISOString(), note: 'Принудительно' });
+                    saveData();
+                    showToast('⚡ Возвращено', 'success');
+                    renderAllTabs(); if (currentScannedTool && currentScannedTool.serial === s) showToolCard(
+                    t); } }
 
-    // Основные обработчики
-    document.getElementById('loginBtn').addEventListener('click', () => {
-      login(
-        document.getElementById('loginName').value,
-        document.getElementById('loginEmail').value,
-        document.getElementById('loginPhone').value,
-        document.getElementById('loginRole').value
-      );
-    });
+            // ==================== ИСТОРИЯ ====================
+            function getFilteredTransactions() {
+                if (currentUser.role === 'admin' || currentUser.role === 'brigadier') {
+                    return DB.transactions;
+                }
+                return DB.transactions.filter(t => t.user_id === currentUser.telegram_id);
+            }
 
-    document.getElementById('logoutBtn').addEventListener('click', logout);
+            function getRecentTakenTools() {
+                const userId = currentUser.telegram_id;
+                const taken = DB.transactions
+                    .filter(t => t.user_id === userId && t.action === 'take')
+                    .slice(-10)
+                    .reverse();
+                const returnedSerials = new Set(
+                    DB.transactions
+                    .filter(t => t.user_id === userId && t.action === 'return')
+                    .map(t => t.tool_serial)
+                );
+                return taken.filter(t => !returnedSerials.has(t.tool_serial));
+            }
 
-    document.querySelectorAll('.nav-item').forEach(item => {
-      item.addEventListener('click', () => navigateTo(item.dataset.screen));
-    });
+            function renderHistory() {
+                const isAdminOrBrigadier = currentUser.role === 'admin' || currentUser.role === 'brigadier';
+                const transactions = getFilteredTransactions().slice().reverse();
 
-    document.getElementById('searchManualBtn').addEventListener('click', () => {
-      handleSerialScan(document.getElementById('manualSerialInput').value);
-    });
-    
-    document.getElementById('stopScannerBtn').addEventListener('click', stopScanner);
+                // Кнопки действий
+                historyActions.innerHTML = '';
+                if (isAdminOrBrigadier) {
+                    historyActions.innerHTML +=
+                        '<button class="btn-small btn-outline" id="btnExportHistoryCSV">📥 CSV</button>';
+                }
 
-    // Инициализация приложения
-    openDB().then(() => seedData()).then(() => {
-      console.log('База данных готова, приложение запущено');
-    });
+                if (transactions.length === 0) {
+                    historyList.innerHTML =
+                        '<div class="empty-state"><div class="icon">📭</div><p>История пуста</p></div>';
+                } else {
+                    historyList.innerHTML = transactions.slice(0, 50).map(t => {
+                        const tool = DB.tools.find(x => x.serial === t.tool_serial);
+                        const user = DB.users.find(u => u.telegram_id === t.user_id);
+                        const isTake = t.action === 'take';
+                        const isCurrentUser = t.user_id === currentUser.telegram_id;
+                        const canTakeAgain = isTake && isCurrentUser && tool && tool.status ===
+                            'available';
+                        return `
+                    <div class="history-item">
+                        <div class="history-icon ${isTake ? 'icon-take' : 'icon-return'}">${isTake ? '🤚' : '✅'}</div>
+                        <div class="history-details">
+                            <div class="history-action">${isTake ? 'Взял' : 'Вернул'}: ${tool?.name || t.tool_serial}</div>
+                            <div class="history-tool">${isAdminOrBrigadier ? (user?.full_name||'ID:'+t.user_id)+' · ' : ''}${t.tool_serial}</div>
+                            <div class="history-time">${new Date(t.timestamp).toLocaleString()}</div>
+                        </div>
+                        ${canTakeAgain ? `<button class="btn-small btn-small-success take-again" data-serial="${t.tool_serial}">Взять снова</button>` : ''}
+                    </div>`;
+                    }).join('');
 
-  })();
-</script>
+                    // Обработчики для кнопок "Взять снова"
+                    historyList.querySelectorAll('.take-again').forEach(btn => {
+                        btn.addEventListener('click', () => {
+                            const serial = btn.dataset.serial;
+                            const tool = DB.tools.find(t => t.serial === serial);
+                            if (tool && tool.status === 'available') {
+                                tool.status = 'taken';
+                                tool.current_holder = currentUser.telegram_id;
+                                DB.transactions.push({
+                                    id: Date.now(),
+                                    tool_serial: tool.serial,
+                                    user_id: currentUser.telegram_id,
+                                    action: 'take',
+                                    timestamp: new Date().toISOString()
+                                });
+                                saveData();
+                                showToast('✅ Инструмент взят повторно!', 'success');
+                                renderAllTabs();
+                            }
+                        });
+                    });
+                }
+
+                // Обработчик экспорта истории
+                const btnExportHistory = $('#btnExportHistoryCSV');
+                if (btnExportHistory) {
+                    btnExportHistory.addEventListener('click', exportHistoryCSV);
+                }
+            }
+
+            function exportHistoryCSV() {
+                const transactions = getFilteredTransactions().slice().reverse();
+                let csv = 'Дата;Серийный№;Инструмент;Категория;Пользователь;Действие\n';
+                transactions.forEach(t => {
+                    const tool = DB.tools.find(x => x.serial === t.tool_serial);
+                    const user = DB.users.find(u => u.telegram_id === t.user_id);
+                    const cat = tool ? DB.categories.find(c => c.id === tool.category_id) : null;
+                    csv +=
+                        `${new Date(t.timestamp).toLocaleString()};${t.tool_serial};${tool?.name||''};${cat?.name||''};${user?.full_name||t.user_id};${t.action==='take'?'Взял':'Вернул'}\n`;
+                });
+                downloadCSV(csv, 'history_report.csv');
+                showToast('📥 История экспортирована', 'success');
+            }
+
+            function exportAllCSV() {
+                let csv = 'Категория;Серийный№;Название;Статус;ТекущийДержатель\n';
+                DB.tools.forEach(t => {
+                    const cat = DB.categories.find(c => c.id === t.category_id);
+                    const holder = t.current_holder ? DB.users.find(u => u.telegram_id === t.current_holder) :
+                        null;
+                    csv +=
+                        `${cat?.name||'Без категории'};${t.serial};${t.name};${t.status==='available'?'Склад':'Выдан'};${holder?.full_name||''}\n`;
+                });
+                downloadCSV(csv, 'tools_full_report.csv');
+                showToast('📥 Полный отчет экспортирован', 'success');
+            }
+
+            function importCSV(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const text = e.target.result;
+                    const lines = text.split('\n').filter(l => l.trim());
+                    if (lines.length < 2) { showToast('Файл пуст или неверный формат', 'error'); return; }
+                    let imported = 0;
+                    // Пропускаем заголовок
+                    for (let i = 1; i < lines.length; i++) {
+                        const cols = lines[i].split(';');
+                        if (cols.length < 3) continue;
+                        const catName = cols[0].trim();
+                        const serial = cols[1].trim();
+                        const name = cols[2].trim();
+                        if (!serial || !name) continue;
+                        // Находим или создаем категорию
+                        let catId = null;
+                        if (catName && catName !== 'Без категории') {
+                            let cat = DB.categories.find(c => c.name === catName);
+                            if (!cat) {
+                                cat = { id: 'cat_' + Date.now() + '_' + Math.random(),
+                                    name: catName };
+                                DB.categories.push(cat);
+                            }
+                            catId = cat.id;
+                        }
+                        // Проверяем, существует ли инструмент
+                        const existing = DB.tools.find(t => t.serial === serial);
+                        if (!existing) {
+                            DB.tools.push({
+                                serial,
+                                name,
+                                category_id: catId,
+                                status: 'available',
+                                current_holder: null
+                            });
+                            imported++;
+                        }
+                    }
+                    saveData();
+                    showToast(`✅ Импортировано: ${imported} инструментов`, 'success');
+                    renderAdminView();
+                };
+                reader.readAsText(file);
+                importFileInput.value = '';
+            }
+
+            function downloadCSV(csvContent, filename) {
+                const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+
+            // ==================== СОТРУДНИКИ ====================
+            function renderStaffList() {
+                if (!canManageUsers()) { staffList.innerHTML =
+                        '<div class="empty-state"><div class="icon">🔒</div><p>Нет доступа</p></div>'; return; }
+                const users = DB.users.filter(u => u.telegram_id !== currentUser.telegram_id);
+                if (users.length === 0) { staffList.innerHTML =
+                        '<div class="empty-state"><div class="icon">👥</div><p>Нет сотрудников</p></div>'; return; }
+                staffList.innerHTML = `
+                <table class="admin-table">
+                    <thead><tr><th>Имя</th><th>Роль</th><th>Username</th><th>ID</th><th></th></tr></thead>
+                    <tbody>${users.map(u => `
+                        <tr>
+                            <td>${u.full_name}</td>
+                            <td><span class="status-dot ${u.role==='admin'?'dot-green':u.role==='brigadier'?'dot-green':'dot-red'}"></span>${u.role==='admin'?'Админ':u.role==='brigadier'?'Бригадир':'Сотрудник'}</td>
+                            <td>@${u.username||'нет'}</td>
+                            <td><code>${u.telegram_id}</code></td>
+                            <td>
+                                ${u.role==='user' ? `<button class="btn-small btn-small-success promote-brigadier" data-tid="${u.telegram_id}">⬆ Бригадир</button>` : ''}
+                                ${u.role==='brigadier' ? `<button class="btn-small btn-outline demote-user" data-tid="${u.telegram_id}">⬇ Сотрудник</button>` : ''}
+                            </td>
+                        </tr>`).join('')}</tbody>
+                </table>`;
+                staffList.querySelectorAll('.promote-brigadier').forEach(b => {
+                    b.addEventListener('click', () => promoteToBrigadier(parseInt(b.dataset.tid)));
+                });
+                staffList.querySelectorAll('.demote-user').forEach(b => {
+                    b.addEventListener('click', () => demoteToUser(parseInt(b.dataset.tid)));
+                });
+            }
+
+            function promoteToBrigadier(telegramId) {
+                const user = DB.users.find(u => u.telegram_id === telegramId);
+                if (user && user.role === 'user') {
+                    user.role = 'brigadier';
+                    saveData();
+                    showToast('👷 Назначен бригадиром: ' + user.full_name, 'success');
+                    renderStaffList();
+                }
+            }
+
+            function demoteToUser(telegramId) {
+                const user = DB.users.find(u => u.telegram_id === telegramId);
+                if (user && user.role === 'brigadier') {
+                    user.role = 'user';
+                    saveData();
+                    showToast('⬇ Понижен до сотрудника: ' + user.full_name, 'success');
+                    renderStaffList();
+                }
+            }
+
+            function exportStaffCSV() {
+                let csv = 'Имя;Username;TelegramID;Роль\n';
+                DB.users.forEach(u => {
+                    csv +=
+                        `${u.full_name};${u.username||''};${u.telegram_id};${u.role==='admin'?'Админ':u.role==='brigadier'?'Бригадир':'Сотрудник'}\n`;
+                });
+                downloadCSV(csv, 'staff_report.csv');
+                showToast('📥 Список сотрудников экспортирован', 'success');
+            }
+
+            // ==================== КАТЕГОРИИ ====================
+            function openAddCategoryModal() { inputCatName.value = '';
+                modalAddCategory.classList.add('active');
+                inputCatName.focus(); }
+
+            function closeAddCategoryModal() { modalAddCategory.classList.remove('active'); }
+
+            function submitCategory() { const name = inputCatName.value.trim(); if (!name) { showToast(
+                        'Введите название', 'error'); return; } const id = 'cat_' + Date.now();
+                DB.categories.push({ id, name });
+                saveData();
+                closeAddCategoryModal();
+                showToast('✅ Категория создана', 'success');
+                renderAdminView(); }
+
+            function deleteCategory(catId) { if (!confirm('Удалить категорию? Инструменты станут без категории.'))
+                return; const tools = DB.tools.filter(t => t.category_id === catId);
+                tools.forEach(t => t.category_id = null);
+                DB.categories = DB.categories.filter(c => c.id !== catId);
+                saveData();
+                showToast('Категория удалена', 'success');
+                renderAdminView(); }
+
+            // ==================== ДОБАВЛЕНИЕ ИНСТРУМЕНТА ====================
+            function openAddToolModal(categoryId = null) { editingToolSerial = null;
+                $('#modalToolTitle').textContent = '➕ Добавить инструмент';
+                inputCategory.innerHTML = '<option value="">Без категории</option>' + DB.categories.map(c =>
+                    `<option value="${c.id}" ${c.id===categoryId?'selected':''}>${c.name}</option>`).join(
+                    '');
+                inputSerial.value = '';
+                inputName.value = '';
+                modalAddTool.classList.add('active');
+                inputName.focus(); }
+
+            function openEditToolModal(serial) { const tool = DB.tools.find(t => t.serial === serial); if (!tool) return;
+                editingToolSerial = serial;
+                $('#modalToolTitle').textContent = '✏️ Редактировать инструмент';
+                inputCategory.innerHTML = '<option value="">Без категории</option>' + DB.categories.map(c =>
+                    `<option value="${c.id}" ${c.id===tool.category_id?'selected':''}>${c.name}</option>`).join(
+                    '');
+                inputSerial.value = tool.serial;
+                inputName.value = tool.name;
+                modalAddTool.classList.add('active'); }
+
+            function closeAddToolModal() { modalAddTool.classList.remove('active');
+                editingToolSerial = null; }
+
+            function submitTool() { const catId = inputCategory.value || null; const serial = inputSerial.value.trim();
+                const name = inputName.value.trim(); if (!serial) { showToast('Введите серийный номер',
+                'error'); return; } if (!name) { showToast('Введите название', 'error'); return; } if (
+                    editingToolSerial) { const tool = DB.tools.find(t => t.serial === editingToolSerial); if (tool) { if (
+                            serial !== editingToolSerial && DB.tools.find(t => t.serial === serial)) { showToast(
+                                'Такой номер уже есть!', 'error'); return; }
+                        tool.serial = serial;
+                        tool.name = name;
+                        tool.category_id = catId; } } else { if (DB.tools.find(t => t.serial === serial)) { showToast(
+                            'Инструмент с таким номером уже существует!', 'error'); return; }
+                    DB.tools.push({ serial, name, category_id: catId, status: 'available',
+                    current_holder: null }); }
+                saveData();
+                closeAddToolModal();
+                showToast('✅ Сохранено!', 'success');
+                renderAdminView();
+                renderAllTabs(); }
+
+            function deleteTool(serial) { if (!confirm('Удалить инструмент ' + serial + '?')) return;
+                DB.tools = DB.tools.filter(t => t.serial !== serial);
+                saveData();
+                showToast('Удален', 'success');
+                renderAdminView(); }
+
+            // ==================== СКАНЕР СЕРИЙНОГО НОМЕРА ====================
+            function openSerialScanner() { modalScanSerial.classList.add('active');
+                setTimeout(() => startSerialScanner(), 300); }
+
+            function closeSerialScanner() { if (serialScanner && serialScanner.isScanning) serialScanner.stop().catch(
+                    () => {});
+                serialScanner = null;
+                modalScanSerial.classList.remove('active'); }
+            async function startSerialScanner() { document.getElementById('serial-qr-reader').innerHTML = '';
+                serialScanner = new Html5Qrcode("serial-qr-reader"); try { await serialScanner.start({ facingMode: "environment" }, { fps: 10,
+                        qrbox: { width: 200, height: 200 }, aspectRatio: 1.0 }, (t) => { inputSerial.value = t
+                        .trim();
+                    closeSerialScanner();
+                    showToast('✅ Считано!', 'success'); }, () => {}); } catch (e) { showToast(
+                    'Ошибка камеры', 'error');
+                    closeSerialScanner(); } }
+
+            // ==================== АДМИН-ПАНЕЛЬ ====================
+            function renderAdminView() { if (currentAdminView.type === 'category') { renderCategoryDetail(currentAdminView
+                    .categoryId); } else { renderCategoriesList(); } }
+
+            function renderCategoriesList() { currentAdminView = { type: 'categories', categoryId: null };
+                adminTitle.textContent = '📁 Категории инструментов';
+                breadcrumbs.innerHTML = '';
+                adminActions.innerHTML = `
+                    <button class="btn-small" id="btnAddCategory">📁 Создать категорию</button>
+                    ${canAddTools() ? '<button class="btn-small" id="btnAddTool">➕ Добавить инструмент</button>' : ''}
+                    <button class="btn-small btn-outline" id="btnExportCSV">📥 Экспорт CSV</button>
+                    ${canAddTools() ? '<button class="btn-small btn-outline" id="btnImportCSV">📤 Импорт CSV</button>' : ''}`;
+                document.getElementById('btnAddCategory').addEventListener('click', openAddCategoryModal); if (
+                    canAddTools()) { document.getElementById('btnAddTool').addEventListener('click', () =>
+                        openAddToolModal());
+                    document.getElementById('btnImportCSV').addEventListener('click', () => importFileInput.click
+                        ()); }
+                document.getElementById('btnExportCSV').addEventListener('click', exportAllCSV); let html = ''; if (DB
+                    .categories.length === 0) { html =
+                        '<div class="empty-state"><div class="icon">📁</div><p>Нет категорий</p></div>'; } else {
+                    DB.categories.forEach(cat => { const count = DB.tools.filter(t => t.category_id === cat.id)
+                            .length;
+                        html += `
+                    <div class="category-section">
+                        <div class="category-header" data-cat-id="${cat.id}">
+                            <span class="cat-name">${cat.name}</span>
+                            <span class="cat-count">${count} инстр.</span>
+                            <span class="cat-toggle">▶</span>
+                        </div>
+                    </div>`; }); } const noCat = DB.tools.filter(t => !t.category_id).length; if (noCat > 0) {
+                    html += `
+                    <div class="category-section" style="margin-top:12px;">
+                        <div class="category-header" style="opacity:0.7;" data-cat-id="">
+                            <span class="cat-name">Без категории</span>
+                            <span class="cat-count">${noCat} инстр.</span>
+                            <span class="cat-toggle">▶</span>
+                        </div>
+                    </div>`; }
+                adminContent.innerHTML = html;
+                document.querySelectorAll('.category-header').forEach(h => { h.addEventListener('click', () => {
+                        const catId = h.dataset.catId;
+                        openCategoryDetail(catId); }); }); }
+
+            function openCategoryDetail(catId) { currentAdminView = { type: 'category', categoryId: catId ||
+                    '' };
+                renderCategoryDetail(catId || ''); }
+
+            function renderCategoryDetail(catId) { let cat = null; if (catId) cat = DB.categories.find(c => c.id ===
+                    catId);
+                adminTitle.textContent = cat ? cat.name : 'Без категории';
+                breadcrumbs.innerHTML =
+                    `<span id="backToCategories">📁 Все категории</span> <span class="sep">›</span> ${cat ? cat.name : 'Без категории'}`;
+                document.getElementById('backToCategories').addEventListener('click', renderCategoriesList);
+                adminActions.innerHTML = `
+                    ${canAddTools() ? `<button class="btn-small" id="btnAddToolHere">➕ Добавить инструмент</button>` : ''}
+                    <button class="btn-small" id="btnAddCategory">📁 Создать категорию</button>
+                    ${catId ? `<button class="btn-small btn-small-danger" id="btnDeleteCat">🗑 Удалить категорию</button>` : ''}
+                    <button class="btn-small btn-outline" id="btnExportCSV">📥 Экспорт CSV</button>`;
+                if (canAddTools()) document.getElementById('btnAddToolHere').addEventListener('click', () =>
+                    openAddToolModal(catId || null));
+                document.getElementById('btnAddCategory').addEventListener('click', openAddCategoryModal);
+                document.getElementById('btnExportCSV').addEventListener('click', exportAllCSV); if (catId) document
+                    .getElementById('btnDeleteCat').addEventListener('click', () => { deleteCategory(catId);
+                        renderCategoriesList(); }); const tools = DB.tools.filter(t => (catId === '' ? !t.category_id :
+                        t.category_id === catId)); if (tools.length === 0) { adminContent.innerHTML =
+                        '<div class="empty-state"><div class="icon">📭</div><p>Нет инструментов</p></div>'; return; }
+                adminContent.innerHTML = `
+                <div class="category-section"><div class="category-tools open">
+                    <table class="admin-table">
+                        <thead><tr><th>Серийный №</th><th>Название</th><th>Статус</th><th>У кого</th><th></th></tr></thead>
+                        <tbody>${tools.map(t => { const h = t.current_holder ? DB.users.find(u => u.telegram_id === t.current_holder) : null; const canEdit = canAddTools(); return `
+                            <tr>
+                                <td><code>${t.serial}</code></td>
+                                <td>${t.name}</td>
+                                <td><span class="status-dot ${t.status==='available'?'dot-green':'dot-red'}"></span>${t.status==='available'?'Склад':'Выдан'}</td>
+                                <td>${h ? h.full_name : '—'}</td>
+                                <td style="white-space:nowrap;">
+                                    ${canEdit ? `<button class="btn-small btn-outline" data-edit="${t.serial}" style="margin-right:4px;">✏️</button>` : ''}
+                                    ${t.status==='taken' && canForceReturn() ? `<button class="btn-small btn-outline" data-force="${t.serial}" style="margin-right:4px;">↩</button>` : ''}
+                                    ${canEdit ? `<button class="btn-small btn-small-danger" data-del="${t.serial}">🗑</button>` : ''}
+                                </td>
+                            </tr>`; }).join('')}</tbody>
+                    </table>
+                </div></div>`;
+                adminContent.querySelectorAll('[data-edit]').forEach(b => b.addEventListener('click', () =>
+                    openEditToolModal(b.dataset.edit)));
+                adminContent.querySelectorAll('[data-force]').forEach(b => b.addEventListener('click', () =>
+                    forceReturnBySerial(b.dataset.force)));
+                adminContent.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', () => deleteTool(
+                    b.dataset.del))); }
+
+            // ==================== ОТРИСОВКА ====================
+            function renderAllTabs() { renderHistory(); if (canManageUsers()) renderStaffList(); if (currentUser &&
+                    (currentUser.role === 'admin' || currentUser.role === 'brigadier')) renderAdminView(); }
+
+            function switchScreen(name) { $$('.screen').forEach(s => s.classList.remove('active')); const t = $(
+                    '#screen-' + name); if (t) t.classList.add('active');
+                $$('.tab').forEach(t => t.classList.remove('active')); const tb = document.querySelector(
+                    `.tab[data-screen="${name}"]`); if (tb) tb.classList.add('active'); if (name ===
+                    'history') renderHistory(); if (name === 'staff' && canManageUsers()) renderStaffList(); if (
+                    name === 'admin' && (currentUser.role === 'admin' || currentUser.role === 'brigadier'))
+                    renderAdminView(); if (name !== 'scan') { stopMainScanner();
+                    showScannerPlaceholder(); } }
+
+            // ==================== ИНИЦИАЛИЗАЦИЯ ====================
+            function init() {
+                $('#btnLogin').addEventListener('click', authenticateViaTelegram);
+                $('#btnLogout').addEventListener('click', logout);
+                $('#btnDevUser').addEventListener('click', () => loginAs({ telegram_id: 123456789,
+                    username: 'ivan_petrov', full_name: 'Иван Петров', role: 'user' }));
+                $('#btnDevBrigadier').addEventListener('click', () => loginAs({ telegram_id: 111222333,
+                    username: 'brigadier_user', full_name: 'Алексей Бригадиров', role: 'brigadier' }));
+                $('#btnDevAdmin').addEventListener('click', () => loginAs({ telegram_id: 987654321,
+                    username: 'admin_user', full_name: 'Сергей Админов', role: 'admin' }));
+                $$('.tab').forEach(t => t.addEventListener('click', () => switchScreen(t.dataset.screen)));
+                btnTake.addEventListener('click', takeTool);
+                btnReturn.addEventListener('click', returnTool);
+                btnForceReturn.addEventListener('click', forceReturn);
+                btnStopScan.addEventListener('click', () => { stopMainScanner();
+                    showScannerPlaceholder(); });
+                $('#btnManual').addEventListener('click', () => { const c = manualInput.value.trim(); if (c) { processCode(
+                        c);
+                        manualInput.value = ''; } });
+                manualInput.addEventListener('keypress', e => { if (e.key === 'Enter') $('#btnManual').click(); });
+                $('#btnSubmitTool').addEventListener('click', submitTool);
+                $('#btnCancelTool').addEventListener('click', closeAddToolModal);
+                $('#btnScanSerial').addEventListener('click', openSerialScanner);
+                $('#btnCancelScan').addEventListener('click', closeSerialScanner);
+                $('#btnSubmitCategory').addEventListener('click', submitCategory);
+                $('#btnCancelCategory').addEventListener('click', closeAddCategoryModal);
+                $('#btnExportStaffCSV').addEventListener('click', exportStaffCSV);
+                importFileInput.addEventListener('change', importCSV);
+                modalAddTool.addEventListener('click', e => { if (e.target === modalAddTool) closeAddToolModal
+                (); });
+                modalAddCategory.addEventListener('click', e => { if (e.target === modalAddCategory)
+                    closeAddCategoryModal(); });
+                modalScanSerial.addEventListener('click', e => { if (e.target === modalScanSerial)
+                    closeSerialScanner(); });
+                [inputSerial, inputName].forEach(i => i.addEventListener('keypress', e => { if (e.key ===
+                        'Enter') submitTool(); }));
+                inputCatName.addEventListener('keypress', e => { if (e.key === 'Enter') submitCategory(); });
+                if (checkSavedAuth()) showMainApp();
+                else if (isRunningInTelegram()) authenticateViaTelegram();
+                else showLoginScreen();
+                console.log('🔧 ToolTracker v4.0 готов');
+            }
+            init();
+        })();
+    </script>
 </body>
 </html>
