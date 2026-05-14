@@ -4,48 +4,283 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Учёт инструментов</title>
-<!-- html5-qrcode -->
-<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js">
-</script>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; color: #222; }
-.app { max-width: 480px; margin: 0 auto; min-height: 100vh; background: #fff; display: flex; flex-direction: column; }
-.header { background: #1a1a2e; color: #fff; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; }
-.header .user { font-size: 14px; }
-.header .role { font-size: 11px; opacity: 0.8; }
-.header button { background: #e94560; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; }
-.content { flex: 1; padding: 16px; overflow-y: auto; }
-.tabs { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
-.tabs button { padding: 8px 14px; border: 1px solid #ccc; border-radius: 20px; background: #fff; cursor: pointer; font-size: 14px; }
-.tabs button.active { background: #1a1a2e; color: #fff; border-color: #1a1a2e; }
-.card { background: #fff; border-radius: 16px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 12px; }
-.card h3 { margin-bottom: 8px; }
-.status-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #f0f2f5;
+  color: #222;
+}
+.app {
+  width: 100%;
+  min-height: 100vh;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Адаптивность */
+@media (min-width: 768px) {
+  .app {
+    max-width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .header {
+    width: 100%;
+  }
+  .tabs {
+    width: 100%;
+  }
+  .content {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 20px;
+  }
+  .content > * {
+    flex: 1 1 45%;
+    min-width: 400px;
+  }
+  .content .full-width {
+    flex: 1 1 100%;
+  }
+  .card {
+    height: fit-content;
+  }
+}
+
+@media (min-width: 1200px) {
+  .content > * {
+    flex: 1 1 30%;
+  }
+  .content .full-width {
+    flex: 1 1 100%;
+  }
+}
+
+.header {
+  background: #1a1a2e;
+  color: #fff;
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.header .user-info { font-size: 14px; }
+.header .user-info .role { font-size: 11px; opacity: 0.8; }
+.header-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.header-actions button {
+  background: #e94560;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  white-space: nowrap;
+}
+.tabs {
+  display: flex;
+  gap: 4px;
+  padding: 10px 16px;
+  flex-wrap: wrap;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  overflow-x: auto;
+}
+.tabs button {
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  white-space: nowrap;
+}
+.tabs button.active {
+  background: #1a1a2e;
+  color: #fff;
+  border-color: #1a1a2e;
+}
+.content {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  background: #fafafa;
+}
+.card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  margin-bottom: 16px;
+}
+.card h3 { margin-bottom: 10px; }
+.card h4 { margin-bottom: 8px; color: #555; }
+.status-badge {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+}
 .status-in_stock { background: #d4edda; color: #155724; }
 .status-taken { background: #f8d7da; color: #721c24; }
-.btn { display: block; width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 17px; font-weight: 600; cursor: pointer; margin-top: 10px; }
+.btn {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: opacity 0.2s;
+}
+.btn:active { opacity: 0.8; }
 .btn-green { background: #28a745; color: #fff; }
 .btn-blue { background: #007bff; color: #fff; }
 .btn-red { background: #dc3545; color: #fff; }
 .btn-gray { background: #6c757d; color: #fff; }
-.btn-sm { padding: 8px 16px; font-size: 14px; width: auto; display: inline-block; }
-input, select { width: 100%; padding: 10px; margin: 6px 0; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
-.form-group { margin-bottom: 12px; }
-.form-group label { font-size: 13px; color: #555; display: block; margin-bottom: 3px; }
-.error { background: #f8d7da; color: #721c24; padding: 10px; border-radius: 8px; margin: 8px 0; }
-.success { background: #d4edda; color: #155724; padding: 10px; border-radius: 8px; margin: 8px 0; }
+.btn-orange { background: #fd7e14; color: #fff; }
+.btn-sm {
+  padding: 6px 14px;
+  font-size: 13px;
+  width: auto;
+  display: inline-block;
+  border-radius: 8px;
+  margin: 2px;
+}
+.btn-xs {
+  padding: 4px 10px;
+  font-size: 11px;
+  width: auto;
+  display: inline-block;
+  border-radius: 6px;
+  margin: 2px;
+}
+input, select, textarea {
+  width: 100%;
+  padding: 10px 12px;
+  margin: 5px 0 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 15px;
+  background: #fff;
+}
+input:focus, select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+}
+.form-group { margin-bottom: 8px; }
+.form-group label { font-size: 13px; color: #555; display: block; margin-bottom: 2px; font-weight: 500; }
+.form-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.form-row > * { flex: 1; min-width: 150px; }
+.error { background: #f8d7da; color: #721c24; padding: 12px; border-radius: 8px; margin: 8px 0; font-size: 14px; }
+.success { background: #d4edda; color: #155724; padding: 12px; border-radius: 8px; margin: 8px 0; font-size: 14px; }
+.warning { background: #fff3cd; color: #856404; padding: 12px; border-radius: 8px; margin: 8px 0; font-size: 14px; }
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
-table th, table td { padding: 8px 6px; text-align: left; border-bottom: 1px solid #eee; }
-table th { background: #f8f9fa; position: sticky; top: 0; }
-.scroll-table { max-height: 400px; overflow-y: auto; }
-.history-item { padding: 10px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 10px; }
-.history-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+table th, table td { padding: 10px 8px; text-align: left; border-bottom: 1px solid #eee; }
+table th {
+  background: #f8f9fa;
+  position: sticky;
+  top: 0;
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #555;
+}
+table tr:hover { background: #f8f9fa; }
+.scroll-table {
+  max-height: 50vh;
+  overflow-y: auto;
+  border: 1px solid #eee;
+  border-radius: 8px;
+}
+.history-item {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.history-item:last-child { border-bottom: none; }
+.history-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
 .dot-red { background: #dc3545; }
 .dot-blue { background: #007bff; }
 .dot-orange { background: #fd7e14; }
-.hidden { display: none; }
-#reader { width: 100%; border-radius: 12px; overflow: hidden; }
+.dot-purple { background: #6f42c1; }
+.hidden { display: none !important; }
+#reader {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.tree-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+.tree-item:hover { background: #f0f2f5; }
+.tree-item.active { background: #e3f2fd; font-weight: 600; }
+.tree-children { padding-left: 24px; }
+.category-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  background: #e9ecef;
+  color: #495057;
+  margin: 2px;
+}
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modal {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+@media (max-width: 767px) {
+  .header { padding: 10px 12px; }
+  .tabs { padding: 8px 8px; gap: 2px; }
+  .tabs button { padding: 6px 12px; font-size: 12px; }
+  .content { padding: 10px; }
+  .card { padding: 14px; }
+  .btn { padding: 12px; font-size: 15px; }
+  table { font-size: 11px; }
+  table th, table td { padding: 6px 4px; }
+}
 </style>
 </head>
 <body>
@@ -53,12 +288,15 @@ table th { background: #f8f9fa; position: sticky; top: 0; }
 
 <script>
 // ============ БАЗА ДАННЫХ (localStorage) ============
-const DB_KEY = 'tooltracker_db';
+const DB_KEY = 'tooltracker_db_v2';
 
 function getDB() {
   const raw = localStorage.getItem(DB_KEY);
-  if (raw) return JSON.parse(raw);
-  // Инициализация по умолчанию
+  if (raw) {
+    const db = JSON.parse(raw);
+    if (!db.categories) db.categories = [];
+    return db;
+  }
   const defaultDB = {
     users: [
       { id: 'u1', login: 'admin', password: 'admin', fullName: 'Администратор', role: 'admin', personalArticle: 'ADMIN00001' },
@@ -66,12 +304,23 @@ function getDB() {
       { id: 'u3', login: 'zhanibek', password: '123456', fullName: 'Махамаджон Уулу Жанибек', role: 'employee', personalArticle: 'TFVPIBJU04' },
       { id: 'u4', login: 'petr', password: '123456', fullName: 'Петров Пётр', role: 'employee', personalArticle: 'USER000042' }
     ],
-    instruments: [
-      { id: 'i1', article: 'INSTR-0099', name: 'Перфоратор Bosch GBH 2-26', description: 'Мощный перфоратор', status: 'in_stock', currentHolderId: null },
-      { id: 'i2', article: 'INSTR-0042', name: 'Шуруповёрт Makita DF333D', description: 'Аккумуляторный', status: 'taken', currentHolderId: 'u3' },
-      { id: 'i3', article: 'INSTR-0018', name: 'УШМ DeWALT DWE4057', description: 'Болгарка 125мм', status: 'in_stock', currentHolderId: null }
+    categories: [
+      { id: 'c1', name: 'Ручной инструмент', parentId: null },
+      { id: 'c2', name: 'Измерительный инструмент', parentId: null },
+      { id: 'c3', name: 'Перфораторы', parentId: null },
+      { id: 'c4', name: 'Болгарки', parentId: null },
+      { id: 'c5', name: 'Шуруповёрты', parentId: 'c1' }
     ],
-    log: []
+    instruments: [
+      { id: 'i1', article: 'INSTR-0099', name: 'Перфоратор Bosch GBH 2-26', description: 'Мощный перфоратор, 800 Вт', categoryId: 'c3', status: 'in_stock', currentHolderId: null },
+      { id: 'i2', article: 'INSTR-0042', name: 'Шуруповёрт Makita DF333D', description: 'Аккумуляторный 12В', categoryId: 'c5', status: 'taken', currentHolderId: 'u3' },
+      { id: 'i3', article: 'INSTR-0018', name: 'УШМ DeWALT DWE4057', description: 'Болгарка 125мм', categoryId: 'c4', status: 'in_stock', currentHolderId: null },
+      { id: 'i4', article: 'INSTR-0077', name: 'Рулетка Stanley 5м', description: 'Измерительная рулетка', categoryId: 'c2', status: 'taken', currentHolderId: 'u4' }
+    ],
+    log: [
+      { id: 'l1', instrumentId: 'i2', action: 'taken', initiatorId: 'u3', targetId: 'u3', timestamp: '2026-05-14T08:30:00.000Z', comment: '' },
+      { id: 'l2', instrumentId: 'i4', action: 'taken', initiatorId: 'u4', targetId: 'u4', timestamp: '2026-05-14T09:15:00.000Z', comment: '' }
+    ]
   };
   saveDB(defaultDB);
   return defaultDB;
@@ -86,73 +335,112 @@ let currentUser = null;
 let db = getDB();
 let html5QrCode = null;
 
-// ============ РЕНДЕРИНГ ============
+// ============ ХЕЛПЕРЫ ============
 const app = document.getElementById('app');
 
 function render(html) {
   app.innerHTML = html;
-  attachEvents();
 }
 
-function attachEvents() {
-  // Обработчики назначаются через делегирование в основном render, но для удобства часть inline
+function getUserName(id) {
+  const u = db.users.find(u => u.id === id);
+  return u ? u.fullName : '?';
 }
 
-// ============ ЭКРАНЫ ============
+function getInstrumentName(id) {
+  const i = db.instruments.find(i => i.id === id);
+  return i ? `${i.article} ${i.name}` : 'Неизвестный инструмент';
+}
+
+function getCategoryName(id) {
+  if (!id) return 'Без категории';
+  const c = db.categories.find(c => c.id === id);
+  return c ? c.name : '?';
+}
+
+function getCategoryPath(catId) {
+  const path = [];
+  let current = db.categories.find(c => c.id === catId);
+  while (current) {
+    path.unshift(current.name);
+    current = db.categories.find(c => c.id === current.parentId);
+  }
+  return path.join(' → ');
+}
+
+function generateArticle() {
+  return Array.from({length:10}, () => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'[Math.floor(Math.random()*36)]).join('');
+}
+
+function formatDate(iso) {
+  return new Date(iso).toLocaleString('ru-RU');
+}
+
+// ============ РЕНДЕРИНГ ЭКРАНОВ ============
 
 // --- Логин ---
 function renderLogin(error = '') {
   render(`
-    <div class="content" style="display:flex;flex-direction:column;justify-content:center;">
-      <h2 style="text-align:center;margin-bottom:20px;">🔧 Учёт инструментов</h2>
+    <div class="content" style="display:flex;flex-direction:column;justify-content:center;align-items:center;max-width:400px;margin:0 auto;width:100%;">
+      <h2 style="text-align:center;margin-bottom:24px;">🔧 Учёт инструментов</h2>
       ${error ? `<div class="error">${error}</div>` : ''}
-      <div class="card">
-        <div class="form-group"><label>Логин</label><input id="loginInput" type="text" placeholder="Введите логин"></div>
-        <div class="form-group"><label>Пароль</label><input id="passInput" type="password" placeholder="Введите пароль"></div>
+      <div class="card" style="width:100%;">
+        <div class="form-group"><label>Логин</label><input id="loginInput" type="text" placeholder="Введите логин" autocomplete="username"></div>
+        <div class="form-group"><label>Пароль</label><input id="passInput" type="password" placeholder="Введите пароль" autocomplete="current-password"></div>
         <button class="btn btn-blue" id="loginBtn">Войти</button>
       </div>
-      <p style="text-align:center;font-size:12px;color:#888;margin-top:10px;">
-        Тест: admin/admin, sergey/123456, zhanibek/123456
+      <p style="text-align:center;font-size:12px;color:#888;margin-top:12px;">
+        Тест: <b>admin/admin</b> (админ), <b>sergey/123456</b> (бригадир), <b>zhanibek/123456</b> (сотрудник), <b>petr/123456</b> (сотрудник)
       </p>
     </div>
   `);
   document.getElementById('loginBtn').addEventListener('click', () => {
-    const login = document.getElementById('loginInput').value.trim();
+    const loginVal = document.getElementById('loginInput').value.trim();
     const pass = document.getElementById('passInput').value.trim();
-    const user = db.users.find(u => u.login === login && u.password === pass);
+    const user = db.users.find(u => u.login === loginVal && u.password === pass);
     if (user) {
       currentUser = user;
+      db = getDB();
       renderMain();
     } else {
       renderLogin('Неверный логин или пароль');
     }
+  });
+  document.getElementById('passInput')?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') document.getElementById('loginBtn').click();
   });
 }
 
 // --- Главный интерфейс ---
 function renderMain(tab = 'scanner', message = '') {
   const role = currentUser.role;
-  const tabs = [
+  const allTabs = [
     { id: 'scanner', label: '📷 Сканер', roles: ['employee','foreman','admin'] },
-    { id: 'history', label: '📋 История', roles: ['employee','foreman','admin'] },
+    { id: 'history', label: '📋 Моя история', roles: ['employee','foreman','admin'] },
     { id: 'admin_instr', label: '🛠️ Инструменты', roles: ['admin'] },
+    { id: 'admin_cat', label: '📁 Категории', roles: ['admin'] },
     { id: 'admin_users', label: '👥 Пользователи', roles: ['admin'] },
     { id: 'admin_log', label: '📊 Журнал', roles: ['admin'] }
-  ].filter(t => t.roles.includes(role));
+  ];
+  const tabs = allTabs.filter(t => t.roles.includes(role));
+
+  // Нормализация таба
+  if (!tabs.find(t => t.id === tab)) tab = tabs[0].id;
 
   render(`
     <div class="header">
-      <div><span class="user">${currentUser.fullName}</span><br><span class="role">${role === 'admin' ? 'Администратор' : role === 'foreman' ? 'Бригадир' : 'Сотрудник'}</span></div>
-      <div>
-        <button id="profileBtn">🔑 Пароль</button>
-        <button id="logoutBtn">Выйти</button>
+      <div class="user-info">
+        <strong>${currentUser.fullName}</strong><br>
+        <span class="role">${role === 'admin' ? '🛡️ Администратор' : role === 'foreman' ? '🪖 Бригадир' : '🦺 Сотрудник'}</span>
+      </div>
+      <div class="header-actions">
+        <button id="profileBtn">🔑 Сменить пароль</button>
+        <button id="logoutBtn">🚪 Выйти</button>
       </div>
     </div>
-    <div class="tabs" style="padding:10px 16px 0;">
-      ${tabs.map(t => `<button class="${tab===t.id?'active':''}" data-tab="${t.id}">${t.label}</button>`).join('')}
-    </div>
+    <div class="tabs">${tabs.map(t => `<button class="${tab===t.id?'active':''}" data-tab="${t.id}">${t.label}</button>`).join('')}</div>
     <div class="content" id="tabContent">
-      ${message ? `<div class="${message.includes('✅')?'success':'error'}">${message}</div>` : ''}
+      ${message ? `<div class="full-width ${message.includes('✅')?'success':message.includes('⚠')?'warning':'error'}">${message}</div>` : ''}
     </div>
   `);
 
@@ -173,6 +461,7 @@ function renderMain(tab = 'scanner', message = '') {
     case 'scanner': renderScanner(content); break;
     case 'history': renderHistory(content); break;
     case 'admin_instr': renderAdminInstruments(content); break;
+    case 'admin_cat': renderAdminCategories(content); break;
     case 'admin_users': renderAdminUsers(content); break;
     case 'admin_log': renderAdminLog(content); break;
   }
@@ -180,18 +469,29 @@ function renderMain(tab = 'scanner', message = '') {
 
 // --- Профиль / смена пароля ---
 function renderProfile() {
+  const msgDiv = document.createElement('div');
+  msgDiv.className = 'full-width';
   const content = document.getElementById('tabContent');
-  content.innerHTML = `
-    <div class="card">
-      <h3>Смена пароля</h3>
+  content.insertBefore(msgDiv, content.firstChild);
+
+  // Создаём модальное окно
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.innerHTML = `
+    <div class="modal">
+      <h3>🔑 Смена пароля</h3>
       <div class="form-group"><label>Старый пароль</label><input id="oldPass" type="password"></div>
       <div class="form-group"><label>Новый пароль</label><input id="newPass1" type="password"></div>
       <div class="form-group"><label>Повторите новый</label><input id="newPass2" type="password"></div>
-      <button class="btn btn-blue" id="changePassBtn">Сохранить</button>
-      <button class="btn btn-gray" id="backFromProfileBtn">Назад</button>
-      <div id="profileMsg"></div>
+      <div style="display:flex;gap:10px;">
+        <button class="btn btn-blue" id="changePassBtn" style="flex:1;">Сохранить</button>
+        <button class="btn btn-gray" id="closeModalBtn" style="flex:1;">Отмена</button>
+      </div>
+      <div id="profileMsg" style="margin-top:10px;"></div>
     </div>
   `;
+  document.body.appendChild(overlay);
+
   document.getElementById('changePassBtn').addEventListener('click', () => {
     const old = document.getElementById('oldPass').value;
     const n1 = document.getElementById('newPass1').value;
@@ -204,69 +504,93 @@ function renderProfile() {
     user.password = n1;
     currentUser.password = n1;
     saveDB(db);
-    msg.innerHTML = '<div class="success">Пароль изменён ✅</div>';
+    msg.innerHTML = '<div class="success">✅ Пароль успешно изменён!</div>';
+    setTimeout(() => { document.body.removeChild(overlay); }, 1500);
   });
-  document.getElementById('backFromProfileBtn').addEventListener('click', () => renderMain());
+
+  document.getElementById('closeModalBtn').addEventListener('click', () => {
+    document.body.removeChild(overlay);
+  });
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) document.body.removeChild(overlay);
+  });
 }
 
-// --- Сканер ---
+// --- Сканер (единый для всех ролей) ---
 function renderScanner(container) {
   const isForeman = currentUser.role === 'foreman';
+  const isAdmin = currentUser.role === 'admin';
+  const canIssue = isForeman || isAdmin;
+
   container.innerHTML = `
-    ${isForeman ? `
-    <div style="margin-bottom:10px;display:flex;gap:8px;">
-      <button id="modeSelf" class="btn-sm btn-blue" style="flex:1">👤 Взять себе</button>
-      <button id="modeEmployee" class="btn-sm btn-gray" style="flex:1">👥 Выдать сотруднику</button>
+    <div class="card full-width">
+      ${canIssue ? `
+      <div style="margin-bottom:12px;display:flex;gap:8px;">
+        <button id="modeSelf" class="btn-sm btn-blue" style="flex:1;">👤 Взять / Вернуть себе</button>
+        <button id="modeEmployee" class="btn-sm btn-gray" style="flex:1;">👥 Выдать сотруднику</button>
+      </div>
+      <div id="foremanStep" style="font-size:13px;color:#555;margin-bottom:10px;padding:8px;background:#f0f2f5;border-radius:8px;">Режим: <b>взять / вернуть себе</b></div>
+      ` : ''}
+      <div id="reader"></div>
+      <button class="btn btn-gray" id="manualInputBtn" style="margin-top:10px;">⌨️ Ввести артикул вручную</button>
+      <div id="manualInputArea" class="hidden" style="margin-top:10px;">
+        <div style="display:flex;gap:8px;">
+          <input id="manualArticle" type="text" placeholder="INSTR-XXXX или артикул сотрудника" style="flex:1;">
+          <button class="btn btn-blue btn-sm" id="submitManual" style="margin-top:0;width:auto;">Найти</button>
+        </div>
+      </div>
     </div>
-    <div id="foremanStep" style="font-size:13px;color:#555;margin-bottom:8px;">Режим: взять себе</div>
-    ` : ''}
-    <div id="reader"></div>
-    <button class="btn btn-gray" id="manualInputBtn" style="margin-top:8px;">⌨️ Ввести артикул вручную</button>
-    <div id="manualInputArea" class="hidden" style="margin-top:10px;">
-      <input id="manualArticle" type="text" placeholder="INSTR-XXXX или артикул сотрудника">
-      <button class="btn btn-blue btn-sm" id="submitManual">Найти</button>
-    </div>
-    <div id="scanResult"></div>
-    <div id="scanMsg"></div>
+    <div id="scanResult" class="full-width"></div>
+    <div id="scanMsg" class="full-width"></div>
   `;
 
-  let foremanMode = 'self'; // 'self' | 'employee'
+  let foremanMode = 'self';
   let pendingEmployee = null;
 
-  // HTML5 QR Scanner
+  // Запуск сканера
   if (html5QrCode) { html5QrCode.stop().catch(()=>{}); }
-  html5QrCode = new Html5Qrcode("reader");
-  html5QrCode.start(
-    { facingMode: "environment" },
-    { fps: 10, qrbox: 250 },
-    (decodedText) => handleQRScan(decodedText),
-    () => {}
-  ).catch(err => {
-    document.getElementById('scanMsg').innerHTML = `<div class="error">Камера недоступна: ${err.message}. Используйте ручной ввод.</div>`;
-  });
+  const readerEl = document.getElementById('reader');
+  if (readerEl) {
+    html5QrCode = new Html5Qrcode("reader");
+    html5QrCode.start(
+      { facingMode: "environment" },
+      { fps: 10, qrbox: { width: 250, height: 250 } },
+      (decodedText) => handleQRScan(decodedText),
+      () => {}
+    ).catch(err => {
+      document.getElementById('scanMsg').innerHTML = `<div class="warning">⚠️ Камера недоступна: ${err.message}. Используйте ручной ввод.</div>`;
+    });
+  }
 
   function handleQRScan(code) {
     const msg = document.getElementById('scanMsg');
     msg.innerHTML = '';
     const result = document.getElementById('scanResult');
+    db = getDB();
 
-    if (isForeman && foremanMode === 'employee' && !pendingEmployee) {
-      // Сначала сканируем сотрудника
+    // Если режим выдачи сотруднику и ещё не выбран сотрудник
+    if (canIssue && foremanMode === 'employee' && !pendingEmployee) {
       const emp = db.users.find(u => u.personalArticle === code && u.role === 'employee');
       if (!emp) {
-        msg.innerHTML = '<div class="error">Сотрудник не найден. Попробуйте снова.</div>';
+        msg.innerHTML = '<div class="error">❌ Сотрудник не найден. Убедитесь, что сканируете бейдж сотрудника.</div>';
         return;
       }
       pendingEmployee = emp;
-      document.getElementById('foremanStep').innerHTML = `👤 Сотрудник: <b>${emp.fullName}</b>. Теперь сканируйте инструмент.`;
-      msg.innerHTML = '<div class="success">Сотрудник найден. Сканируйте инструмент.</div>';
+      document.getElementById('foremanStep').innerHTML = `👤 Сотрудник: <b>${emp.fullName}</b> (${emp.personalArticle}). Теперь сканируйте инструмент.`;
+      msg.innerHTML = '<div class="success">✅ Сотрудник найден! Сканируйте инструмент для выдачи.</div>';
       return;
     }
 
     // Ищем инструмент
     const instr = db.instruments.find(i => i.article === code);
     if (!instr) {
-      msg.innerHTML = `<div class="error">Инструмент ${code} не найден.</div>`;
+      // Может быть, это артикул пользователя?
+      const user = db.users.find(u => u.personalArticle === code);
+      if (user) {
+        msg.innerHTML = `<div class="warning">⚠️ Это артикул пользователя <b>${user.fullName}</b>. Сканируйте инструмент.</div>`;
+        return;
+      }
+      msg.innerHTML = `<div class="error">❌ Инструмент с артикулом <b>${code}</b> не найден в системе.</div>`;
       return;
     }
     showInstrumentCard(instr, result, msg);
@@ -275,99 +599,136 @@ function renderScanner(container) {
   function showInstrumentCard(instr, container, msgEl) {
     const holder = instr.currentHolderId ? db.users.find(u => u.id === instr.currentHolderId) : null;
     const isHeldByMe = instr.currentHolderId === currentUser.id;
-    const canForceReturn = currentUser.role === 'admin' && instr.status === 'taken';
+    const catPath = getCategoryPath(instr.categoryId);
 
     container.innerHTML = `
-      <div class="card" style="margin-top:10px;">
+      <div class="card">
         <h3>${instr.name}</h3>
-        <p>Арт: <b>${instr.article}</b></p>
-        <p>${instr.description || ''}</p>
-        <span class="status-badge status-${instr.status}">${instr.status === 'in_stock' ? '🟢 На складе' : '🔴 На руках'}</span>
-        ${holder ? `<p style="margin-top:8px;">Держатель: <b>${holder.fullName}</b></p>` : ''}
+        <p style="color:#666;">Артикул: <b>${instr.article}</b></p>
+        ${catPath !== 'Без категории' ? `<p style="color:#666;">Категория: <span class="category-badge">${catPath}</span></p>` : ''}
+        ${instr.description ? `<p style="color:#888;font-size:14px;">${instr.description}</p>` : ''}
+        <div style="margin:12px 0;">
+          <span class="status-badge status-${instr.status}">${instr.status === 'in_stock' ? '🟢 На складе' : '🔴 На руках'}</span>
+        </div>
+        ${holder ? `<p>Держатель: <b>${holder.fullName}</b> (${holder.personalArticle})</p>` : ''}
 
         ${instr.status === 'in_stock' && !pendingEmployee ? `
           <button class="btn btn-green" id="takeBtn">🟢 ВЗЯТЬ</button>
         ` : ''}
         ${instr.status === 'in_stock' && pendingEmployee ? `
-          <button class="btn btn-green" id="issueBtn">🟢 ВЫДАТЬ сотруднику ${pendingEmployee.fullName}</button>
+          <button class="btn btn-orange" id="issueBtn">🟠 ВЫДАТЬ: ${pendingEmployee.fullName}</button>
         ` : ''}
         ${isHeldByMe ? `
-          <button class="btn btn-blue" id="returnBtn">🔵 ВЕРНУТЬ</button>
+          <button class="btn btn-blue" id="returnBtn">🔵 ВЕРНУТЬ НА СКЛАД</button>
         ` : ''}
-        ${canForceReturn ? `
+        ${currentUser.role === 'admin' && instr.status === 'taken' && !isHeldByMe ? `
           <button class="btn btn-red" id="forceReturnBtn">⚠️ ПРИНУДИТЕЛЬНЫЙ ВОЗВРАТ</button>
         ` : ''}
-        ${instr.status === 'taken' && !isHeldByMe && !canForceReturn ? `
-          <p style="color:#721c24;margin-top:10px;">Инструмент у ${holder?.fullName}. Обратитесь к администратору.</p>
+        ${instr.status === 'taken' && !isHeldByMe && currentUser.role !== 'admin' ? `
+          <div class="warning">Инструмент находится у <b>${holder?.fullName || 'другого сотрудника'}</b>. Обратитесь к администратору для возврата.</div>
         ` : ''}
-        <button class="btn btn-gray btn-sm" id="closeCardBtn">Закрыть</button>
+        <button class="btn btn-gray btn-sm" id="closeCardBtn" style="margin-top:8px;">✕ Закрыть</button>
       </div>
     `;
 
-    // Обработчики
     document.getElementById('closeCardBtn')?.addEventListener('click', () => {
       container.innerHTML = '';
       pendingEmployee = null;
-      if (isForeman) document.getElementById('foremanStep').innerHTML = 'Режим: выдать сотруднику';
+      if (canIssue) document.getElementById('foremanStep').innerHTML = 'Режим: <b>взять / вернуть себе</b>';
+      msgEl.innerHTML = '';
     });
 
     document.getElementById('takeBtn')?.addEventListener('click', () => {
       instr.status = 'taken';
       instr.currentHolderId = currentUser.id;
-      db.log.push({ id: Date.now().toString(), instrumentId: instr.id, action: 'taken', initiatorId: currentUser.id, targetId: currentUser.id, timestamp: new Date().toISOString(), comment: '' });
+      db.log.push({
+        id: 'l' + Date.now(),
+        instrumentId: instr.id,
+        action: 'taken',
+        initiatorId: currentUser.id,
+        targetId: currentUser.id,
+        timestamp: new Date().toISOString(),
+        comment: ''
+      });
       saveDB(db);
-      msgEl.innerHTML = '<div class="success">✅ Инструмент взят!</div>';
-      setTimeout(() => { container.innerHTML = ''; if (isForeman) document.getElementById('foremanStep').innerHTML = 'Режим: выдать сотруднику'; }, 1500);
+      msgEl.innerHTML = '<div class="success">✅ Инструмент успешно взят!</div>';
+      setTimeout(() => { container.innerHTML = ''; msgEl.innerHTML = ''; }, 1500);
     });
 
     document.getElementById('issueBtn')?.addEventListener('click', () => {
       instr.status = 'taken';
       instr.currentHolderId = pendingEmployee.id;
-      db.log.push({ id: Date.now().toString(), instrumentId: instr.id, action: 'issued_by_foreman', initiatorId: currentUser.id, targetId: pendingEmployee.id, timestamp: new Date().toISOString(), comment: '' });
+      db.log.push({
+        id: 'l' + Date.now(),
+        instrumentId: instr.id,
+        action: 'issued_by_foreman',
+        initiatorId: currentUser.id,
+        targetId: pendingEmployee.id,
+        timestamp: new Date().toISOString(),
+        comment: ''
+      });
       saveDB(db);
-      msgEl.innerHTML = `<div class="success">✅ Выдано сотруднику ${pendingEmployee.fullName}!</div>`;
+      msgEl.innerHTML = `<div class="success">✅ Инструмент выдан сотруднику <b>${pendingEmployee.fullName}</b>!</div>`;
       pendingEmployee = null;
-      if (isForeman) document.getElementById('foremanStep').innerHTML = 'Режим: выдать сотруднику';
-      setTimeout(() => { container.innerHTML = ''; }, 1500);
+      if (canIssue) document.getElementById('foremanStep').innerHTML = 'Режим: <b>выдать сотруднику</b>. Сканируйте бейдж сотрудника.';
+      setTimeout(() => { container.innerHTML = ''; msgEl.innerHTML = ''; }, 2000);
     });
 
     document.getElementById('returnBtn')?.addEventListener('click', () => {
       instr.status = 'in_stock';
       instr.currentHolderId = null;
-      db.log.push({ id: Date.now().toString(), instrumentId: instr.id, action: 'returned', initiatorId: currentUser.id, targetId: currentUser.id, timestamp: new Date().toISOString(), comment: '' });
+      db.log.push({
+        id: 'l' + Date.now(),
+        instrumentId: instr.id,
+        action: 'returned',
+        initiatorId: currentUser.id,
+        targetId: currentUser.id,
+        timestamp: new Date().toISOString(),
+        comment: ''
+      });
       saveDB(db);
-      msgEl.innerHTML = '<div class="success">✅ Инструмент возвращён!</div>';
-      setTimeout(() => { container.innerHTML = ''; }, 1500);
+      msgEl.innerHTML = '<div class="success">✅ Инструмент возвращён на склад!</div>';
+      setTimeout(() => { container.innerHTML = ''; msgEl.innerHTML = ''; }, 1500);
     });
 
     document.getElementById('forceReturnBtn')?.addEventListener('click', () => {
-      const reason = prompt('Причина принудительного возврата:');
-      if (!reason) return;
-      const prevHolder = instr.currentHolderId;
+      const reason = prompt('Укажите причину принудительного возврата:');
+      if (reason === null) return;
+      const prevHolderId = instr.currentHolderId;
       instr.status = 'in_stock';
       instr.currentHolderId = null;
-      db.log.push({ id: Date.now().toString(), instrumentId: instr.id, action: 'force_returned', initiatorId: currentUser.id, targetId: prevHolder, timestamp: new Date().toISOString(), comment: reason });
+      db.log.push({
+        id: 'l' + Date.now(),
+        instrumentId: instr.id,
+        action: 'force_returned',
+        initiatorId: currentUser.id,
+        targetId: prevHolderId,
+        timestamp: new Date().toISOString(),
+        comment: reason || 'Без причины'
+      });
       saveDB(db);
       msgEl.innerHTML = '<div class="success">✅ Принудительный возврат выполнен.</div>';
-      setTimeout(() => { container.innerHTML = ''; }, 1500);
+      setTimeout(() => { container.innerHTML = ''; msgEl.innerHTML = ''; }, 1500);
     });
   }
 
-  // Режимы бригадира
-  if (isForeman) {
+  // Режимы бригадира / админа
+  if (canIssue) {
     document.getElementById('modeSelf').addEventListener('click', () => {
       foremanMode = 'self';
       pendingEmployee = null;
-      document.getElementById('foremanStep').innerHTML = 'Режим: взять себе';
+      document.getElementById('foremanStep').innerHTML = 'Режим: <b>взять / вернуть себе</b>';
       document.getElementById('modeSelf').className = 'btn-sm btn-blue';
       document.getElementById('modeEmployee').className = 'btn-sm btn-gray';
+      document.getElementById('scanResult').innerHTML = '';
     });
     document.getElementById('modeEmployee').addEventListener('click', () => {
       foremanMode = 'employee';
       pendingEmployee = null;
-      document.getElementById('foremanStep').innerHTML = 'Режим: выдать сотруднику. Сканируйте бейдж сотрудника.';
+      document.getElementById('foremanStep').innerHTML = 'Режим: <b>выдать сотруднику</b>. Сканируйте бейдж сотрудника.';
       document.getElementById('modeEmployee').className = 'btn-sm btn-blue';
       document.getElementById('modeSelf').className = 'btn-sm btn-gray';
+      document.getElementById('scanResult').innerHTML = '';
     });
   }
 
@@ -379,151 +740,373 @@ function renderScanner(container) {
     const val = document.getElementById('manualArticle').value.trim();
     if (val) handleQRScan(val);
   });
+  document.getElementById('manualArticle')?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      const val = document.getElementById('manualArticle').value.trim();
+      if (val) handleQRScan(val);
+    }
+  });
 }
 
-// --- История ---
+// --- История (исправлено) ---
 function renderHistory(container) {
-  const myLog = db.log.filter(e => e.initiatorId === currentUser.id || (currentUser.role === 'foreman' && e.action === 'issued_by_foreman' && e.initiatorId === currentUser.id));
-  const actionLabels = { taken: 'Взял', returned: 'Вернул', issued_by_foreman: 'Выдал', force_returned: 'Принуд. возврат' };
-  const actionDots = { taken: 'dot-red', returned: 'dot-blue', issued_by_foreman: 'dot-orange', force_returned: 'dot-red' };
+  container.innerHTML = '<div class="full-width"><h3>📋 Моя история операций</h3></div>';
+  const content = container;
 
-  container.innerHTML = `
-    <h3>Моя история операций</h3>
-    ${myLog.length === 0 ? '<p>Нет операций</p>' : ''}
-    ${myLog.sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp)).map(entry => {
+  // Получаем ВСЕ операции, где пользователь фигурирует
+  let myLog = [];
+  if (currentUser.role === 'employee') {
+    // Сотрудник видит операции, где он target (инструмент на нём) или initiator (он сам брал/возвращал)
+    myLog = db.log.filter(e => e.initiatorId === currentUser.id || e.targetId === currentUser.id);
+  } else if (currentUser.role === 'foreman') {
+    // Бригадир видит свои операции + операции выдачи сотрудникам
+    myLog = db.log.filter(e => e.initiatorId === currentUser.id);
+  } else if (currentUser.role === 'admin') {
+    // Админ видит всё (но в этом разделе — только свои)
+    myLog = db.log.filter(e => e.initiatorId === currentUser.id);
+  }
+
+  const actionLabels = {
+    taken: 'Взял',
+    returned: 'Вернул',
+    issued_by_foreman: 'Выдал сотруднику',
+    force_returned: 'Принудительный возврат'
+  };
+  const actionDots = {
+    taken: 'dot-red',
+    returned: 'dot-blue',
+    issued_by_foreman: 'dot-orange',
+    force_returned: 'dot-purple'
+  };
+
+  if (myLog.length === 0) {
+    content.innerHTML += '<div class="card full-width"><p>У вас пока нет операций.</p></div>';
+    return;
+  }
+
+  const grouped = {};
+  myLog.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp)).forEach(entry => {
+    const date = new Date(entry.timestamp).toLocaleDateString('ru-RU');
+    if (!grouped[date]) grouped[date] = [];
+    grouped[date].push(entry);
+  });
+
+  let html = '';
+  for (const [date, entries] of Object.entries(grouped)) {
+    html += `<div class="card full-width"><h4>📅 ${date}</h4>`;
+    entries.forEach(entry => {
       const instr = db.instruments.find(i => i.id === entry.instrumentId);
       const targetUser = db.users.find(u => u.id === entry.targetId);
-      return `
+      html += `
         <div class="history-item">
           <div class="history-dot ${actionDots[entry.action] || 'dot-red'}"></div>
-          <div style="flex:1">
-            <b>${actionLabels[entry.action] || entry.action}</b> — ${instr?.article || '?'} ${instr?.name || 'Неизвестный инструмент'}
-            ${entry.action === 'issued_by_foreman' ? `<br><small>Выдано: ${targetUser?.fullName || '?'}</small>` : ''}
-            ${entry.comment ? `<br><small>Причина: ${entry.comment}</small>` : ''}
-            <br><small>${new Date(entry.timestamp).toLocaleString()}</small>
+          <div style="flex:1;">
+            <b>${actionLabels[entry.action] || entry.action}</b>
+            — ${instr?.article || '?'} ${instr?.name || 'Неизвестный инструмент'}
+            ${entry.action === 'issued_by_foreman' ? `<br><small>👤 Выдано: ${targetUser?.fullName || '?'}</small>` : ''}
+            ${entry.action === 'force_returned' ? `<br><small>👤 У кого забрали: ${targetUser?.fullName || '?'}</small>` : ''}
+            ${entry.comment ? `<br><small>💬 Причина: ${entry.comment}</small>` : ''}
+            <br><small style="color:#888;">🕐 ${formatDate(entry.timestamp)}</small>
           </div>
         </div>
       `;
-    }).join('')}
-  `;
+    });
+    html += '</div>';
+  }
+  content.innerHTML += html;
 }
 
-// --- Админ: Инструменты ---
+// --- Админ: Инструменты (с категориями) ---
 function renderAdminInstruments(container) {
   container.innerHTML = `
-    <h3>Управление инструментами</h3>
-    <button class="btn btn-green btn-sm" id="addInstrBtn">+ Добавить инструмент</button>
-    <input type="text" placeholder="Поиск..." id="instrSearch" style="margin:8px 0;">
-    <div class="scroll-table">
-      <table id="instrTable">
-        <thead><tr><th>Артикул</th><th>Название</th><th>Статус</th><th>У кого</th><th>Действия</th></tr></thead>
-        <tbody></tbody>
-      </table>
+    <div class="full-width" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+      <h3>🛠️ Управление инструментами</h3>
+      <button class="btn btn-green btn-sm" id="addInstrBtn">+ Добавить инструмент</button>
     </div>
-    <div id="instrForm" class="hidden card" style="margin-top:10px;"></div>
+    <div class="card" style="flex: 0 0 280px; max-height: 60vh; overflow-y: auto;">
+      <h4>📁 Категории</h4>
+      <div id="categoryTree"></div>
+      <button class="btn btn-gray btn-sm" id="showAllInstr" style="margin-top:8px;">📋 Показать все</button>
+    </div>
+    <div class="card" style="flex: 1; min-width: 350px;">
+      <input type="text" placeholder="🔍 Поиск по артикулу или названию..." id="instrSearch">
+      <div class="scroll-table" style="margin-top:8px;">
+        <table id="instrTable">
+          <thead><tr><th>Артикул</th><th>Название</th><th>Категория</th><th>Статус</th><th>У кого</th><th>Действия</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+    <div id="instrForm" class="hidden full-width card"></div>
   `;
+
+  let selectedCategoryId = null;
+
+  function renderCategoryTree() {
+    const tree = document.getElementById('categoryTree');
+    const buildTree = (parentId = null, level = 0) => {
+      const children = db.categories.filter(c => c.parentId === parentId);
+      if (children.length === 0) return '';
+      return children.map(c => `
+        <div class="tree-item ${selectedCategoryId === c.id ? 'active' : ''}" data-cat-id="${c.id}" style="padding-left:${12 + level * 20}px;">
+          📁 ${c.name}
+          <span style="font-size:10px;color:#999;margin-left:auto;">${db.instruments.filter(i => i.categoryId === c.id).length}</span>
+        </div>
+        <div class="tree-children">${buildTree(c.id, level + 1)}</div>
+      `).join('');
+    };
+    tree.innerHTML = `
+      <div class="tree-item ${selectedCategoryId === null ? 'active' : ''}" data-cat-id="">
+        📋 Все инструменты
+        <span style="font-size:10px;color:#999;margin-left:auto;">${db.instruments.length}</span>
+      </div>
+      <div class="tree-item ${selectedCategoryId === 'none' ? 'active' : ''}" data-cat-id="none">
+        ❓ Без категории
+        <span style="font-size:10px;color:#999;margin-left:auto;">${db.instruments.filter(i => !i.categoryId).length}</span>
+      </div>
+      ${buildTree(null)}
+    `;
+
+    tree.querySelectorAll('.tree-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const catId = item.dataset.catId;
+        selectedCategoryId = catId === '' ? null : (catId === 'none' ? 'none' : catId);
+        renderCategoryTree();
+        refreshTable(document.getElementById('instrSearch')?.value || '');
+      });
+    });
+  }
 
   function refreshTable(filter = '') {
     const tbody = document.querySelector('#instrTable tbody');
-    const filtered = db.instruments.filter(i => i.article.includes(filter) || i.name.toLowerCase().includes(filter.toLowerCase()));
+    let filtered = db.instruments.filter(i =>
+      i.article.toLowerCase().includes(filter.toLowerCase()) ||
+      i.name.toLowerCase().includes(filter.toLowerCase())
+    );
+    if (selectedCategoryId === 'none') {
+      filtered = filtered.filter(i => !i.categoryId);
+    } else if (selectedCategoryId) {
+      filtered = filtered.filter(i => i.categoryId === selectedCategoryId);
+    }
     tbody.innerHTML = filtered.map(i => {
       const holder = i.currentHolderId ? db.users.find(u => u.id === i.currentHolderId) : null;
       return `
         <tr>
-          <td>${i.article}</td>
+          <td><b>${i.article}</b></td>
           <td>${i.name}</td>
+          <td><span class="category-badge">${getCategoryName(i.categoryId)}</span></td>
           <td><span class="status-badge status-${i.status}">${i.status === 'in_stock' ? 'Склад' : 'На руках'}</span></td>
           <td>${holder?.fullName || '—'}</td>
           <td>
-            <button class="btn-sm btn-gray editInstr" data-id="${i.id}">✏️</button>
-            ${i.status === 'taken' ? `<button class="btn-sm btn-red forceRet" data-id="${i.id}">↩️</button>` : ''}
-            <button class="btn-sm btn-red delInstr" data-id="${i.id}">🗑</button>
+            <button class="btn-xs btn-gray editInstr" data-id="${i.id}">✏️</button>
+            ${i.status === 'taken' ? `<button class="btn-xs btn-red forceRet" data-id="${i.id}">↩️</button>` : ''}
+            <button class="btn-xs btn-red delInstr" data-id="${i.id}">🗑</button>
           </td>
         </tr>
       `;
     }).join('');
 
-    // События
     tbody.querySelectorAll('.editInstr').forEach(b => b.addEventListener('click', () => showInstrForm(b.dataset.id)));
     tbody.querySelectorAll('.forceRet').forEach(b => b.addEventListener('click', () => {
       const instr = db.instruments.find(i => i.id === b.dataset.id);
-      const reason = prompt('Причина возврата:');
-      if (!reason) return;
-      db.log.push({ id: Date.now().toString(), instrumentId: instr.id, action: 'force_returned', initiatorId: currentUser.id, targetId: instr.currentHolderId, timestamp: new Date().toISOString(), comment: reason });
-      instr.status = 'in_stock'; instr.currentHolderId = null;
+      const reason = prompt('Причина принудительного возврата:');
+      if (reason === null) return;
+      db.log.push({
+        id: 'l' + Date.now(),
+        instrumentId: instr.id,
+        action: 'force_returned',
+        initiatorId: currentUser.id,
+        targetId: instr.currentHolderId,
+        timestamp: new Date().toISOString(),
+        comment: reason || ''
+      });
+      instr.status = 'in_stock';
+      instr.currentHolderId = null;
       saveDB(db);
       refreshTable(document.getElementById('instrSearch')?.value || '');
     }));
     tbody.querySelectorAll('.delInstr').forEach(b => b.addEventListener('click', () => {
-      if (confirm('Удалить инструмент?')) {
+      if (confirm('Удалить инструмент? Это действие нельзя отменить.')) {
         db.instruments = db.instruments.filter(i => i.id !== b.dataset.id);
         saveDB(db);
+        renderCategoryTree();
         refreshTable(document.getElementById('instrSearch')?.value || '');
       }
     }));
   }
 
+  renderCategoryTree();
   refreshTable();
   document.getElementById('instrSearch').addEventListener('input', e => refreshTable(e.target.value));
+  document.getElementById('showAllInstr').addEventListener('click', () => {
+    selectedCategoryId = null;
+    renderCategoryTree();
+    refreshTable(document.getElementById('instrSearch')?.value || '');
+  });
   document.getElementById('addInstrBtn').addEventListener('click', () => showInstrForm());
 
   function showInstrForm(id = null) {
     const instr = id ? db.instruments.find(i => i.id === id) : null;
     const form = document.getElementById('instrForm');
     form.classList.remove('hidden');
+    const catOptions = db.categories.map(c => `<option value="${c.id}" ${instr?.categoryId === c.id ? 'selected' : ''}>${getCategoryPath(c.id)}</option>`).join('');
     form.innerHTML = `
-      <h4>${id ? 'Редактировать' : 'Добавить'} инструмент</h4>
-      <div class="form-group"><label>Артикул</label><input id="fArticle" value="${instr?.article || ''}" placeholder="INSTR-XXXX"></div>
-      <div class="form-group"><label>Название</label><input id="fName" value="${instr?.name || ''}"></div>
-      <div class="form-group"><label>Описание</label><input id="fDesc" value="${instr?.description || ''}"></div>
-      <button class="btn btn-green" id="saveInstrBtn">Сохранить</button>
-      <button class="btn btn-gray" id="cancelInstrBtn">Отмена</button>
+      <h4>${id ? '✏️ Редактировать' : '➕ Добавить'} инструмент</h4>
+      <div class="form-row">
+        <div class="form-group"><label>Артикул *</label><input id="fArticle" value="${instr?.article || ''}" placeholder="INSTR-XXXX"></div>
+        <div class="form-group"><label>Название *</label><input id="fName" value="${instr?.name || ''}" placeholder="Название инструмента"></div>
+      </div>
+      <div class="form-group"><label>Описание</label><textarea id="fDesc" rows="2">${instr?.description || ''}</textarea></div>
+      <div class="form-group"><label>Категория</label><select id="fCategory"><option value="">Без категории</option>${catOptions}</select></div>
+      <div style="display:flex;gap:10px;">
+        <button class="btn btn-green" id="saveInstrBtn" style="flex:1;">💾 Сохранить</button>
+        <button class="btn btn-gray" id="cancelInstrBtn" style="flex:1;">Отмена</button>
+      </div>
     `;
     document.getElementById('saveInstrBtn').addEventListener('click', () => {
       const article = document.getElementById('fArticle').value.trim();
       const name = document.getElementById('fName').value.trim();
       if (!article || !name) { alert('Артикул и название обязательны'); return; }
       if (id) {
-        Object.assign(instr, { article, name, description: document.getElementById('fDesc').value });
+        if (db.instruments.find(i => i.article === article && i.id !== id)) { alert('Артикул уже существует'); return; }
+        Object.assign(instr, {
+          article,
+          name,
+          description: document.getElementById('fDesc').value,
+          categoryId: document.getElementById('fCategory').value || null
+        });
       } else {
         if (db.instruments.find(i => i.article === article)) { alert('Артикул уже существует'); return; }
-        db.instruments.push({ id: 'i' + Date.now(), article, name, description: document.getElementById('fDesc').value, status: 'in_stock', currentHolderId: null });
+        db.instruments.push({
+          id: 'i' + Date.now(),
+          article,
+          name,
+          description: document.getElementById('fDesc').value,
+          categoryId: document.getElementById('fCategory').value || null,
+          status: 'in_stock',
+          currentHolderId: null
+        });
       }
       saveDB(db);
       form.classList.add('hidden');
+      renderCategoryTree();
       refreshTable(document.getElementById('instrSearch')?.value || '');
     });
     document.getElementById('cancelInstrBtn').addEventListener('click', () => form.classList.add('hidden'));
   }
 }
 
+// --- Админ: Категории ---
+function renderAdminCategories(container) {
+  container.innerHTML = `
+    <div class="full-width" style="display:flex;justify-content:space-between;align-items:center;">
+      <h3>📁 Управление категориями</h3>
+      <button class="btn btn-green btn-sm" id="addCatBtn">+ Добавить категорию</button>
+    </div>
+    <div class="card full-width">
+      <div id="catList"></div>
+    </div>
+    <div id="catForm" class="hidden full-width card"></div>
+  `;
+
+  function renderCatList() {
+    const buildTree = (parentId = null, level = 0) => {
+      const children = db.categories.filter(c => c.parentId === parentId);
+      return children.map(c => `
+        <div style="padding:8px 12px;border-bottom:1px solid #eee;display:flex;align-items:center;gap:10px;">
+          <span style="padding-left:${level * 20}px;">📁 <b>${c.name}</b></span>
+          <span style="font-size:11px;color:#999;">(${db.instruments.filter(i => i.categoryId === c.id).length} инструментов)</span>
+          <span style="flex:1;"></span>
+          <button class="btn-xs btn-gray editCat" data-id="${c.id}">✏️</button>
+          <button class="btn-xs btn-red delCat" data-id="${c.id}">🗑</button>
+        </div>
+        ${buildTree(c.id, level + 1)}
+      `).join('');
+    };
+    document.getElementById('catList').innerHTML = buildTree(null) || '<p style="padding:12px;">Нет категорий. Создайте первую.</p>';
+
+    document.querySelectorAll('.editCat').forEach(b => b.addEventListener('click', () => showCatForm(b.dataset.id)));
+    document.querySelectorAll('.delCat').forEach(b => b.addEventListener('click', () => {
+      if (confirm('Удалить категорию? Инструменты в ней останутся, но потеряют привязку.')) {
+        db.categories = db.categories.filter(c => c.id !== b.dataset.id && c.parentId !== b.dataset.id);
+        db.instruments.forEach(i => { if (i.categoryId === b.dataset.id) i.categoryId = null; });
+        saveDB(db);
+        renderCatList();
+      }
+    }));
+  }
+
+  renderCatList();
+  document.getElementById('addCatBtn').addEventListener('click', () => showCatForm());
+
+  function showCatForm(id = null) {
+    const cat = id ? db.categories.find(c => c.id === id) : null;
+    const form = document.getElementById('catForm');
+    form.classList.remove('hidden');
+    const parentOptions = db.categories.filter(c => c.id !== id).map(c => `<option value="${c.id}" ${cat?.parentId === c.id ? 'selected' : ''}>${getCategoryPath(c.id)}</option>`).join('');
+    form.innerHTML = `
+      <h4>${id ? '✏️ Редактировать' : '➕ Добавить'} категорию</h4>
+      <div class="form-group"><label>Название *</label><input id="fCatName" value="${cat?.name || ''}" placeholder="Название категории"></div>
+      <div class="form-group"><label>Родительская категория</label><select id="fCatParent"><option value="">Нет (корневая)</option>${parentOptions}</select></div>
+      <div style="display:flex;gap:10px;">
+        <button class="btn btn-green" id="saveCatBtn" style="flex:1;">💾 Сохранить</button>
+        <button class="btn btn-gray" id="cancelCatBtn" style="flex:1;">Отмена</button>
+      </div>
+    `;
+    document.getElementById('saveCatBtn').addEventListener('click', () => {
+      const name = document.getElementById('fCatName').value.trim();
+      if (!name) { alert('Название обязательно'); return; }
+      if (id) {
+        Object.assign(cat, { name, parentId: document.getElementById('fCatParent').value || null });
+      } else {
+        db.categories.push({
+          id: 'c' + Date.now(),
+          name,
+          parentId: document.getElementById('fCatParent').value || null
+        });
+      }
+      saveDB(db);
+      form.classList.add('hidden');
+      renderCatList();
+    });
+    document.getElementById('cancelCatBtn').addEventListener('click', () => form.classList.add('hidden'));
+  }
+}
+
 // --- Админ: Пользователи ---
 function renderAdminUsers(container) {
   container.innerHTML = `
-    <h3>Управление пользователями</h3>
-    <button class="btn btn-green btn-sm" id="addUserBtn">+ Добавить пользователя</button>
-    <div class="scroll-table" style="margin-top:10px;">
-      <table>
-        <thead><tr><th>ФИО</th><th>Логин</th><th>Роль</th><th>Артикул</th><th>Действия</th></tr></thead>
-        <tbody id="usersTbody"></tbody>
-      </table>
+    <div class="full-width" style="display:flex;justify-content:space-between;align-items:center;">
+      <h3>👥 Управление пользователями</h3>
+      <button class="btn btn-green btn-sm" id="addUserBtn">+ Добавить пользователя</button>
     </div>
-    <div id="userForm" class="hidden card" style="margin-top:10px;"></div>
+    <div class="card full-width">
+      <div class="scroll-table">
+        <table>
+          <thead><tr><th>ФИО</th><th>Логин</th><th>Роль</th><th>Артикул</th><th>Действия</th></tr></thead>
+          <tbody id="usersTbody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div id="userForm" class="hidden full-width card"></div>
   `;
 
   function refreshUsers() {
     document.getElementById('usersTbody').innerHTML = db.users.map(u => `
       <tr>
-        <td>${u.fullName}</td><td>${u.login}</td><td>${u.role}</td><td>${u.personalArticle}</td>
+        <td><b>${u.fullName}</b></td>
+        <td>${u.login}</td>
+        <td>${u.role === 'admin' ? '🛡️ Админ' : u.role === 'foreman' ? '🪖 Бригадир' : '🦺 Сотрудник'}</td>
+        <td><code>${u.personalArticle}</code></td>
         <td>
-          <button class="btn-sm btn-gray editUser" data-id="${u.id}">✏️</button>
-          <button class="btn-sm btn-red delUser" data-id="${u.id}">🗑</button>
+          <button class="btn-xs btn-gray editUser" data-id="${u.id}">✏️</button>
+          ${u.id !== currentUser.id ? `<button class="btn-xs btn-red delUser" data-id="${u.id}">🗑</button>` : ''}
         </td>
       </tr>
     `).join('');
     document.querySelectorAll('.editUser').forEach(b => b.addEventListener('click', () => showUserForm(b.dataset.id)));
     document.querySelectorAll('.delUser').forEach(b => b.addEventListener('click', () => {
-      if (confirm('Удалить пользователя?')) {
+      if (confirm('Удалить пользователя? Все его операции в истории сохранятся.')) {
         db.users = db.users.filter(u => u.id !== b.dataset.id);
         saveDB(db);
         refreshUsers();
@@ -539,22 +1122,46 @@ function renderAdminUsers(container) {
     const form = document.getElementById('userForm');
     form.classList.remove('hidden');
     form.innerHTML = `
-      <h4>${id ? 'Редактировать' : 'Добавить'} пользователя</h4>
-      <div class="form-group"><label>ФИО</label><input id="ufName" value="${user?.fullName || ''}"></div>
-      <div class="form-group"><label>Логин</label><input id="ufLogin" value="${user?.login || ''}"></div>
-      <div class="form-group"><label>Пароль</label><input id="ufPass" type="password" value="${user?.password || ''}"></div>
-      <div class="form-group"><label>Роль</label><select id="ufRole"><option value="employee" ${user?.role==='employee'?'selected':''}>Сотрудник</option><option value="foreman" ${user?.role==='foreman'?'selected':''}>Бригадир</option><option value="admin" ${user?.role==='admin'?'selected':''}>Админ</option></select></div>
-      <div class="form-group"><label>Артикул</label><input id="ufArticle" value="${user?.personalArticle || ''}"><button type="button" class="btn-sm btn-gray" id="genArticle">Сгенерировать</button></div>
-      <button class="btn btn-green" id="saveUserBtn">Сохранить</button>
-      <button class="btn btn-gray" id="cancelUserBtn">Отмена</button>
+      <h4>${id ? '✏️ Редактировать' : '➕ Добавить'} пользователя</h4>
+      <div class="form-row">
+        <div class="form-group"><label>ФИО *</label><input id="ufName" value="${user?.fullName || ''}"></div>
+        <div class="form-group"><label>Логин *</label><input id="ufLogin" value="${user?.login || ''}"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Пароль *</label><input id="ufPass" type="text" value="${user?.password || ''}"></div>
+        <div class="form-group"><label>Роль *</label><select id="ufRole">
+          <option value="employee" ${user?.role==='employee'?'selected':''}>🦺 Сотрудник</option>
+          <option value="foreman" ${user?.role==='foreman'?'selected':''}>🪖 Бригадир</option>
+          <option value="admin" ${user?.role==='admin'?'selected':''}>🛡️ Админ</option>
+        </select></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Артикул * (для QR-бейджа)</label><input id="ufArticle" value="${user?.personalArticle || ''}"></div>
+        <div class="form-group"><label>&nbsp;</label><button class="btn btn-gray btn-sm" id="genArticle" style="margin-top:5px;">🎲 Сгенерировать</button></div>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button class="btn btn-green" id="saveUserBtn" style="flex:1;">💾 Сохранить</button>
+        <button class="btn btn-gray" id="cancelUserBtn" style="flex:1;">Отмена</button>
+      </div>
     `;
     document.getElementById('genArticle').addEventListener('click', () => {
-      document.getElementById('ufArticle').value = Array.from({length:10}, () => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'[Math.floor(Math.random()*36)]).join('');
+      document.getElementById('ufArticle').value = generateArticle();
     });
     document.getElementById('saveUserBtn').addEventListener('click', () => {
-      const d = { fullName: document.getElementById('ufName').value, login: document.getElementById('ufLogin').value, password: document.getElementById('ufPass').value, role: document.getElementById('ufRole').value, personalArticle: document.getElementById('ufArticle').value };
-      if (!d.fullName || !d.login || !d.password || !d.personalArticle) { alert('Все поля обязательны'); return; }
+      const d = {
+        fullName: document.getElementById('ufName').value.trim(),
+        login: document.getElementById('ufLogin').value.trim(),
+        password: document.getElementById('ufPass').value.trim(),
+        role: document.getElementById('ufRole').value,
+        personalArticle: document.getElementById('ufArticle').value.trim()
+      };
+      if (!d.fullName || !d.login || !d.password || !d.personalArticle) {
+        alert('Все поля обязательны для заполнения');
+        return;
+      }
       if (id) {
+        if (db.users.find(u => u.login === d.login && u.id !== id)) { alert('Логин занят'); return; }
+        if (db.users.find(u => u.personalArticle === d.personalArticle && u.id !== id)) { alert('Артикул занят'); return; }
         Object.assign(user, d);
       } else {
         if (db.users.find(u => u.login === d.login)) { alert('Логин занят'); return; }
@@ -572,35 +1179,97 @@ function renderAdminUsers(container) {
 // --- Админ: Журнал ---
 function renderAdminLog(container) {
   container.innerHTML = `
-    <h3>Полный журнал событий</h3>
-    <button class="btn btn-blue btn-sm" id="exportCSV">📥 Выгрузить CSV</button>
-    <div class="scroll-table" style="margin-top:10px;">
-      <table>
-        <thead><tr><th>Дата</th><th>Инструмент</th><th>Действие</th><th>Инициатор</th><th>Цель</th><th>Комментарий</th></tr></thead>
-        <tbody id="logTbody"></tbody>
-      </table>
+    <div class="full-width" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+      <h3>📊 Полный журнал событий</h3>
+      <button class="btn btn-blue btn-sm" id="exportCSV">📥 Выгрузить CSV</button>
+    </div>
+    <div class="card full-width">
+      <div class="form-row" style="margin-bottom:12px;">
+        <div class="form-group"><label>Фильтр по инструменту</label><input id="logFilterInstr" type="text" placeholder="Артикул или название..."></div>
+        <div class="form-group"><label>Фильтр по сотруднику</label><input id="logFilterUser" type="text" placeholder="ФИО..."></div>
+        <div class="form-group"><label>Тип действия</label><select id="logFilterAction">
+          <option value="">Все</option>
+          <option value="taken">Взял</option>
+          <option value="returned">Вернул</option>
+          <option value="issued_by_foreman">Выдал</option>
+          <option value="force_returned">Принуд. возврат</option>
+        </select></div>
+      </div>
+      <div class="scroll-table">
+        <table id="logTable">
+          <thead><tr><th>Дата</th><th>Инструмент</th><th>Действие</th><th>Инициатор</th><th>Цель</th><th>Комментарий</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
     </div>
   `;
 
-  const actions = { taken: 'Взял', returned: 'Вернул', issued_by_foreman: 'Выдал', force_returned: 'Принуд. возврат' };
-  document.getElementById('logTbody').innerHTML = db.log.sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp)).map(e => {
-    const instr = db.instruments.find(i => i.id === e.instrumentId);
-    const init = db.users.find(u => u.id === e.initiatorId);
-    const target = db.users.find(u => u.id === e.targetId);
-    return `<tr><td>${new Date(e.timestamp).toLocaleString()}</td><td>${instr?.article||'?'} ${instr?.name||''}</td><td>${actions[e.action]||e.action}</td><td>${init?.fullName||'?'}</td><td>${target?.fullName||'?'}</td><td>${e.comment||''}</td></tr>`;
-  }).join('');
+  const actions = { taken: '🔴 Взял', returned: '🔵 Вернул', issued_by_foreman: '🟠 Выдал', force_returned: '🟣 Принуд. возврат' };
+
+  function refreshLog() {
+    const fInstr = (document.getElementById('logFilterInstr')?.value || '').toLowerCase();
+    const fUser = (document.getElementById('logFilterUser')?.value || '').toLowerCase();
+    const fAction = document.getElementById('logFilterAction')?.value || '';
+
+    let filtered = [...db.log];
+    if (fInstr) {
+      filtered = filtered.filter(e => {
+        const instr = db.instruments.find(i => i.id === e.instrumentId);
+        return instr && (instr.article.toLowerCase().includes(fInstr) || instr.name.toLowerCase().includes(fInstr));
+      });
+    }
+    if (fUser) {
+      filtered = filtered.filter(e => {
+        const init = db.users.find(u => u.id === e.initiatorId);
+        const target = db.users.find(u => u.id === e.targetId);
+        return (init?.fullName.toLowerCase().includes(fUser)) || (target?.fullName.toLowerCase().includes(fUser));
+      });
+    }
+    if (fAction) {
+      filtered = filtered.filter(e => e.action === fAction);
+    }
+
+    filtered.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+    document.getElementById('logTable').querySelector('tbody').innerHTML = filtered.map(e => {
+      const instr = db.instruments.find(i => i.id === e.instrumentId);
+      const init = db.users.find(u => u.id === e.initiatorId);
+      const target = db.users.find(u => u.id === e.targetId);
+      return `<tr>
+        <td>${formatDate(e.timestamp)}</td>
+        <td>${instr?.article || '?'} ${instr?.name || ''}</td>
+        <td>${actions[e.action] || e.action}</td>
+        <td>${init?.fullName || '?'}</td>
+        <td>${target?.fullName || '?'}</td>
+        <td>${e.comment || '—'}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  refreshLog();
+  document.getElementById('logFilterInstr').addEventListener('input', refreshLog);
+  document.getElementById('logFilterUser').addEventListener('input', refreshLog);
+  document.getElementById('logFilterAction').addEventListener('change', refreshLog);
 
   document.getElementById('exportCSV').addEventListener('click', () => {
-    const rows = [['Дата','Инструмент','Действие','Инициатор','Цель','Комментарий']];
-    db.log.sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp)).forEach(e => {
+    const rows = [['Дата','Инструмент (артикул)','Инструмент (название)','Действие','Инициатор','Цель','Комментарий']];
+    [...db.log].sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp)).forEach(e => {
       const instr = db.instruments.find(i => i.id === e.instrumentId);
-      rows.push([new Date(e.timestamp).toLocaleString(), instr?.article||'', actions[e.action]||e.action, db.users.find(u=>u.id===e.initiatorId)?.fullName||'', db.users.find(u=>u.id===e.targetId)?.fullName||'', e.comment||'']);
+      rows.push([
+        formatDate(e.timestamp),
+        instr?.article || '',
+        instr?.name || '',
+        actions[e.action] || e.action,
+        db.users.find(u=>u.id===e.initiatorId)?.fullName || '',
+        db.users.find(u=>u.id===e.targetId)?.fullName || '',
+        e.comment || ''
+      ]);
     });
-    const csv = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
-    const blob = new Blob(['\uFEFF' + csv], {type: 'text/csv;charset=utf-8'});
+    const csv = '\uFEFF' + rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+    const blob = new Blob([csv], {type: 'text/csv;charset=utf-8'});
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = 'journal.csv';
+    a.download = 'journal_' + new Date().toISOString().slice(0,10) + '.csv';
     a.click();
   });
 }
