@@ -35,13 +35,10 @@ body {
   overflow: hidden;
 }
 
-/* Анимированные частицы */
 .particles {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   pointer-events: none;
   z-index: 0;
 }
@@ -54,29 +51,16 @@ body {
 }
 
 @keyframes floatUp {
-  0% {
-    transform: translateY(100vh) scale(0);
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(-100px) scale(1.5);
-    opacity: 0;
-  }
+  0% { transform: translateY(100vh) scale(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-100px) scale(1.5); opacity: 0; }
 }
 
-/* Геометрические фигуры */
 .geo-shapes {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   pointer-events: none;
   z-index: 0;
 }
@@ -87,29 +71,14 @@ body {
   animation: rotateSlow linear infinite;
 }
 
-.geo-shape.circle {
-  border-radius: 50%;
-}
-
-.geo-shape.square {
-  border-radius: 15px;
-}
-
-.geo-shape.triangle {
-  width: 0 !important;
-  height: 0 !important;
-  border-left: 80px solid transparent;
-  border-right: 80px solid transparent;
-  border-bottom: 140px solid rgba(255, 255, 255, 0.04);
-  background: none !important;
-}
+.geo-shape.circle { border-radius: 50%; }
+.geo-shape.square { border-radius: 15px; }
 
 @keyframes rotateSlow {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
 
-/* Карточка логина */
 .login-card {
   position: relative;
   z-index: 1;
@@ -124,14 +93,8 @@ body {
 }
 
 @keyframes cardEntry {
-  from {
-    opacity: 0;
-    transform: translateY(40px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  from { opacity: 0; transform: translateY(40px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .login-logo {
@@ -219,16 +182,13 @@ body {
 
 .login-btn:active {
   transform: translateY(0);
-  box-shadow: 0 5px 15px rgba(0, 123, 255, 0.2);
 }
 
 .login-btn::after {
   content: '';
   position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
+  top: 50%; left: 50%;
+  width: 0; height: 0;
   background: rgba(255, 255, 255, 0.2);
   border-radius: 50%;
   transform: translate(-50%, -50%);
@@ -236,8 +196,7 @@ body {
 }
 
 .login-btn:active::after {
-  width: 300px;
-  height: 300px;
+  width: 300px; height: 300px;
 }
 
 .login-error {
@@ -266,11 +225,8 @@ body {
   line-height: 1.5;
 }
 
-.login-hint b {
-  color: #666;
-}
+.login-hint b { color: #666; }
 
-/* Светящиеся точки */
 .glow-dot {
   position: absolute;
   border-radius: 50%;
@@ -294,37 +250,11 @@ body {
   flex-direction: column;
 }
 
-/* Адаптивная сетка */
-@media (min-width: 768px) {
-  .app {
-    display: grid;
-    grid-template-rows: auto auto 1fr;
-  }
-  .content {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    gap: 16px;
-    align-content: start;
-  }
-  .content .full-width {
-    grid-column: 1 / -1;
-  }
-}
-
-@media (min-width: 1200px) {
-  .content {
-    grid-template-columns: repeat(3, 1fr);
-  }
-  .content .full-width {
-    grid-column: 1 / -1;
-  }
-}
-
 /* Хедер */
 .header {
   background: linear-gradient(135deg, #1a1a2e, #16213e);
   color: #fff;
-  padding: 14px 20px;
+  padding: 12px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -369,7 +299,6 @@ body {
   font-size: 13px;
   white-space: nowrap;
   transition: all 0.2s;
-  backdrop-filter: blur(10px);
 }
 
 .header-actions button:hover {
@@ -410,9 +339,7 @@ body {
   transition: all 0.2s;
 }
 
-.tabs button:hover {
-  background: #f0f2f5;
-}
+.tabs button:hover { background: #f0f2f5; }
 
 .tabs button.active {
   background: #1a1a2e;
@@ -429,19 +356,13 @@ body {
   background: #f0f2f5;
 }
 
-/* Карточки */
+/* Общие карточки */
 .card {
   background: #fff;
   border-radius: 16px;
   padding: 20px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-  margin-bottom: 0;
   height: fit-content;
-  transition: box-shadow 0.2s;
-}
-
-.card:hover {
-  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
 }
 
 .card h3 {
@@ -466,15 +387,8 @@ body {
   letter-spacing: 0.3px;
 }
 
-.status-in_stock {
-  background: #d4edda;
-  color: #155724;
-}
-
-.status-taken {
-  background: #f8d7da;
-  color: #721c24;
-}
+.status-in_stock { background: #d4edda; color: #155724; }
+.status-taken { background: #f8d7da; color: #721c24; }
 
 /* Кнопки */
 .btn {
@@ -491,9 +405,7 @@ body {
   text-align: center;
 }
 
-.btn:active {
-  transform: scale(0.98);
-}
+.btn:active { transform: scale(0.98); }
 
 .btn-green { background: #28a745; color: #fff; }
 .btn-green:hover { background: #218838; }
@@ -593,9 +505,7 @@ table th {
   letter-spacing: 0.5px;
 }
 
-table tr:hover {
-  background: #f8f9fa;
-}
+table tr:hover { background: #f8f9fa; }
 
 .scroll-table {
   max-height: 55vh;
@@ -645,13 +555,8 @@ table tr:hover {
   transition: background 0.2s;
 }
 
-.history-item:hover {
-  background: #fafafa;
-}
-
-.history-item:last-child {
-  border-bottom: none;
-}
+.history-item:hover { background: #fafafa; }
+.history-item:last-child { border-bottom: none; }
 
 .history-dot {
   width: 14px;
@@ -689,9 +594,7 @@ table tr:hover {
   margin: 2px 0;
 }
 
-.tree-item:hover {
-  background: #f0f2f5;
-}
+.tree-item:hover { background: #f0f2f5; }
 
 .tree-item.active {
   background: #e3f2fd;
@@ -699,9 +602,7 @@ table tr:hover {
   color: #007bff;
 }
 
-.tree-children {
-  padding-left: 20px;
-}
+.tree-children { padding-left: 20px; }
 
 .category-badge {
   display: inline-block;
@@ -717,10 +618,8 @@ table tr:hover {
 /* Модальное окно */
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   background: rgba(0,0,0,0.6);
   display: flex;
   align-items: center;
@@ -752,9 +651,7 @@ table tr:hover {
   to { opacity: 1; transform: translateY(0); }
 }
 
-.hidden {
-  display: none !important;
-}
+.hidden { display: none !important; }
 
 code {
   background: #f0f2f5;
@@ -764,7 +661,25 @@ code {
   font-family: 'SF Mono', 'Consolas', monospace;
 }
 
-/* Мобильная адаптация */
+/* ============ АДАПТИВНАЯ СЕТКА ДЛЯ РАЗДЕЛА ИНСТРУМЕНТОВ ============ */
+.instruments-layout {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.instruments-sidebar {
+  width: 280px;
+  flex-shrink: 0;
+}
+
+.instruments-main {
+  flex: 1;
+  min-width: 0;
+}
+
+/* На мобильных устройствах */
 @media (max-width: 767px) {
   .header {
     padding: 10px 12px;
@@ -817,16 +732,24 @@ code {
     border-radius: 20px;
   }
 
-  .login-logo .icon {
-    font-size: 45px;
+  .login-logo .icon { font-size: 45px; }
+  .login-logo h1 { font-size: 20px; }
+
+  #reader { max-width: 100%; }
+
+  /* Инструменты на мобильных */
+  .instruments-layout {
+    flex-direction: column;
+    gap: 10px;
   }
 
-  .login-logo h1 {
-    font-size: 20px;
+  .instruments-sidebar {
+    width: 100%;
   }
 
-  #reader {
-    max-width: 100%;
+  .instruments-main {
+    width: 100%;
+    min-width: 100%;
   }
 }
 
@@ -836,6 +759,22 @@ code {
     padding: 14px;
     gap: 12px;
   }
+
+  .instruments-sidebar {
+    width: 240px;
+  }
+}
+
+/* Большие экраны */
+@media (min-width: 1200px) {
+  .instruments-sidebar {
+    width: 300px;
+  }
+}
+
+/* Общие адаптивные классы */
+.full-width {
+  width: 100%;
 }
 </style>
 </head>
@@ -929,7 +868,6 @@ function formatDate(iso) {
 
 // ============ СТРАНИЦА ВХОДА (АНИМИРОВАННАЯ) ============
 function renderLogin(error = '') {
-  // Создаём частицы
   const particlesHTML = Array.from({length: 30}, (_, i) => {
     const size = Math.random() * 6 + 2;
     const left = Math.random() * 100;
@@ -941,41 +879,31 @@ function renderLogin(error = '') {
   render(`
     <div class="login-wrapper">
       <div class="particles">${particlesHTML}</div>
-
-      <!-- Геометрические фигуры -->
       <div class="geo-shapes">
         <div class="geo-shape circle" style="width:200px;height:200px;top:-50px;right:-50px;animation-duration:25s;"></div>
         <div class="geo-shape square" style="width:150px;height:150px;bottom:10%;left:-40px;animation-duration:30s;"></div>
         <div class="geo-shape circle" style="width:100px;height:100px;bottom:20%;right:15%;animation-duration:20s;"></div>
         <div class="geo-shape square" style="width:80px;height:80px;top:15%;left:10%;animation-duration:35s;"></div>
       </div>
-
-      <!-- Светящиеся точки -->
       <div class="glow-dot" style="width:80px;height:80px;top:10%;left:20%;animation-delay:0s;"></div>
       <div class="glow-dot" style="width:60px;height:60px;bottom:15%;right:25%;animation-delay:1.5s;"></div>
 
-      <!-- Карточка логина -->
       <div class="login-card">
         <div class="login-logo">
           <span class="icon">🔧</span>
           <h1>ToolTracker</h1>
           <p>Система учёта инструментов</p>
         </div>
-
         ${error ? `<div class="login-error">${error}</div>` : ''}
-
         <div class="form-group">
           <label>👤 Логин</label>
           <input id="loginInput" type="text" placeholder="Введите логин" autocomplete="username">
         </div>
-
         <div class="form-group">
           <label>🔒 Пароль</label>
           <input id="passInput" type="password" placeholder="Введите пароль" autocomplete="current-password">
         </div>
-
         <button class="login-btn" id="loginBtn">Войти в систему</button>
-
         <p class="login-hint">
           Тестовые доступы:<br>
           <b>admin / admin</b> (администратор)<br>
@@ -986,12 +914,8 @@ function renderLogin(error = '') {
     </div>
   `);
 
-  // Фокус на поле логина
-  setTimeout(() => {
-    document.getElementById('loginInput')?.focus();
-  }, 500);
+  setTimeout(() => document.getElementById('loginInput')?.focus(), 500);
 
-  // Обработчик входа
   document.getElementById('loginBtn').addEventListener('click', () => {
     const loginVal = document.getElementById('loginInput').value.trim();
     const pass = document.getElementById('passInput').value.trim();
@@ -1005,7 +929,6 @@ function renderLogin(error = '') {
     }
   });
 
-  // Enter на поле пароля
   document.getElementById('passInput')?.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') document.getElementById('loginBtn').click();
   });
@@ -1037,16 +960,13 @@ function renderMain(tab = 'scanner', message = '') {
           <button id="logoutBtn">🚪 Выйти</button>
         </div>
       </div>
-
       <div class="tabs">${tabs.map(t => `<button class="${tab===t.id?'active':''}" data-tab="${t.id}">${t.label}</button>`).join('')}</div>
-
       <div class="content" id="tabContent">
         ${message ? `<div class="full-width ${message.includes('✅')?'success':message.includes('⚠')?'warning':'error'}">${message}</div>` : ''}
       </div>
     </div>
   `);
 
-  // Переключение вкладок
   document.querySelectorAll('.tabs button').forEach(btn => {
     btn.addEventListener('click', () => renderMain(btn.dataset.tab));
   });
@@ -1059,7 +979,6 @@ function renderMain(tab = 'scanner', message = '') {
 
   document.getElementById('profileBtn').addEventListener('click', () => renderProfile());
 
-  // Контент вкладки
   const content = document.getElementById('tabContent');
   switch(tab) {
     case 'scanner': renderScanner(content); break;
@@ -1141,7 +1060,6 @@ function renderScanner(container) {
   let foremanMode = 'self';
   let pendingEmployee = null;
 
-  // Запуск сканера
   if (html5QrCode) { html5QrCode.stop().catch(()=>{}); }
   const readerEl = document.getElementById('reader');
   if (readerEl) {
@@ -1202,7 +1120,6 @@ function renderScanner(container) {
           <span class="status-badge status-${instr.status}">${instr.status === 'in_stock' ? '🟢 На складе' : '🔴 На руках'}</span>
         </div>
         ${holder ? `<p style="margin:8px 0;">👤 Держатель: <b>${holder.fullName}</b></p>` : ''}
-
         ${instr.status === 'in_stock' && !pendingEmployee ? `<button class="btn btn-green" id="takeBtn">🟢 ВЗЯТЬ</button>` : ''}
         ${instr.status === 'in_stock' && pendingEmployee ? `<button class="btn btn-orange" id="issueBtn">🟠 ВЫДАТЬ: ${pendingEmployee.fullName}</button>` : ''}
         ${isHeldByMe ? `<button class="btn btn-blue" id="returnBtn">🔵 ВЕРНУТЬ НА СКЛАД</button>` : ''}
@@ -1317,49 +1234,59 @@ function renderHistory(container) {
     grouped[date].push(entry);
   });
 
-  let html = '';
   for (const [date, entries] of Object.entries(grouped)) {
-    html += `<div class="card full-width"><h4>📅 ${date}</h4>`;
+    const card = document.createElement('div');
+    card.className = 'card full-width';
+    card.innerHTML = `<h4>📅 ${date}</h4>`;
     entries.forEach(entry => {
       const instr = db.instruments.find(i => i.id === entry.instrumentId);
       const targetUser = db.users.find(u => u.id === entry.targetId);
-      html += `
-        <div class="history-item">
-          <div class="history-dot ${actionDots[entry.action] || 'dot-red'}"></div>
-          <div style="flex:1;">
-            <b>${actionLabels[entry.action] || entry.action}</b>
-            — ${instr?.article || '?'} ${instr?.name || 'Неизвестный инструмент'}
-            ${entry.action === 'issued_by_foreman' ? `<br><small>👤 Выдано: ${targetUser?.fullName || '?'}</small>` : ''}
-            ${entry.action === 'force_returned' ? `<br><small>👤 Забрано у: ${targetUser?.fullName || '?'}</small>` : ''}
-            ${entry.comment ? `<br><small>💬 ${entry.comment}</small>` : ''}
-            <br><small style="color:#888;">🕐 ${formatDate(entry.timestamp)}</small>
-          </div>
+      const div = document.createElement('div');
+      div.className = 'history-item';
+      div.innerHTML = `
+        <div class="history-dot ${actionDots[entry.action] || 'dot-red'}"></div>
+        <div style="flex:1;">
+          <b>${actionLabels[entry.action] || entry.action}</b>
+          — ${instr?.article || '?'} ${instr?.name || 'Неизвестный инструмент'}
+          ${entry.action === 'issued_by_foreman' ? `<br><small>👤 Выдано: ${targetUser?.fullName || '?'}</small>` : ''}
+          ${entry.action === 'force_returned' ? `<br><small>👤 Забрано у: ${targetUser?.fullName || '?'}</small>` : ''}
+          ${entry.comment ? `<br><small>💬 ${entry.comment}</small>` : ''}
+          <br><small style="color:#888;">🕐 ${formatDate(entry.timestamp)}</small>
         </div>`;
+      card.appendChild(div);
     });
-    html += '</div>';
+    container.appendChild(card);
   }
-  container.innerHTML += html;
 }
 
-// ============ АДМИН: ИНСТРУМЕНТЫ ============
+// ============ АДМИН: ИНСТРУМЕНТЫ (ИСПРАВЛЕНО) ============
 function renderAdminInstruments(container) {
   container.innerHTML = `
-    <div class="full-width" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
-      <h3>🛠️ Управление инструментами</h3>
+    <div class="full-width" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:16px;">
+      <h3 style="margin:0;">🛠️ Управление инструментами</h3>
       <button class="btn btn-green btn-sm" id="addInstrBtn">+ Добавить</button>
     </div>
-    <div class="card" style="max-height:60vh;overflow-y:auto;">
-      <h4>📁 Категории</h4>
-      <div id="categoryTree"></div>
-      <button class="btn btn-gray btn-sm" id="showAllInstr" style="margin-top:8px;">📋 Показать все</button>
-    </div>
-    <div class="card" style="min-width:350px;">
-      <input type="text" placeholder="🔍 Поиск..." id="instrSearch">
-      <div class="scroll-table" style="margin-top:8px;">
-        <table id="instrTable"><thead><tr><th>Артикул</th><th>Название</th><th>Категория</th><th>Статус</th><th>У кого</th><th>Действия</th></tr></thead><tbody></tbody></table>
+    <div class="instruments-layout">
+      <div class="instruments-sidebar">
+        <div class="card" style="max-height:60vh;overflow-y:auto;">
+          <h4>📁 Категории</h4>
+          <div id="categoryTree"></div>
+          <button class="btn btn-gray btn-sm" id="showAllInstr" style="margin-top:8px;">📋 Показать все</button>
+        </div>
+      </div>
+      <div class="instruments-main">
+        <div class="card">
+          <input type="text" placeholder="🔍 Поиск..." id="instrSearch" style="margin-bottom:12px;">
+          <div class="scroll-table">
+            <table id="instrTable">
+              <thead><tr><th>Артикул</th><th>Название</th><th>Категория</th><th>Статус</th><th>У кого</th><th>Действия</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
-    <div id="instrForm" class="hidden full-width card"></div>
+    <div id="instrForm" class="hidden full-width card" style="margin-top:16px;"></div>
   `;
 
   let selectedCategoryId = null;
@@ -1395,7 +1322,8 @@ function renderAdminInstruments(container) {
     if (selectedCategoryId === 'none') filtered = filtered.filter(i => !i.categoryId);
     else if (selectedCategoryId) filtered = filtered.filter(i => i.categoryId === selectedCategoryId);
 
-    document.querySelector('#instrTable tbody').innerHTML = filtered.map(i => {
+    const tbody = document.querySelector('#instrTable tbody');
+    tbody.innerHTML = filtered.map(i => {
       const holder = i.currentHolderId ? db.users.find(u => u.id === i.currentHolderId) : null;
       return `<tr>
         <td><code>${i.article}</code></td><td>${i.name}</td>
@@ -1409,8 +1337,8 @@ function renderAdminInstruments(container) {
         </td></tr>`;
     }).join('');
 
-    document.querySelectorAll('.editInstr').forEach(b => b.addEventListener('click', () => showForm(b.dataset.id)));
-    document.querySelectorAll('.forceRet').forEach(b => b.addEventListener('click', () => {
+    tbody.querySelectorAll('.editInstr').forEach(b => b.addEventListener('click', () => showForm(b.dataset.id)));
+    tbody.querySelectorAll('.forceRet').forEach(b => b.addEventListener('click', () => {
       const instr = db.instruments.find(i => i.id === b.dataset.id);
       const reason = prompt('Причина:');
       if (reason === null) return;
@@ -1418,7 +1346,7 @@ function renderAdminInstruments(container) {
       instr.status = 'in_stock'; instr.currentHolderId = null;
       saveDB(db); refreshTable();
     }));
-    document.querySelectorAll('.delInstr').forEach(b => b.addEventListener('click', () => {
+    tbody.querySelectorAll('.delInstr').forEach(b => b.addEventListener('click', () => {
       if (confirm('Удалить?')) { db.instruments = db.instruments.filter(i => i.id !== b.dataset.id); saveDB(db); renderTree(); refreshTable(); }
     }));
   }
@@ -1462,7 +1390,7 @@ function renderAdminInstruments(container) {
 // ============ АДМИН: КАТЕГОРИИ ============
 function renderAdminCategories(container) {
   container.innerHTML = `
-    <div class="full-width" style="display:flex;justify-content:space-between;align-items:center;"><h3>📁 Категории</h3><button class="btn btn-green btn-sm" id="addCatBtn">+ Добавить</button></div>
+    <div class="full-width" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;"><h3>📁 Категории</h3><button class="btn btn-green btn-sm" id="addCatBtn">+ Добавить</button></div>
     <div class="card full-width"><div id="catList"></div></div>
     <div id="catForm" class="hidden full-width card"></div>
   `;
@@ -1508,7 +1436,7 @@ function renderAdminCategories(container) {
 // ============ АДМИН: ПОЛЬЗОВАТЕЛИ ============
 function renderAdminUsers(container) {
   container.innerHTML = `
-    <div class="full-width" style="display:flex;justify-content:space-between;align-items:center;"><h3>👥 Пользователи</h3><button class="btn btn-green btn-sm" id="addUserBtn">+ Добавить</button></div>
+    <div class="full-width" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;"><h3>👥 Пользователи</h3><button class="btn btn-green btn-sm" id="addUserBtn">+ Добавить</button></div>
     <div class="card full-width"><div class="scroll-table"><table><thead><tr><th>ФИО</th><th>Логин</th><th>Роль</th><th>Артикул</th><th>Действия</th></tr></thead><tbody id="usersTbody"></tbody></table></div></div>
     <div id="userForm" class="hidden full-width card"></div>
   `;
