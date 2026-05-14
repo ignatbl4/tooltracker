@@ -6,775 +6,143 @@
 <title>🔧 Учёт инструментов</title>
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
-/* ============ СБРОС И БАЗА ============ */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif; background: #0a0a1a; color: #222; min-height: 100vh; min-height: 100dvh; overflow-x: hidden; }
 
-body {
-  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-  background: #0a0a1a;
-  color: #222;
-  min-height: 100vh;
-  min-height: 100dvh;
-  overflow-x: hidden;
-}
-
-/* ============ АНИМИРОВАННЫЙ ФОН ЛОГИНА ============ */
-.login-wrapper {
-  position: relative;
-  width: 100%;
-  min-height: 100vh;
-  min-height: 100dvh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #0f0c29, #1a1a3e, #24243e);
-  overflow: hidden;
-}
-
-.particles {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.particle {
-  position: absolute;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.15);
-  animation: floatUp linear infinite;
-}
-
-@keyframes floatUp {
-  0% { transform: translateY(100vh) scale(0); opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { transform: translateY(-100px) scale(1.5); opacity: 0; }
-}
-
-.geo-shapes {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.geo-shape {
-  position: absolute;
-  border: 2px solid rgba(255, 255, 255, 0.08);
-  animation: rotateSlow linear infinite;
-}
-
+/* ===== ЛОГИН ===== */
+.login-wrapper { position: relative; width: 100%; min-height: 100vh; min-height: 100dvh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #0f0c29, #1a1a3e, #24243e); overflow: hidden; }
+.particles { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+.particle { position: absolute; border-radius: 50%; background: rgba(255,255,255,0.15); animation: floatUp linear infinite; }
+@keyframes floatUp { 0% { transform: translateY(100vh) scale(0); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(-100px) scale(1.5); opacity: 0; } }
+.geo-shapes { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+.geo-shape { position: absolute; border: 2px solid rgba(255,255,255,0.08); animation: rotateSlow linear infinite; }
 .geo-shape.circle { border-radius: 50%; }
 .geo-shape.square { border-radius: 15px; }
-
-@keyframes rotateSlow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.login-card {
-  position: relative;
-  z-index: 1;
-  width: 90%;
-  max-width: 420px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border-radius: 24px;
-  padding: 35px 30px;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
-  animation: cardEntry 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-@keyframes cardEntry {
-  from { opacity: 0; transform: translateY(40px) scale(0.95); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-.login-logo {
-  text-align: center;
-  margin-bottom: 25px;
-}
-
-.login-logo .icon {
-  font-size: 60px;
-  display: block;
-  animation: bounce 2s ease-in-out infinite;
-}
-
-@keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-15px); }
-}
-
-.login-logo h1 {
-  font-size: 24px;
-  font-weight: 700;
-  color: #1a1a2e;
-  margin-top: 8px;
-  letter-spacing: -0.5px;
-}
-
-.login-logo p {
-  font-size: 13px;
-  color: #888;
-  margin-top: 4px;
-}
-
-.login-card .form-group {
-  margin-bottom: 16px;
-}
-
-.login-card .form-group label {
-  display: block;
-  font-size: 13px;
-  font-weight: 600;
-  color: #444;
-  margin-bottom: 6px;
-  letter-spacing: 0.3px;
-  text-transform: uppercase;
-}
-
-.login-card input {
-  width: 100%;
-  padding: 14px 16px;
-  border: 2px solid #e8e8e8;
-  border-radius: 14px;
-  font-size: 16px;
-  background: #fafafa;
-  transition: all 0.3s;
-  outline: none;
-}
-
-.login-card input:focus {
-  border-color: #007bff;
-  background: #fff;
-  box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.1);
-}
-
-.login-btn {
-  width: 100%;
-  padding: 15px;
-  background: linear-gradient(135deg, #007bff, #0056b3);
-  color: #fff;
-  border: none;
-  border-radius: 14px;
-  font-size: 17px;
-  font-weight: 700;
-  cursor: pointer;
-  margin-top: 8px;
-  transition: all 0.3s;
-  letter-spacing: 0.5px;
-  position: relative;
-  overflow: hidden;
-}
-
-.login-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(0, 123, 255, 0.3);
-}
-
-.login-btn:active {
-  transform: translateY(0);
-}
-
-.login-btn::after {
-  content: '';
-  position: absolute;
-  top: 50%; left: 50%;
-  width: 0; height: 0;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  transition: width 0.6s, height 0.6s;
-}
-
-.login-btn:active::after {
-  width: 300px; height: 300px;
-}
-
-.login-error {
-  background: #ffe0e0;
-  color: #cc0000;
-  padding: 12px;
-  border-radius: 10px;
-  font-size: 13px;
-  text-align: center;
-  margin-bottom: 15px;
-  animation: shake 0.5s;
-}
-
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-8px); }
-  50% { transform: translateX(8px); }
-  75% { transform: translateX(-4px); }
-}
-
-.login-hint {
-  text-align: center;
-  font-size: 11px;
-  color: #aaa;
-  margin-top: 16px;
-  line-height: 1.5;
-}
-
+@keyframes rotateSlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.login-card { position: relative; z-index: 1; width: 90%; max-width: 420px; background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-radius: 24px; padding: 35px 30px; box-shadow: 0 25px 60px rgba(0,0,0,0.4); animation: cardEntry 0.8s cubic-bezier(0.175,0.885,0.32,1.275); }
+@keyframes cardEntry { from { opacity: 0; transform: translateY(40px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.login-logo { text-align: center; margin-bottom: 25px; }
+.login-logo .icon { font-size: 60px; display: block; animation: bounce 2s ease-in-out infinite; }
+@keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+.login-logo h1 { font-size: 24px; font-weight: 700; color: #1a1a2e; margin-top: 8px; }
+.login-logo p { font-size: 13px; color: #888; margin-top: 4px; }
+.login-card .form-group { margin-bottom: 16px; }
+.login-card .form-group label { display: block; font-size: 13px; font-weight: 600; color: #444; margin-bottom: 6px; text-transform: uppercase; }
+.login-card input { width: 100%; padding: 14px 16px; border: 2px solid #e8e8e8; border-radius: 14px; font-size: 16px; background: #fafafa; transition: all 0.3s; outline: none; }
+.login-card input:focus { border-color: #007bff; background: #fff; box-shadow: 0 0 0 4px rgba(0,123,255,0.1); }
+.login-btn { width: 100%; padding: 15px; background: linear-gradient(135deg, #007bff, #0056b3); color: #fff; border: none; border-radius: 14px; font-size: 17px; font-weight: 700; cursor: pointer; margin-top: 8px; transition: all 0.3s; position: relative; overflow: hidden; }
+.login-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,123,255,0.3); }
+.login-btn:active { transform: translateY(0); }
+.login-btn::after { content: ''; position: absolute; top: 50%; left: 50%; width: 0; height: 0; background: rgba(255,255,255,0.2); border-radius: 50%; transform: translate(-50%,-50%); transition: width 0.6s, height 0.6s; }
+.login-btn:active::after { width: 300px; height: 300px; }
+.login-error { background: #ffe0e0; color: #cc0000; padding: 12px; border-radius: 10px; font-size: 13px; text-align: center; margin-bottom: 15px; animation: shake 0.5s; }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 50%{transform:translateX(8px)} 75%{transform:translateX(-4px)} }
+.login-hint { text-align: center; font-size: 11px; color: #aaa; margin-top: 16px; line-height: 1.5; }
 .login-hint b { color: #666; }
+.glow-dot { position: absolute; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, transparent 70%); animation: pulse 3s ease-in-out infinite; pointer-events: none; }
+@keyframes pulse { 0%,100%{transform:scale(0.8);opacity:0.3} 50%{transform:scale(1.4);opacity:0.7} }
 
-.glow-dot {
-  position: absolute;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, transparent 70%);
-  animation: pulse 3s ease-in-out infinite;
-  pointer-events: none;
-}
-
-@keyframes pulse {
-  0%, 100% { transform: scale(0.8); opacity: 0.3; }
-  50% { transform: scale(1.4); opacity: 0.7; }
-}
-
-/* ============ ОСНОВНОЕ ПРИЛОЖЕНИЕ ============ */
-.app {
-  width: 100%;
-  min-height: 100vh;
-  min-height: 100dvh;
-  background: #f0f2f5;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Хедер */
-.header {
-  background: linear-gradient(135deg, #1a1a2e, #16213e);
-  color: #fff;
-  padding: 12px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 2px 20px rgba(0,0,0,0.2);
-}
-
-.header .user-info {
-  font-size: 14px;
-}
-
-.header .user-info strong {
-  font-size: 16px;
-}
-
-.header .user-info .role {
-  font-size: 11px;
-  opacity: 0.8;
-  background: rgba(255,255,255,0.1);
-  padding: 2px 10px;
-  border-radius: 20px;
-  margin-left: 6px;
-}
-
-.header-actions {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.header-actions button {
-  background: rgba(255,255,255,0.1);
-  color: #fff;
-  border: 1px solid rgba(255,255,255,0.2);
-  padding: 8px 14px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 13px;
-  white-space: nowrap;
-  transition: all 0.2s;
-}
-
-.header-actions button:hover {
-  background: rgba(255,255,255,0.2);
-}
-
-.header-actions button:last-child {
-  background: rgba(233, 69, 96, 0.3);
-  border-color: rgba(233, 69, 96, 0.5);
-}
-
-.header-actions button:last-child:hover {
-  background: rgba(233, 69, 96, 0.5);
-}
-
-/* Табы */
-.tabs {
-  display: flex;
-  gap: 4px;
-  padding: 10px 16px;
-  flex-wrap: wrap;
-  background: #fff;
-  border-bottom: 1px solid #eee;
-  overflow-x: auto;
-  position: sticky;
-  top: 60px;
-  z-index: 99;
-}
-
-.tabs button {
-  padding: 8px 16px;
-  border: 1px solid #e0e0e0;
-  border-radius: 20px;
-  background: #fff;
-  cursor: pointer;
-  font-size: 13px;
-  white-space: nowrap;
-  transition: all 0.2s;
-}
-
+/* ===== ОСНОВНОЕ ===== */
+.app { width: 100%; min-height: 100vh; min-height: 100dvh; background: #f0f2f5; display: flex; flex-direction: column; }
+.header { background: linear-gradient(135deg, #1a1a2e, #16213e); color: #fff; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 20px rgba(0,0,0,0.2); }
+.header .user-info { font-size: 14px; }
+.header .user-info strong { font-size: 16px; }
+.header .user-info .role { font-size: 11px; opacity: 0.8; background: rgba(255,255,255,0.1); padding: 2px 10px; border-radius: 20px; margin-left: 6px; }
+.header-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.header-actions button { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); padding: 8px 14px; border-radius: 10px; cursor: pointer; font-size: 13px; white-space: nowrap; transition: all 0.2s; }
+.header-actions button:hover { background: rgba(255,255,255,0.2); }
+.header-actions button:last-child { background: rgba(233,69,96,0.3); border-color: rgba(233,69,96,0.5); }
+.header-actions button:last-child:hover { background: rgba(233,69,96,0.5); }
+.tabs { display: flex; gap: 4px; padding: 10px 16px; flex-wrap: wrap; background: #fff; border-bottom: 1px solid #eee; overflow-x: auto; position: sticky; top: 60px; z-index: 99; }
+.tabs button { padding: 8px 16px; border: 1px solid #e0e0e0; border-radius: 20px; background: #fff; cursor: pointer; font-size: 13px; white-space: nowrap; transition: all 0.2s; }
 .tabs button:hover { background: #f0f2f5; }
-
-.tabs button.active {
-  background: #1a1a2e;
-  color: #fff;
-  border-color: #1a1a2e;
-  box-shadow: 0 2px 8px rgba(26,26,46,0.3);
-}
-
-/* Контент */
-.content {
-  flex: 1;
-  padding: 16px;
-  overflow-y: auto;
-  background: #f0f2f5;
-}
-
-/* Общие карточки */
-.card {
-  background: #fff;
-  border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-  height: fit-content;
-}
-
-.card h3 {
-  margin-bottom: 10px;
-  font-size: 18px;
-  color: #1a1a2e;
-}
-
-.card h4 {
-  margin-bottom: 8px;
-  color: #555;
-  font-size: 15px;
-}
-
-/* Статус бейджи */
-.status-badge {
-  display: inline-block;
-  padding: 5px 14px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.3px;
-}
-
+.tabs button.active { background: #1a1a2e; color: #fff; border-color: #1a1a2e; box-shadow: 0 2px 8px rgba(26,26,46,0.3); }
+.content { flex: 1; padding: 16px; overflow-y: auto; background: #f0f2f5; }
+.card { background: #fff; border-radius: 16px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); height: fit-content; margin-bottom: 16px; }
+.card h3 { margin-bottom: 10px; font-size: 18px; color: #1a1a2e; }
+.card h4 { margin-bottom: 8px; color: #555; font-size: 15px; }
+.status-badge { display: inline-block; padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; }
 .status-in_stock { background: #d4edda; color: #155724; }
 .status-taken { background: #f8d7da; color: #721c24; }
-
-/* Кнопки */
-.btn {
-  display: block;
-  width: 100%;
-  padding: 14px;
-  border: none;
-  border-radius: 12px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  margin-top: 8px;
-  transition: all 0.2s;
-  text-align: center;
-}
-
+.status-pending_return { background: #fff3cd; color: #856404; }
+.btn { display: block; width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 8px; transition: all 0.2s; text-align: center; }
 .btn:active { transform: scale(0.98); }
-
 .btn-green { background: #28a745; color: #fff; }
-.btn-green:hover { background: #218838; }
 .btn-blue { background: #007bff; color: #fff; }
-.btn-blue:hover { background: #0069d9; }
 .btn-red { background: #dc3545; color: #fff; }
-.btn-red:hover { background: #c82333; }
 .btn-gray { background: #6c757d; color: #fff; }
-.btn-gray:hover { background: #5a6268; }
 .btn-orange { background: #fd7e14; color: #fff; }
-.btn-orange:hover { background: #e66a00; }
-
-.btn-sm {
-  padding: 7px 16px;
-  font-size: 13px;
-  width: auto;
-  display: inline-block;
-  border-radius: 8px;
-  margin: 2px;
-}
-
-.btn-xs {
-  padding: 4px 10px;
-  font-size: 11px;
-  width: auto;
-  display: inline-block;
-  border-radius: 6px;
-  margin: 2px;
-}
-
-/* Формы */
-input, select, textarea {
-  width: 100%;
-  padding: 10px 14px;
-  margin: 5px 0 10px;
-  border: 2px solid #e8e8e8;
-  border-radius: 10px;
-  font-size: 15px;
-  background: #fafafa;
-  transition: all 0.2s;
-  outline: none;
-  font-family: inherit;
-}
-
-input:focus, select:focus, textarea:focus {
-  border-color: #007bff;
-  background: #fff;
-  box-shadow: 0 0 0 4px rgba(0,123,255,0.08);
-}
-
-.form-group {
-  margin-bottom: 8px;
-}
-
-.form-group label {
-  font-size: 12px;
-  color: #555;
-  display: block;
-  margin-bottom: 2px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-}
-
-.form-row {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.form-row > * {
-  flex: 1;
-  min-width: 140px;
-}
-
-/* Таблицы */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 13px;
-}
-
-table th, table td {
-  padding: 10px 8px;
-  text-align: left;
-  border-bottom: 1px solid #eee;
-}
-
-table th {
-  background: #f8f9fa;
-  position: sticky;
-  top: 0;
-  font-weight: 700;
-  font-size: 11px;
-  text-transform: uppercase;
-  color: #555;
-  letter-spacing: 0.5px;
-}
-
+.btn-yellow { background: #ffc107; color: #333; }
+.btn-sm { padding: 7px 16px; font-size: 13px; width: auto; display: inline-block; border-radius: 8px; margin: 2px; }
+.btn-xs { padding: 4px 10px; font-size: 11px; width: auto; display: inline-block; border-radius: 6px; margin: 2px; }
+input, select, textarea { width: 100%; padding: 10px 14px; margin: 5px 0 10px; border: 2px solid #e8e8e8; border-radius: 10px; font-size: 15px; background: #fafafa; transition: all 0.2s; outline: none; font-family: inherit; }
+input:focus, select:focus, textarea:focus { border-color: #007bff; background: #fff; box-shadow: 0 0 0 4px rgba(0,123,255,0.08); }
+.form-group { margin-bottom: 8px; }
+.form-group label { font-size: 12px; color: #555; display: block; margin-bottom: 2px; font-weight: 600; text-transform: uppercase; }
+.form-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.form-row > * { flex: 1; min-width: 140px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+table th, table td { padding: 10px 8px; text-align: left; border-bottom: 1px solid #eee; }
+table th { background: #f8f9fa; position: sticky; top: 0; font-weight: 700; font-size: 11px; text-transform: uppercase; color: #555; }
 table tr:hover { background: #f8f9fa; }
-
-.scroll-table {
-  max-height: 55vh;
-  overflow-y: auto;
-  border: 1px solid #eee;
-  border-radius: 10px;
-}
-
-/* Сообщения */
-.error {
-  background: #f8d7da;
-  color: #721c24;
-  padding: 12px;
-  border-radius: 10px;
-  margin: 8px 0;
-  font-size: 13px;
-  border-left: 4px solid #dc3545;
-}
-
-.success {
-  background: #d4edda;
-  color: #155724;
-  padding: 12px;
-  border-radius: 10px;
-  margin: 8px 0;
-  font-size: 13px;
-  border-left: 4px solid #28a745;
-}
-
-.warning {
-  background: #fff3cd;
-  color: #856404;
-  padding: 12px;
-  border-radius: 10px;
-  margin: 8px 0;
-  font-size: 13px;
-  border-left: 4px solid #ffc107;
-}
-
-/* История */
-.history-item {
-  padding: 14px;
-  border-bottom: 1px solid #eee;
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  transition: background 0.2s;
-}
-
+.scroll-table { max-height: 55vh; overflow-y: auto; border: 1px solid #eee; border-radius: 10px; }
+.error { background: #f8d7da; color: #721c24; padding: 12px; border-radius: 10px; margin: 8px 0; font-size: 13px; border-left: 4px solid #dc3545; }
+.success { background: #d4edda; color: #155724; padding: 12px; border-radius: 10px; margin: 8px 0; font-size: 13px; border-left: 4px solid #28a745; }
+.warning { background: #fff3cd; color: #856404; padding: 12px; border-radius: 10px; margin: 8px 0; font-size: 13px; border-left: 4px solid #ffc107; }
+.info { background: #d1ecf1; color: #0c5460; padding: 12px; border-radius: 10px; margin: 8px 0; font-size: 13px; border-left: 4px solid #17a2b8; }
+.history-item { padding: 14px; border-bottom: 1px solid #eee; display: flex; align-items: flex-start; gap: 12px; transition: background 0.2s; }
 .history-item:hover { background: #fafafa; }
 .history-item:last-child { border-bottom: none; }
-
-.history-dot {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-
+.history-dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; margin-top: 2px; }
 .dot-red { background: #dc3545; }
 .dot-blue { background: #007bff; }
 .dot-orange { background: #fd7e14; }
 .dot-purple { background: #6f42c1; }
-
-/* Сканер */
-#reader {
-  width: 100%;
-  max-width: 500px;
-  margin: 0 auto;
-  border-radius: 14px;
-  overflow: hidden;
-  border: 2px solid #e0e0e0;
-}
-
-/* Дерево категорий */
-.tree-item {
-  padding: 9px 14px;
-  cursor: pointer;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  transition: all 0.15s;
-  margin: 2px 0;
-}
-
+.dot-yellow { background: #ffc107; }
+#reader { width: 100%; max-width: 500px; margin: 0 auto; border-radius: 14px; overflow: hidden; border: 2px solid #e0e0e0; }
+.tree-item { padding: 9px 14px; cursor: pointer; border-radius: 8px; display: flex; align-items: center; gap: 8px; font-size: 14px; transition: all 0.15s; margin: 2px 0; }
 .tree-item:hover { background: #f0f2f5; }
-
-.tree-item.active {
-  background: #e3f2fd;
-  font-weight: 600;
-  color: #007bff;
-}
-
+.tree-item.active { background: #e3f2fd; font-weight: 600; color: #007bff; }
 .tree-children { padding-left: 20px; }
-
-.category-badge {
-  display: inline-block;
-  padding: 3px 10px;
-  border-radius: 12px;
-  font-size: 11px;
-  background: #e9ecef;
-  color: #495057;
-  margin: 2px;
-  font-weight: 500;
-}
-
-/* Модальное окно */
-.modal-overlay {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  backdrop-filter: blur(4px);
-  animation: fadeIn 0.2s;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.modal {
-  background: #fff;
-  border-radius: 20px;
-  padding: 28px;
-  max-width: 500px;
-  width: 92%;
-  max-height: 85vh;
-  overflow-y: auto;
-  box-shadow: 0 30px 60px rgba(0,0,0,0.3);
-  animation: slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
+.category-badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px; background: #e9ecef; color: #495057; margin: 2px; font-weight: 500; }
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(4px); animation: fadeIn 0.2s; }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+.modal { background: #fff; border-radius: 20px; padding: 28px; max-width: 500px; width: 92%; max-height: 85vh; overflow-y: auto; box-shadow: 0 30px 60px rgba(0,0,0,0.3); animation: slideUp 0.3s cubic-bezier(0.175,0.885,0.32,1.275); }
+@keyframes slideUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
 .hidden { display: none !important; }
+code { background: #f0f2f5; padding: 2px 8px; border-radius: 6px; font-size: 13px; font-family: 'SF Mono', 'Consolas', monospace; }
+.full-width { width: 100%; }
+.instruments-layout { display: flex; gap: 16px; width: 100%; flex-wrap: wrap; }
+.instruments-sidebar { width: 280px; flex-shrink: 0; }
+.instruments-main { flex: 1; min-width: 0; }
+.badge-counter { display: inline-block; background: #dc3545; color: #fff; border-radius: 12px; padding: 2px 8px; font-size: 11px; font-weight: 700; margin-left: 4px; animation: pulse2 2s infinite; }
+@keyframes pulse2 { 0%,100%{transform:scale(1)} 50%{transform:scale(1.15)} }
 
-code {
-  background: #f0f2f5;
-  padding: 2px 8px;
-  border-radius: 6px;
-  font-size: 13px;
-  font-family: 'SF Mono', 'Consolas', monospace;
-}
-
-/* ============ АДАПТИВНАЯ СЕТКА ДЛЯ РАЗДЕЛА ИНСТРУМЕНТОВ ============ */
-.instruments-layout {
-  display: flex;
-  gap: 16px;
-  width: 100%;
-  flex-wrap: wrap;
-}
-
-.instruments-sidebar {
-  width: 280px;
-  flex-shrink: 0;
-}
-
-.instruments-main {
-  flex: 1;
-  min-width: 0;
-}
-
-/* На мобильных устройствах */
 @media (max-width: 767px) {
-  .header {
-    padding: 10px 12px;
-  }
-
-  .header .user-info {
-    font-size: 12px;
-  }
-
-  .header .user-info strong {
-    font-size: 14px;
-  }
-
-  .tabs {
-    padding: 8px;
-    gap: 2px;
-    top: 52px;
-  }
-
-  .tabs button {
-    padding: 6px 10px;
-    font-size: 11px;
-  }
-
-  .content {
-    padding: 8px;
-  }
-
-  .card {
-    padding: 14px;
-    border-radius: 12px;
-  }
-
-  .btn {
-    padding: 12px;
-    font-size: 15px;
-    border-radius: 10px;
-  }
-
-  table {
-    font-size: 11px;
-  }
-
-  table th, table td {
-    padding: 6px 4px;
-  }
-
-  .login-card {
-    padding: 25px 18px;
-    border-radius: 20px;
-  }
-
+  .header { padding: 10px 12px; }
+  .header .user-info { font-size: 12px; }
+  .header .user-info strong { font-size: 14px; }
+  .tabs { padding: 8px; gap: 2px; top: 52px; }
+  .tabs button { padding: 6px 10px; font-size: 11px; }
+  .content { padding: 8px; }
+  .card { padding: 14px; border-radius: 12px; }
+  .btn { padding: 12px; font-size: 15px; border-radius: 10px; }
+  table { font-size: 11px; }
+  table th, table td { padding: 6px 4px; }
+  .login-card { padding: 25px 18px; border-radius: 20px; }
   .login-logo .icon { font-size: 45px; }
   .login-logo h1 { font-size: 20px; }
-
   #reader { max-width: 100%; }
-
-  /* Инструменты на мобильных */
-  .instruments-layout {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .instruments-sidebar {
-    width: 100%;
-  }
-
-  .instruments-main {
-    width: 100%;
-    min-width: 100%;
-  }
+  .instruments-layout { flex-direction: column; gap: 10px; }
+  .instruments-sidebar { width: 100%; }
+  .instruments-main { width: 100%; min-width: 100%; }
 }
-
-/* Планшет */
 @media (min-width: 768px) and (max-width: 1199px) {
-  .content {
-    padding: 14px;
-    gap: 12px;
-  }
-
-  .instruments-sidebar {
-    width: 240px;
-  }
+  .content { padding: 14px; }
+  .instruments-sidebar { width: 240px; }
 }
-
-/* Большие экраны */
 @media (min-width: 1200px) {
-  .instruments-sidebar {
-    width: 300px;
-  }
-}
-
-/* Общие адаптивные классы */
-.full-width {
-  width: 100%;
+  .instruments-sidebar { width: 300px; }
 }
 </style>
 </head>
@@ -782,14 +150,15 @@ code {
 <div id="app"></div>
 
 <script>
-// ============ БАЗА ДАННЫХ (localStorage) ============
-const DB_KEY = 'tooltracker_db_v2';
+// ============ БАЗА ДАННЫХ ============
+const DB_KEY = 'tooltracker_db_v3';
 
 function getDB() {
   const raw = localStorage.getItem(DB_KEY);
   if (raw) {
     const db = JSON.parse(raw);
     if (!db.categories) db.categories = [];
+    if (!db.returnRequests) db.returnRequests = [];
     return db;
   }
   const defaultDB = {
@@ -815,64 +184,31 @@ function getDB() {
     log: [
       { id: 'l1', instrumentId: 'i2', action: 'taken', initiatorId: 'u3', targetId: 'u3', timestamp: '2026-05-14T08:30:00.000Z', comment: '' },
       { id: 'l2', instrumentId: 'i4', action: 'taken', initiatorId: 'u4', targetId: 'u4', timestamp: '2026-05-14T09:15:00.000Z', comment: '' }
-    ]
+    ],
+    returnRequests: []
   };
   saveDB(defaultDB);
   return defaultDB;
 }
 
-function saveDB(db) {
-  localStorage.setItem(DB_KEY, JSON.stringify(db));
-}
+function saveDB(db) { localStorage.setItem(DB_KEY, JSON.stringify(db)); }
 
-// ============ ГЛОБАЛЬНОЕ СОСТОЯНИЕ ============
 let currentUser = null;
 let db = getDB();
 let html5QrCode = null;
 
-// ============ ХЕЛПЕРЫ ============
 const appEl = document.getElementById('app');
+function render(html) { appEl.innerHTML = html; }
+function getUserName(id) { const u = db.users.find(u => u.id === id); return u ? u.fullName : '?'; }
+function getCategoryName(id) { if (!id) return 'Без категории'; const c = db.categories.find(c => c.id === id); return c ? c.name : '?'; }
+function getCategoryPath(catId) { const path = []; let current = db.categories.find(c => c.id === catId); while (current) { path.unshift(current.name); current = db.categories.find(c => c.id === current.parentId); } return path.join(' → '); }
+function generateArticle() { return Array.from({length:10}, () => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'[Math.floor(Math.random()*36)]).join(''); }
+function formatDate(iso) { return new Date(iso).toLocaleString('ru-RU'); }
 
-function render(html) {
-  appEl.innerHTML = html;
-}
-
-function getUserName(id) {
-  const u = db.users.find(u => u.id === id);
-  return u ? u.fullName : '?';
-}
-
-function getCategoryName(id) {
-  if (!id) return 'Без категории';
-  const c = db.categories.find(c => c.id === id);
-  return c ? c.name : '?';
-}
-
-function getCategoryPath(catId) {
-  const path = [];
-  let current = db.categories.find(c => c.id === catId);
-  while (current) {
-    path.unshift(current.name);
-    current = db.categories.find(c => c.id === current.parentId);
-  }
-  return path.join(' → ');
-}
-
-function generateArticle() {
-  return Array.from({length:10}, () => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'[Math.floor(Math.random()*36)]).join('');
-}
-
-function formatDate(iso) {
-  return new Date(iso).toLocaleString('ru-RU');
-}
-
-// ============ СТРАНИЦА ВХОДА (АНИМИРОВАННАЯ) ============
+// ============ ЛОГИН ============
 function renderLogin(error = '') {
-  const particlesHTML = Array.from({length: 30}, (_, i) => {
-    const size = Math.random() * 6 + 2;
-    const left = Math.random() * 100;
-    const delay = Math.random() * 8;
-    const duration = Math.random() * 10 + 8;
+  const particlesHTML = Array.from({length: 30}, () => {
+    const size = Math.random()*6+2, left = Math.random()*100, delay = Math.random()*8, duration = Math.random()*10+8;
     return `<div class="particle" style="width:${size}px;height:${size}px;left:${left}%;animation-delay:${delay}s;animation-duration:${duration}s;"></div>`;
   }).join('');
 
@@ -885,53 +221,27 @@ function renderLogin(error = '') {
         <div class="geo-shape circle" style="width:100px;height:100px;bottom:20%;right:15%;animation-duration:20s;"></div>
         <div class="geo-shape square" style="width:80px;height:80px;top:15%;left:10%;animation-duration:35s;"></div>
       </div>
-      <div class="glow-dot" style="width:80px;height:80px;top:10%;left:20%;animation-delay:0s;"></div>
+      <div class="glow-dot" style="width:80px;height:80px;top:10%;left:20%;"></div>
       <div class="glow-dot" style="width:60px;height:60px;bottom:15%;right:25%;animation-delay:1.5s;"></div>
-
       <div class="login-card">
-        <div class="login-logo">
-          <span class="icon">🔧</span>
-          <h1>ToolTracker</h1>
-          <p>Система учёта инструментов</p>
-        </div>
+        <div class="login-logo"><span class="icon">🔧</span><h1>ToolTracker</h1><p>Система учёта инструментов</p></div>
         ${error ? `<div class="login-error">${error}</div>` : ''}
-        <div class="form-group">
-          <label>👤 Логин</label>
-          <input id="loginInput" type="text" placeholder="Введите логин" autocomplete="username">
-        </div>
-        <div class="form-group">
-          <label>🔒 Пароль</label>
-          <input id="passInput" type="password" placeholder="Введите пароль" autocomplete="current-password">
-        </div>
+        <div class="form-group"><label>👤 Логин</label><input id="loginInput" type="text" placeholder="Введите логин" autocomplete="username"></div>
+        <div class="form-group"><label>🔒 Пароль</label><input id="passInput" type="password" placeholder="Введите пароль" autocomplete="current-password"></div>
         <button class="login-btn" id="loginBtn">Войти в систему</button>
-        <p class="login-hint">
-          Тестовые доступы:<br>
-          <b>admin / admin</b> (администратор)<br>
-          <b>sergey / 123456</b> (бригадир)<br>
-          <b>zhanibek / 123456</b> (сотрудник)
-        </p>
+        <p class="login-hint">Тестовые доступы:<br><b>admin / admin</b> (админ)<br><b>sergey / 123456</b> (бригадир)<br><b>zhanibek / 123456</b> (сотрудник)</p>
       </div>
     </div>
   `);
-
   setTimeout(() => document.getElementById('loginInput')?.focus(), 500);
-
   document.getElementById('loginBtn').addEventListener('click', () => {
     const loginVal = document.getElementById('loginInput').value.trim();
     const pass = document.getElementById('passInput').value.trim();
     const user = db.users.find(u => u.login === loginVal && u.password === pass);
-    if (user) {
-      currentUser = user;
-      db = getDB();
-      renderMain();
-    } else {
-      renderLogin('❌ Неверный логин или пароль');
-    }
+    if (user) { currentUser = user; db = getDB(); renderMain(); }
+    else { renderLogin('❌ Неверный логин или пароль'); }
   });
-
-  document.getElementById('passInput')?.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') document.getElementById('loginBtn').click();
-  });
+  document.getElementById('passInput')?.addEventListener('keydown', e => { if (e.key==='Enter') document.getElementById('loginBtn').click(); });
 }
 
 // ============ ГЛАВНЫЙ ИНТЕРФЕЙС ============
@@ -940,6 +250,7 @@ function renderMain(tab = 'scanner', message = '') {
   const allTabs = [
     { id: 'scanner', label: '📷 Сканер', roles: ['employee','foreman','admin'] },
     { id: 'history', label: '📋 Моя история', roles: ['employee','foreman','admin'] },
+    { id: 'returns', label: '🔄 Запросы возврата', roles: ['foreman','admin'] },
     { id: 'admin_instr', label: '🛠️ Инструменты', roles: ['admin'] },
     { id: 'admin_cat', label: '📁 Категории', roles: ['admin'] },
     { id: 'admin_users', label: '👥 Пользователи', roles: ['admin'] },
@@ -948,41 +259,29 @@ function renderMain(tab = 'scanner', message = '') {
   const tabs = allTabs.filter(t => t.roles.includes(role));
   if (!tabs.find(t => t.id === tab)) tab = tabs[0].id;
 
+  // Счётчик ожидающих запросов
+  const pendingCount = (role === 'foreman' || role === 'admin') ? db.returnRequests.filter(r => r.status === 'pending').length : 0;
+
   render(`
     <div class="app">
       <div class="header">
-        <div class="user-info">
-          <strong>${currentUser.fullName}</strong>
-          <span class="role">${role === 'admin' ? '🛡️ Администратор' : role === 'foreman' ? '🪖 Бригадир' : '🦺 Сотрудник'}</span>
-        </div>
-        <div class="header-actions">
-          <button id="profileBtn">🔑 Сменить пароль</button>
-          <button id="logoutBtn">🚪 Выйти</button>
-        </div>
+        <div class="user-info"><strong>${currentUser.fullName}</strong><span class="role">${role==='admin'?'🛡️ Администратор':role==='foreman'?'🪖 Бригадир':'🦺 Сотрудник'}</span></div>
+        <div class="header-actions"><button id="profileBtn">🔑 Сменить пароль</button><button id="logoutBtn">🚪 Выйти</button></div>
       </div>
-      <div class="tabs">${tabs.map(t => `<button class="${tab===t.id?'active':''}" data-tab="${t.id}">${t.label}</button>`).join('')}</div>
-      <div class="content" id="tabContent">
-        ${message ? `<div class="full-width ${message.includes('✅')?'success':message.includes('⚠')?'warning':'error'}">${message}</div>` : ''}
-      </div>
+      <div class="tabs">${tabs.map(t => `<button class="${tab===t.id?'active':''}" data-tab="${t.id}">${t.label}${t.id==='returns'&&pendingCount>0?`<span class="badge-counter">${pendingCount}</span>`:''}</button>`).join('')}</div>
+      <div class="content" id="tabContent">${message ? `<div class="full-width ${message.includes('✅')?'success':message.includes('⚠')?'warning':'error'}">${message}</div>` : ''}</div>
     </div>
   `);
 
-  document.querySelectorAll('.tabs button').forEach(btn => {
-    btn.addEventListener('click', () => renderMain(btn.dataset.tab));
-  });
-
-  document.getElementById('logoutBtn').addEventListener('click', () => {
-    currentUser = null;
-    if (html5QrCode) { html5QrCode.stop().catch(()=>{}); html5QrCode = null; }
-    renderLogin();
-  });
-
+  document.querySelectorAll('.tabs button').forEach(btn => btn.addEventListener('click', () => renderMain(btn.dataset.tab)));
+  document.getElementById('logoutBtn').addEventListener('click', () => { currentUser = null; if (html5QrCode) { html5QrCode.stop().catch(()=>{}); html5QrCode = null; } renderLogin(); });
   document.getElementById('profileBtn').addEventListener('click', () => renderProfile());
 
   const content = document.getElementById('tabContent');
   switch(tab) {
     case 'scanner': renderScanner(content); break;
     case 'history': renderHistory(content); break;
+    case 'returns': renderReturnRequests(content); break;
     case 'admin_instr': renderAdminInstruments(content); break;
     case 'admin_cat': renderAdminCategories(content); break;
     case 'admin_users': renderAdminUsers(content); break;
@@ -990,117 +289,69 @@ function renderMain(tab = 'scanner', message = '') {
   }
 }
 
-// ============ ПРОФИЛЬ / СМЕНА ПАРОЛЯ ============
+// ============ ПРОФИЛЬ ============
 function renderProfile() {
   const overlay = document.createElement('div');
   overlay.className = 'modal-overlay';
   overlay.innerHTML = `
-    <div class="modal">
-      <h3>🔑 Смена пароля</h3>
+    <div class="modal"><h3>🔑 Смена пароля</h3>
       <div class="form-group"><label>Старый пароль</label><input id="oldPass" type="password"></div>
       <div class="form-group"><label>Новый пароль</label><input id="newPass1" type="password"></div>
       <div class="form-group"><label>Повторите новый</label><input id="newPass2" type="password"></div>
-      <div style="display:flex;gap:10px;margin-top:15px;">
-        <button class="btn btn-blue" id="changePassBtn" style="flex:1;">💾 Сохранить</button>
-        <button class="btn btn-gray" id="closeModalBtn" style="flex:1;">Отмена</button>
-      </div>
-      <div id="profileMsg" style="margin-top:10px;"></div>
-    </div>
-  `;
+      <div style="display:flex;gap:10px;margin-top:15px;"><button class="btn btn-blue" id="changePassBtn" style="flex:1;">💾 Сохранить</button><button class="btn btn-gray" id="closeModalBtn" style="flex:1;">Отмена</button></div>
+      <div id="profileMsg" style="margin-top:10px;"></div></div>`;
   document.body.appendChild(overlay);
-
   document.getElementById('changePassBtn').addEventListener('click', () => {
-    const old = document.getElementById('oldPass').value;
-    const n1 = document.getElementById('newPass1').value;
-    const n2 = document.getElementById('newPass2').value;
+    const old = document.getElementById('oldPass').value, n1 = document.getElementById('newPass1').value, n2 = document.getElementById('newPass2').value;
     const msg = document.getElementById('profileMsg');
     if (old !== currentUser.password) { msg.innerHTML = '<div class="error">Неверный старый пароль</div>'; return; }
-    if (n1.length < 4) { msg.innerHTML = '<div class="error">Пароль минимум 4 символа</div>'; return; }
+    if (n1.length < 4) { msg.innerHTML = '<div class="error">Минимум 4 символа</div>'; return; }
     if (n1 !== n2) { msg.innerHTML = '<div class="error">Пароли не совпадают</div>'; return; }
-    const user = db.users.find(u => u.id === currentUser.id);
-    user.password = n1;
-    currentUser.password = n1;
-    saveDB(db);
-    msg.innerHTML = '<div class="success">✅ Пароль успешно изменён!</div>';
+    const user = db.users.find(u => u.id === currentUser.id); user.password = n1; currentUser.password = n1; saveDB(db);
+    msg.innerHTML = '<div class="success">✅ Пароль изменён!</div>';
     setTimeout(() => document.body.removeChild(overlay), 1500);
   });
-
   document.getElementById('closeModalBtn').addEventListener('click', () => document.body.removeChild(overlay));
-  overlay.addEventListener('click', (e) => { if (e.target === overlay) document.body.removeChild(overlay); });
+  overlay.addEventListener('click', e => { if (e.target === overlay) document.body.removeChild(overlay); });
 }
 
 // ============ СКАНЕР ============
 function renderScanner(container) {
   const canIssue = currentUser.role === 'foreman' || currentUser.role === 'admin';
-
   container.innerHTML = `
     <div class="card full-width">
-      ${canIssue ? `
-      <div style="margin-bottom:12px;display:flex;gap:8px;">
-        <button id="modeSelf" class="btn-sm btn-blue" style="flex:1;">👤 Взять / Вернуть себе</button>
-        <button id="modeEmployee" class="btn-sm btn-gray" style="flex:1;">👥 Выдать сотруднику</button>
-      </div>
-      <div id="foremanStep" style="font-size:13px;color:#555;margin-bottom:10px;padding:10px;background:#f0f2f5;border-radius:10px;">
-        Режим: <b>взять / вернуть себе</b>
-      </div>
-      ` : ''}
+      ${canIssue ? `<div style="margin-bottom:12px;display:flex;gap:8px;"><button id="modeSelf" class="btn-sm btn-blue" style="flex:1;">👤 Взять / Вернуть себе</button><button id="modeEmployee" class="btn-sm btn-gray" style="flex:1;">👥 Выдать сотруднику</button></div>
+      <div id="foremanStep" style="font-size:13px;color:#555;margin-bottom:10px;padding:10px;background:#f0f2f5;border-radius:10px;">Режим: <b>взять / вернуть себе</b></div>` : ''}
       <div id="reader"></div>
       <button class="btn btn-gray" id="manualInputBtn" style="margin-top:10px;">⌨️ Ввести артикул вручную</button>
-      <div id="manualInputArea" class="hidden" style="margin-top:10px;">
-        <div style="display:flex;gap:8px;">
-          <input id="manualArticle" type="text" placeholder="INSTR-XXXX или артикул сотрудника" style="flex:1;">
-          <button class="btn btn-blue btn-sm" id="submitManual" style="margin-top:0;width:auto;white-space:nowrap;">🔍 Найти</button>
-        </div>
-      </div>
-    </div>
-    <div id="scanResult" class="full-width"></div>
-    <div id="scanMsg" class="full-width"></div>
-  `;
+      <div id="manualInputArea" class="hidden" style="margin-top:10px;"><div style="display:flex;gap:8px;"><input id="manualArticle" type="text" placeholder="INSTR-XXXX или артикул сотрудника" style="flex:1;"><button class="btn btn-blue btn-sm" id="submitManual" style="margin-top:0;">🔍 Найти</button></div></div></div>
+    <div id="scanResult" class="full-width"></div><div id="scanMsg" class="full-width"></div>`;
 
-  let foremanMode = 'self';
-  let pendingEmployee = null;
-
+  let foremanMode = 'self', pendingEmployee = null;
   if (html5QrCode) { html5QrCode.stop().catch(()=>{}); }
   const readerEl = document.getElementById('reader');
   if (readerEl) {
     html5QrCode = new Html5Qrcode("reader");
-    html5QrCode.start(
-      { facingMode: "environment" },
-      { fps: 10, qrbox: { width: 250, height: 250 } },
-      (decodedText) => handleQRScan(decodedText),
-      () => {}
-    ).catch(err => {
+    html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 250, height: 250 } }, (decodedText) => handleQRScan(decodedText), () => {}).catch(err => {
       document.getElementById('scanMsg').innerHTML = `<div class="warning">⚠️ Камера недоступна: ${err.message}. Используйте ручной ввод.</div>`;
     });
   }
 
   function handleQRScan(code) {
-    const msg = document.getElementById('scanMsg');
-    msg.innerHTML = '';
-    const result = document.getElementById('scanResult');
-    db = getDB();
-
+    const msg = document.getElementById('scanMsg'); msg.innerHTML = '';
+    const result = document.getElementById('scanResult'); db = getDB();
     if (canIssue && foremanMode === 'employee' && !pendingEmployee) {
       const emp = db.users.find(u => u.personalArticle === code && u.role === 'employee');
-      if (!emp) {
-        msg.innerHTML = '<div class="error">❌ Сотрудник не найден. Убедитесь, что сканируете бейдж сотрудника.</div>';
-        return;
-      }
+      if (!emp) { msg.innerHTML = '<div class="error">❌ Сотрудник не найден.</div>'; return; }
       pendingEmployee = emp;
-      document.getElementById('foremanStep').innerHTML = `👤 Сотрудник: <b>${emp.fullName}</b> (${emp.personalArticle})<br>Теперь сканируйте инструмент для выдачи.`;
-      msg.innerHTML = '<div class="success">✅ Сотрудник найден! Сканируйте инструмент.</div>';
-      return;
+      document.getElementById('foremanStep').innerHTML = `👤 Сотрудник: <b>${emp.fullName}</b> (${emp.personalArticle})<br>Теперь сканируйте инструмент.`;
+      msg.innerHTML = '<div class="success">✅ Сотрудник найден! Сканируйте инструмент.</div>'; return;
     }
-
     const instr = db.instruments.find(i => i.article === code);
     if (!instr) {
       const user = db.users.find(u => u.personalArticle === code);
-      if (user) {
-        msg.innerHTML = `<div class="warning">⚠️ Это артикул пользователя <b>${user.fullName}</b>. Сканируйте инструмент.</div>`;
-        return;
-      }
-      msg.innerHTML = `<div class="error">❌ Инструмент с артикулом <b>${code}</b> не найден.</div>`;
-      return;
+      if (user) { msg.innerHTML = `<div class="warning">⚠️ Это артикул <b>${user.fullName}</b>. Сканируйте инструмент.</div>`; return; }
+      msg.innerHTML = `<div class="error">❌ Инструмент <b>${code}</b> не найден.</div>`; return;
     }
     showInstrumentCard(instr, result, msg);
   }
@@ -1109,121 +360,124 @@ function renderScanner(container) {
     const holder = instr.currentHolderId ? db.users.find(u => u.id === instr.currentHolderId) : null;
     const isHeldByMe = instr.currentHolderId === currentUser.id;
     const catPath = getCategoryPath(instr.categoryId);
-
     containerEl.innerHTML = `
-      <div class="card">
-        <h3>${instr.name}</h3>
-        <p style="color:#666;margin:4px 0;">Артикул: <code>${instr.article}</code></p>
-        ${catPath !== 'Без категории' ? `<p style="color:#666;margin:4px 0;">📁 <span class="category-badge">${catPath}</span></p>` : ''}
-        ${instr.description ? `<p style="color:#888;font-size:14px;margin:8px 0;">${instr.description}</p>` : ''}
-        <div style="margin:12px 0;">
-          <span class="status-badge status-${instr.status}">${instr.status === 'in_stock' ? '🟢 На складе' : '🔴 На руках'}</span>
-        </div>
-        ${holder ? `<p style="margin:8px 0;">👤 Держатель: <b>${holder.fullName}</b></p>` : ''}
-        ${instr.status === 'in_stock' && !pendingEmployee ? `<button class="btn btn-green" id="takeBtn">🟢 ВЗЯТЬ</button>` : ''}
-        ${instr.status === 'in_stock' && pendingEmployee ? `<button class="btn btn-orange" id="issueBtn">🟠 ВЫДАТЬ: ${pendingEmployee.fullName}</button>` : ''}
-        ${isHeldByMe ? `<button class="btn btn-blue" id="returnBtn">🔵 ВЕРНУТЬ НА СКЛАД</button>` : ''}
-        ${currentUser.role === 'admin' && instr.status === 'taken' && !isHeldByMe ? `<button class="btn btn-red" id="forceReturnBtn">⚠️ ПРИНУДИТЕЛЬНЫЙ ВОЗВРАТ</button>` : ''}
-        ${instr.status === 'taken' && !isHeldByMe && currentUser.role !== 'admin' ? `<div class="warning">Инструмент у <b>${holder?.fullName || 'другого сотрудника'}</b>. Обратитесь к администратору.</div>` : ''}
-        <button class="btn btn-gray btn-sm" id="closeCardBtn" style="margin-top:8px;">✕ Закрыть</button>
-      </div>
-    `;
+      <div class="card"><h3>${instr.name}</h3>
+        <p style="color:#666;">Артикул: <code>${instr.article}</code></p>
+        ${catPath!=='Без категории'?`<p>📁 <span class="category-badge">${catPath}</span></p>`:''}
+        ${instr.description?`<p style="color:#888;font-size:14px;">${instr.description}</p>`:''}
+        <div style="margin:12px 0;"><span class="status-badge status-${instr.status}">${instr.status==='in_stock'?'🟢 На складе':'🔴 На руках'}</span></div>
+        ${holder?`<p>👤 Держатель: <b>${holder.fullName}</b></p>`:''}
+        ${instr.status==='in_stock'&&!pendingEmployee?`<button class="btn btn-green" id="takeBtn">🟢 ВЗЯТЬ</button>`:''}
+        ${instr.status==='in_stock'&&pendingEmployee?`<button class="btn btn-orange" id="issueBtn">🟠 ВЫДАТЬ: ${pendingEmployee.fullName}</button>`:''}
+        ${isHeldByMe?`<button class="btn btn-blue" id="returnBtn">🔵 ВЕРНУТЬ НА СКЛАД</button>`:''}
+        ${currentUser.role==='admin'&&instr.status==='taken'&&!isHeldByMe?`<button class="btn btn-red" id="forceReturnBtn">⚠️ ПРИНУДИТЕЛЬНЫЙ ВОЗВРАТ</button>`:''}
+        ${instr.status==='taken'&&!isHeldByMe&&currentUser.role!=='admin'?`<div class="warning">Инструмент у <b>${holder?.fullName||'?'}</b>. Обратитесь к администратору.</div>`:''}
+        <button class="btn btn-gray btn-sm" id="closeCardBtn" style="margin-top:8px;">✕ Закрыть</button></div>`;
 
-    document.getElementById('closeCardBtn')?.addEventListener('click', () => {
-      containerEl.innerHTML = '';
-      pendingEmployee = null;
-      if (canIssue) document.getElementById('foremanStep').innerHTML = 'Режим: <b>взять / вернуть себе</b>';
-      msgEl.innerHTML = '';
-    });
-
+    document.getElementById('closeCardBtn')?.addEventListener('click', () => { containerEl.innerHTML=''; pendingEmployee=null; if(canIssue) document.getElementById('foremanStep').innerHTML='Режим: <b>взять / вернуть себе</b>'; msgEl.innerHTML=''; });
     document.getElementById('takeBtn')?.addEventListener('click', () => {
-      instr.status = 'taken';
-      instr.currentHolderId = currentUser.id;
-      db.log.push({ id: 'l' + Date.now(), instrumentId: instr.id, action: 'taken', initiatorId: currentUser.id, targetId: currentUser.id, timestamp: new Date().toISOString(), comment: '' });
-      saveDB(db);
-      msgEl.innerHTML = '<div class="success">✅ Инструмент успешно взят!</div>';
-      setTimeout(() => { containerEl.innerHTML = ''; msgEl.innerHTML = ''; }, 1500);
+      instr.status='taken'; instr.currentHolderId=currentUser.id;
+      db.log.push({ id:'l'+Date.now(), instrumentId:instr.id, action:'taken', initiatorId:currentUser.id, targetId:currentUser.id, timestamp:new Date().toISOString(), comment:'' });
+      saveDB(db); msgEl.innerHTML='<div class="success">✅ Взято!</div>';
+      setTimeout(() => { containerEl.innerHTML=''; msgEl.innerHTML=''; }, 1500);
     });
-
     document.getElementById('issueBtn')?.addEventListener('click', () => {
-      instr.status = 'taken';
-      instr.currentHolderId = pendingEmployee.id;
-      db.log.push({ id: 'l' + Date.now(), instrumentId: instr.id, action: 'issued_by_foreman', initiatorId: currentUser.id, targetId: pendingEmployee.id, timestamp: new Date().toISOString(), comment: '' });
-      saveDB(db);
-      msgEl.innerHTML = `<div class="success">✅ Инструмент выдан <b>${pendingEmployee.fullName}</b>!</div>`;
-      pendingEmployee = null;
-      if (canIssue) document.getElementById('foremanStep').innerHTML = 'Режим: <b>выдать сотруднику</b>. Сканируйте бейдж.';
-      setTimeout(() => { containerEl.innerHTML = ''; msgEl.innerHTML = ''; }, 2000);
+      instr.status='taken'; instr.currentHolderId=pendingEmployee.id;
+      db.log.push({ id:'l'+Date.now(), instrumentId:instr.id, action:'issued_by_foreman', initiatorId:currentUser.id, targetId:pendingEmployee.id, timestamp:new Date().toISOString(), comment:'' });
+      saveDB(db); msgEl.innerHTML=`<div class="success">✅ Выдано ${pendingEmployee.fullName}!</div>`; pendingEmployee=null;
+      if(canIssue) document.getElementById('foremanStep').innerHTML='Режим: <b>выдать сотруднику</b>.';
+      setTimeout(() => { containerEl.innerHTML=''; msgEl.innerHTML=''; }, 2000);
     });
-
     document.getElementById('returnBtn')?.addEventListener('click', () => {
-      instr.status = 'in_stock';
-      instr.currentHolderId = null;
-      db.log.push({ id: 'l' + Date.now(), instrumentId: instr.id, action: 'returned', initiatorId: currentUser.id, targetId: currentUser.id, timestamp: new Date().toISOString(), comment: '' });
-      saveDB(db);
-      msgEl.innerHTML = '<div class="success">✅ Инструмент возвращён на склад!</div>';
-      setTimeout(() => { containerEl.innerHTML = ''; msgEl.innerHTML = ''; }, 1500);
+      instr.status='in_stock'; instr.currentHolderId=null;
+      db.log.push({ id:'l'+Date.now(), instrumentId:instr.id, action:'returned', initiatorId:currentUser.id, targetId:currentUser.id, timestamp:new Date().toISOString(), comment:'' });
+      saveDB(db); msgEl.innerHTML='<div class="success">✅ Возвращено!</div>';
+      setTimeout(() => { containerEl.innerHTML=''; msgEl.innerHTML=''; }, 1500);
     });
-
     document.getElementById('forceReturnBtn')?.addEventListener('click', () => {
-      const reason = prompt('Укажите причину принудительного возврата:');
-      if (reason === null) return;
-      const prevHolder = instr.currentHolderId;
-      instr.status = 'in_stock';
-      instr.currentHolderId = null;
-      db.log.push({ id: 'l' + Date.now(), instrumentId: instr.id, action: 'force_returned', initiatorId: currentUser.id, targetId: prevHolder, timestamp: new Date().toISOString(), comment: reason || '' });
-      saveDB(db);
-      msgEl.innerHTML = '<div class="success">✅ Принудительный возврат выполнен.</div>';
-      setTimeout(() => { containerEl.innerHTML = ''; msgEl.innerHTML = ''; }, 1500);
+      const reason = prompt('Причина:'); if (reason===null) return;
+      const prev = instr.currentHolderId; instr.status='in_stock'; instr.currentHolderId=null;
+      db.log.push({ id:'l'+Date.now(), instrumentId:instr.id, action:'force_returned', initiatorId:currentUser.id, targetId:prev, timestamp:new Date().toISOString(), comment:reason });
+      saveDB(db); msgEl.innerHTML='<div class="success">✅ Принудительный возврат.</div>';
+      setTimeout(() => { containerEl.innerHTML=''; msgEl.innerHTML=''; }, 1500);
     });
   }
 
   if (canIssue) {
-    document.getElementById('modeSelf').addEventListener('click', () => {
-      foremanMode = 'self'; pendingEmployee = null;
-      document.getElementById('foremanStep').innerHTML = 'Режим: <b>взять / вернуть себе</b>';
-      document.getElementById('modeSelf').className = 'btn-sm btn-blue';
-      document.getElementById('modeEmployee').className = 'btn-sm btn-gray';
-      document.getElementById('scanResult').innerHTML = '';
-    });
-    document.getElementById('modeEmployee').addEventListener('click', () => {
-      foremanMode = 'employee'; pendingEmployee = null;
-      document.getElementById('foremanStep').innerHTML = 'Режим: <b>выдать сотруднику</b>. Сканируйте бейдж.';
-      document.getElementById('modeEmployee').className = 'btn-sm btn-blue';
-      document.getElementById('modeSelf').className = 'btn-sm btn-gray';
-      document.getElementById('scanResult').innerHTML = '';
-    });
+    document.getElementById('modeSelf').addEventListener('click', () => { foremanMode='self'; pendingEmployee=null; document.getElementById('foremanStep').innerHTML='Режим: <b>взять / вернуть себе</b>'; document.getElementById('modeSelf').className='btn-sm btn-blue'; document.getElementById('modeEmployee').className='btn-sm btn-gray'; document.getElementById('scanResult').innerHTML=''; });
+    document.getElementById('modeEmployee').addEventListener('click', () => { foremanMode='employee'; pendingEmployee=null; document.getElementById('foremanStep').innerHTML='Режим: <b>выдать сотруднику</b>. Сканируйте бейдж.'; document.getElementById('modeEmployee').className='btn-sm btn-blue'; document.getElementById('modeSelf').className='btn-sm btn-gray'; document.getElementById('scanResult').innerHTML=''; });
   }
-
-  document.getElementById('manualInputBtn').addEventListener('click', () => {
-    document.getElementById('manualInputArea').classList.toggle('hidden');
-  });
-  document.getElementById('submitManual').addEventListener('click', () => {
-    const val = document.getElementById('manualArticle').value.trim();
-    if (val) handleQRScan(val);
-  });
-  document.getElementById('manualArticle')?.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      const val = document.getElementById('manualArticle').value.trim();
-      if (val) handleQRScan(val);
-    }
-  });
+  document.getElementById('manualInputBtn').addEventListener('click', () => document.getElementById('manualInputArea').classList.toggle('hidden'));
+  document.getElementById('submitManual').addEventListener('click', () => { const val = document.getElementById('manualArticle').value.trim(); if (val) handleQRScan(val); });
+  document.getElementById('manualArticle')?.addEventListener('keydown', e => { if (e.key==='Enter') { const val = document.getElementById('manualArticle').value.trim(); if (val) handleQRScan(val); } });
 }
 
-// ============ ИСТОРИЯ ============
+// ============ ИСТОРИЯ (С БЛОКОМ "СЕЙЧАС У МЕНЯ") ============
 function renderHistory(container) {
+  db = getDB();
+  const myInstruments = db.instruments.filter(i => i.currentHolderId === currentUser.id);
   let myLog = db.log.filter(e => e.initiatorId === currentUser.id || e.targetId === currentUser.id);
-  if (currentUser.role === 'foreman') {
-    myLog = db.log.filter(e => e.initiatorId === currentUser.id);
+  if (currentUser.role === 'foreman') myLog = db.log.filter(e => e.initiatorId === currentUser.id);
+
+  const actionLabels = { taken: 'Взял', returned: 'Вернул', issued_by_foreman: 'Выдал сотруднику', force_returned: 'Принудительный возврат', return_requested: 'Запросил возврат' };
+  const actionDots = { taken: 'dot-red', returned: 'dot-blue', issued_by_foreman: 'dot-orange', force_returned: 'dot-purple', return_requested: 'dot-yellow' };
+
+  container.innerHTML = '';
+
+  // === БЛОК "СЕЙЧАС У МЕНЯ" ===
+  if (myInstruments.length > 0) {
+    const myCard = document.createElement('div');
+    myCard.className = 'card full-width';
+    myCard.style.background = 'linear-gradient(135deg, #e8f5e9, #f1f8e9)';
+    myCard.innerHTML = `<h3>📦 Сейчас у меня (${myInstruments.length})</h3>`;
+    myInstruments.forEach(instr => {
+      const hasPendingRequest = db.returnRequests.find(r => r.instrumentId === instr.id && r.userId === currentUser.id && r.status === 'pending');
+      const div = document.createElement('div');
+      div.style.cssText = 'padding:12px;margin:8px 0;background:#fff;border-radius:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;';
+      div.innerHTML = `
+        <div style="flex:1;min-width:180px;"><b>${instr.name}</b><br><code>${instr.article}</code></div>
+        ${hasPendingRequest ? `<span class="status-badge status-pending_return">⏳ Ожидает подтверждения</span>` : `<button class="btn btn-yellow btn-sm requestReturn" data-id="${instr.id}" style="white-space:nowrap;">📤 Запросить возврат</button>`}`;
+      myCard.appendChild(div);
+    });
+    container.appendChild(myCard);
+
+    // Обработчики кнопок запроса возврата
+    myCard.querySelectorAll('.requestReturn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const instrId = btn.dataset.id;
+        const instr = db.instruments.find(i => i.id === instrId);
+        if (!instr) return;
+        // Создаём запрос
+        db.returnRequests.push({
+          id: 'rr' + Date.now(),
+          instrumentId: instr.id,
+          userId: currentUser.id,
+          status: 'pending',
+          createdAt: new Date().toISOString(),
+          reviewedBy: null,
+          reviewedAt: null,
+          reviewComment: ''
+        });
+        // Меняем статус инструмента
+        instr.status = 'pending_return';
+        db.log.push({ id: 'l' + Date.now(), instrumentId: instr.id, action: 'return_requested', initiatorId: currentUser.id, targetId: currentUser.id, timestamp: new Date().toISOString(), comment: 'Запрошен возврат' });
+        saveDB(db);
+        renderHistory(container); // Перерисовываем
+      });
+    });
   }
 
-  const actionLabels = { taken: 'Взял', returned: 'Вернул', issued_by_foreman: 'Выдал сотруднику', force_returned: 'Принудительный возврат' };
-  const actionDots = { taken: 'dot-red', returned: 'dot-blue', issued_by_foreman: 'dot-orange', force_returned: 'dot-purple' };
-
-  container.innerHTML = '<div class="full-width"><h3>📋 Моя история операций</h3></div>';
+  // === ИСТОРИЯ ОПЕРАЦИЙ ===
+  const historyTitle = document.createElement('div');
+  historyTitle.className = 'full-width';
+  historyTitle.innerHTML = '<h3 style="margin-top:8px;">📋 История операций</h3>';
+  container.appendChild(historyTitle);
 
   if (myLog.length === 0) {
-    container.innerHTML += '<div class="card full-width"><p style="text-align:center;color:#888;">У вас пока нет операций.</p></div>';
+    const empty = document.createElement('div');
+    empty.className = 'card full-width';
+    empty.innerHTML = '<p style="text-align:center;color:#888;">Нет операций.</p>';
+    container.appendChild(empty);
     return;
   }
 
@@ -1243,144 +497,155 @@ function renderHistory(container) {
       const targetUser = db.users.find(u => u.id === entry.targetId);
       const div = document.createElement('div');
       div.className = 'history-item';
-      div.innerHTML = `
-        <div class="history-dot ${actionDots[entry.action] || 'dot-red'}"></div>
-        <div style="flex:1;">
-          <b>${actionLabels[entry.action] || entry.action}</b>
-          — ${instr?.article || '?'} ${instr?.name || 'Неизвестный инструмент'}
-          ${entry.action === 'issued_by_foreman' ? `<br><small>👤 Выдано: ${targetUser?.fullName || '?'}</small>` : ''}
-          ${entry.action === 'force_returned' ? `<br><small>👤 Забрано у: ${targetUser?.fullName || '?'}</small>` : ''}
-          ${entry.comment ? `<br><small>💬 ${entry.comment}</small>` : ''}
-          <br><small style="color:#888;">🕐 ${formatDate(entry.timestamp)}</small>
-        </div>`;
+      div.innerHTML = `<div class="history-dot ${actionDots[entry.action]||'dot-red'}"></div><div style="flex:1;"><b>${actionLabels[entry.action]||entry.action}</b> — ${instr?.article||'?'} ${instr?.name||'?'}${entry.action==='issued_by_foreman'?`<br><small>👤 ${targetUser?.fullName||'?'}</small>`:''}${entry.comment?`<br><small>💬 ${entry.comment}</small>`:''}<br><small style="color:#888;">🕐 ${formatDate(entry.timestamp)}</small></div>`;
       card.appendChild(div);
     });
     container.appendChild(card);
   }
 }
 
-// ============ АДМИН: ИНСТРУМЕНТЫ (ИСПРАВЛЕНО) ============
+// ============ ЗАПРОСЫ ВОЗВРАТА (ДЛЯ БРИГАДИРА/АДМИНА) ============
+function renderReturnRequests(container) {
+  db = getDB();
+  const requests = db.returnRequests.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+  container.innerHTML = '<div class="full-width"><h3>🔄 Запросы на возврат инструмента</h3></div>';
+
+  if (requests.length === 0) {
+    container.innerHTML += '<div class="card full-width"><p style="text-align:center;color:#888;">Нет запросов на возврат.</p></div>';
+    return;
+  }
+
+  const pending = requests.filter(r => r.status === 'pending');
+  const processed = requests.filter(r => r.status !== 'pending');
+
+  if (pending.length > 0) {
+    const pendingCard = document.createElement('div');
+    pendingCard.className = 'card full-width';
+    pendingCard.style.border = '2px solid #ffc107';
+    pendingCard.innerHTML = `<h4>⏳ Ожидают подтверждения (${pending.length})</h4>`;
+    pending.forEach(req => {
+      const instr = db.instruments.find(i => i.id === req.instrumentId);
+      const user = db.users.find(u => u.id === req.userId);
+      const div = document.createElement('div');
+      div.style.cssText = 'padding:12px;margin:8px 0;background:#fffef5;border-radius:10px;border:1px solid #ffeeba;';
+      div.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+          <div style="flex:1;min-width:200px;">
+            <b>${instr?.name||'?'}</b> <code>${instr?.article||'?'}</code>
+            <br>👤 Сотрудник: <b>${user?.fullName||'?'}</b>
+            <br><small>📅 ${formatDate(req.createdAt)}</small>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-green btn-sm approveReturn" data-req-id="${req.id}">✅ Подтвердить</button>
+            <button class="btn btn-red btn-sm rejectReturn" data-req-id="${req.id}">❌ Отклонить</button>
+          </div>
+        </div>`;
+      pendingCard.appendChild(div);
+    });
+    container.appendChild(pendingCard);
+
+    pendingCard.querySelectorAll('.approveReturn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const reqId = btn.dataset.reqId;
+        const req = db.returnRequests.find(r => r.id === reqId);
+        if (!req) return;
+        const instr = db.instruments.find(i => i.id === req.instrumentId);
+        if (instr) { instr.status = 'in_stock'; instr.currentHolderId = null; }
+        req.status = 'approved'; req.reviewedBy = currentUser.id; req.reviewedAt = new Date().toISOString(); req.reviewComment = 'Возврат подтверждён';
+        db.log.push({ id: 'l'+Date.now(), instrumentId: req.instrumentId, action: 'returned', initiatorId: currentUser.id, targetId: req.userId, timestamp: new Date().toISOString(), comment: 'Подтверждённый возврат' });
+        saveDB(db);
+        renderReturnRequests(container);
+      });
+    });
+    pendingCard.querySelectorAll('.rejectReturn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const reqId = btn.dataset.reqId;
+        const reason = prompt('Причина отклонения:');
+        if (reason === null) return;
+        const req = db.returnRequests.find(r => r.id === reqId);
+        if (!req) return;
+        const instr = db.instruments.find(i => i.id === req.instrumentId);
+        if (instr) instr.status = 'taken'; // Возвращаем статус
+        req.status = 'rejected'; req.reviewedBy = currentUser.id; req.reviewedAt = new Date().toISOString(); req.reviewComment = reason;
+        db.log.push({ id: 'l'+Date.now(), instrumentId: req.instrumentId, action: 'return_rejected', initiatorId: currentUser.id, targetId: req.userId, timestamp: new Date().toISOString(), comment: reason });
+        saveDB(db);
+        renderReturnRequests(container);
+      });
+    });
+  }
+
+  if (processed.length > 0) {
+    const doneCard = document.createElement('div');
+    doneCard.className = 'card full-width';
+    doneCard.innerHTML = `<h4>✅ Обработанные (${processed.length})</h4>`;
+    processed.forEach(req => {
+      const instr = db.instruments.find(i => i.id === req.instrumentId);
+      const user = db.users.find(u => u.id === req.userId);
+      const reviewer = db.users.find(u => u.id === req.reviewedBy);
+      const div = document.createElement('div');
+      div.className = 'history-item';
+      div.innerHTML = `<div class="history-dot ${req.status==='approved'?'dot-blue':'dot-red'}"></div><div style="flex:1;"><b>${req.status==='approved'?'✅ Подтверждён':'❌ Отклонён'}</b> — ${instr?.article||'?'} ${instr?.name||'?'}<br><small>👤 Сотрудник: ${user?.fullName||'?'} | 👮 ${reviewer?.fullName||'?'}</small>${req.reviewComment?`<br><small>💬 ${req.reviewComment}</small>`:''}<br><small>📅 ${formatDate(req.reviewedAt||req.createdAt)}</small></div>`;
+      doneCard.appendChild(div);
+    });
+    container.appendChild(doneCard);
+  }
+}
+
+// ============ АДМИН: ИНСТРУМЕНТЫ ============
 function renderAdminInstruments(container) {
   container.innerHTML = `
-    <div class="full-width" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:16px;">
-      <h3 style="margin:0;">🛠️ Управление инструментами</h3>
-      <button class="btn btn-green btn-sm" id="addInstrBtn">+ Добавить</button>
-    </div>
+    <div class="full-width" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:16px;"><h3 style="margin:0;">🛠️ Инструменты</h3><button class="btn btn-green btn-sm" id="addInstrBtn">+ Добавить</button></div>
     <div class="instruments-layout">
-      <div class="instruments-sidebar">
-        <div class="card" style="max-height:60vh;overflow-y:auto;">
-          <h4>📁 Категории</h4>
-          <div id="categoryTree"></div>
-          <button class="btn btn-gray btn-sm" id="showAllInstr" style="margin-top:8px;">📋 Показать все</button>
-        </div>
-      </div>
-      <div class="instruments-main">
-        <div class="card">
-          <input type="text" placeholder="🔍 Поиск..." id="instrSearch" style="margin-bottom:12px;">
-          <div class="scroll-table">
-            <table id="instrTable">
-              <thead><tr><th>Артикул</th><th>Название</th><th>Категория</th><th>Статус</th><th>У кого</th><th>Действия</th></tr></thead>
-              <tbody></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+      <div class="instruments-sidebar"><div class="card" style="max-height:60vh;overflow-y:auto;"><h4>📁 Категории</h4><div id="categoryTree"></div><button class="btn btn-gray btn-sm" id="showAllInstr" style="margin-top:8px;">📋 Все</button></div></div>
+      <div class="instruments-main"><div class="card"><input type="text" placeholder="🔍 Поиск..." id="instrSearch" style="margin-bottom:12px;"><div class="scroll-table"><table id="instrTable"><thead><tr><th>Артикул</th><th>Название</th><th>Категория</th><th>Статус</th><th>У кого</th><th>Действия</th></tr></thead><tbody></tbody></table></div></div></div>
     </div>
-    <div id="instrForm" class="hidden full-width card" style="margin-top:16px;"></div>
-  `;
+    <div id="instrForm" class="hidden full-width card" style="margin-top:16px;"></div>`;
 
   let selectedCategoryId = null;
 
   function renderTree() {
     const tree = document.getElementById('categoryTree');
-    const build = (parentId = null, level = 0) => {
-      const children = db.categories.filter(c => c.parentId === parentId);
-      return children.map(c => `
-        <div class="tree-item ${selectedCategoryId === c.id ? 'active' : ''}" data-cat-id="${c.id}" style="padding-left:${12 + level * 20}px;">
-          📁 ${c.name} <span style="font-size:10px;color:#999;margin-left:auto;">${db.instruments.filter(i => i.categoryId === c.id).length}</span>
-        </div>
-        <div class="tree-children">${build(c.id, level + 1)}</div>
-      `).join('');
-    };
-    tree.innerHTML = `
-      <div class="tree-item ${selectedCategoryId === null ? 'active' : ''}" data-cat-id="">📋 Все (${db.instruments.length})</div>
-      <div class="tree-item ${selectedCategoryId === 'none' ? 'active' : ''}" data-cat-id="none">❓ Без категории (${db.instruments.filter(i => !i.categoryId).length})</div>
-      ${build(null)}
-    `;
-    tree.querySelectorAll('.tree-item').forEach(item => {
-      item.addEventListener('click', () => {
-        selectedCategoryId = item.dataset.catId === '' ? null : (item.dataset.catId === 'none' ? 'none' : item.dataset.catId);
-        renderTree();
-        refreshTable();
-      });
-    });
+    const build = (parentId = null, level = 0) => db.categories.filter(c => c.parentId === parentId).map(c => `<div class="tree-item ${selectedCategoryId===c.id?'active':''}" data-cat-id="${c.id}" style="padding-left:${12+level*20}px;">📁 ${c.name} <span style="font-size:10px;color:#999;margin-left:auto;">${db.instruments.filter(i=>i.categoryId===c.id).length}</span></div><div class="tree-children">${build(c.id, level+1)}</div>`).join('');
+    tree.innerHTML = `<div class="tree-item ${selectedCategoryId===null?'active':''}" data-cat-id="">📋 Все (${db.instruments.length})</div><div class="tree-item ${selectedCategoryId==='none'?'active':''}" data-cat-id="none">❓ Без категории (${db.instruments.filter(i=>!i.categoryId).length})</div>${build(null)}`;
+    tree.querySelectorAll('.tree-item').forEach(item => item.addEventListener('click', () => { selectedCategoryId = item.dataset.catId===''?null:(item.dataset.catId==='none'?'none':item.dataset.catId); renderTree(); refreshTable(); }));
   }
 
   function refreshTable() {
-    const filter = (document.getElementById('instrSearch')?.value || '').toLowerCase();
+    const filter = (document.getElementById('instrSearch')?.value||'').toLowerCase();
     let filtered = db.instruments.filter(i => i.article.toLowerCase().includes(filter) || i.name.toLowerCase().includes(filter));
-    if (selectedCategoryId === 'none') filtered = filtered.filter(i => !i.categoryId);
+    if (selectedCategoryId==='none') filtered = filtered.filter(i => !i.categoryId);
     else if (selectedCategoryId) filtered = filtered.filter(i => i.categoryId === selectedCategoryId);
-
-    const tbody = document.querySelector('#instrTable tbody');
-    tbody.innerHTML = filtered.map(i => {
+    document.querySelector('#instrTable tbody').innerHTML = filtered.map(i => {
       const holder = i.currentHolderId ? db.users.find(u => u.id === i.currentHolderId) : null;
-      return `<tr>
-        <td><code>${i.article}</code></td><td>${i.name}</td>
-        <td><span class="category-badge">${getCategoryName(i.categoryId)}</span></td>
-        <td><span class="status-badge status-${i.status}">${i.status==='in_stock'?'Склад':'На руках'}</span></td>
-        <td>${holder?.fullName || '—'}</td>
-        <td>
-          <button class="btn-xs btn-gray editInstr" data-id="${i.id}">✏️</button>
-          ${i.status==='taken'?`<button class="btn-xs btn-red forceRet" data-id="${i.id}">↩️</button>`:''}
-          <button class="btn-xs btn-red delInstr" data-id="${i.id}">🗑</button>
-        </td></tr>`;
+      const statusLabel = i.status==='in_stock'?'🟢 Склад':i.status==='pending_return'?'⏳ Ожидает':'🔴 На руках';
+      const statusClass = i.status==='in_stock'?'status-in_stock':i.status==='pending_return'?'status-pending_return':'status-taken';
+      return `<tr><td><code>${i.article}</code></td><td>${i.name}</td><td><span class="category-badge">${getCategoryName(i.categoryId)}</span></td><td><span class="status-badge ${statusClass}">${statusLabel}</span></td><td>${holder?.fullName||'—'}</td><td><button class="btn-xs btn-gray editInstr" data-id="${i.id}">✏️</button>${i.status==='taken'?`<button class="btn-xs btn-red forceRet" data-id="${i.id}">↩️</button>`:''}<button class="btn-xs btn-red delInstr" data-id="${i.id}">🗑</button></td></tr>`;
     }).join('');
-
-    tbody.querySelectorAll('.editInstr').forEach(b => b.addEventListener('click', () => showForm(b.dataset.id)));
-    tbody.querySelectorAll('.forceRet').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('.editInstr').forEach(b => b.addEventListener('click', () => showForm(b.dataset.id)));
+    document.querySelectorAll('.forceRet').forEach(b => b.addEventListener('click', () => {
       const instr = db.instruments.find(i => i.id === b.dataset.id);
-      const reason = prompt('Причина:');
-      if (reason === null) return;
-      db.log.push({ id: 'l'+Date.now(), instrumentId: instr.id, action: 'force_returned', initiatorId: currentUser.id, targetId: instr.currentHolderId, timestamp: new Date().toISOString(), comment: reason });
-      instr.status = 'in_stock'; instr.currentHolderId = null;
-      saveDB(db); refreshTable();
+      const reason = prompt('Причина:'); if (reason===null) return;
+      db.log.push({ id:'l'+Date.now(), instrumentId:instr.id, action:'force_returned', initiatorId:currentUser.id, targetId:instr.currentHolderId, timestamp:new Date().toISOString(), comment:reason });
+      instr.status='in_stock'; instr.currentHolderId=null; saveDB(db); refreshTable();
     }));
-    tbody.querySelectorAll('.delInstr').forEach(b => b.addEventListener('click', () => {
-      if (confirm('Удалить?')) { db.instruments = db.instruments.filter(i => i.id !== b.dataset.id); saveDB(db); renderTree(); refreshTable(); }
-    }));
+    document.querySelectorAll('.delInstr').forEach(b => b.addEventListener('click', () => { if(confirm('Удалить?')){ db.instruments=db.instruments.filter(i=>i.id!==b.dataset.id); saveDB(db); renderTree(); refreshTable(); } }));
   }
 
   renderTree(); refreshTable();
   document.getElementById('instrSearch').addEventListener('input', refreshTable);
-  document.getElementById('showAllInstr').addEventListener('click', () => { selectedCategoryId = null; renderTree(); refreshTable(); });
+  document.getElementById('showAllInstr').addEventListener('click', () => { selectedCategoryId=null; renderTree(); refreshTable(); });
   document.getElementById('addInstrBtn').addEventListener('click', () => showForm());
 
-  function showForm(id = null) {
+  function showForm(id=null) {
     const instr = id ? db.instruments.find(i => i.id === id) : null;
-    const form = document.getElementById('instrForm');
-    form.classList.remove('hidden');
-    form.innerHTML = `
-      <h4>${id?'✏️ Редактировать':'➕ Добавить'} инструмент</h4>
-      <div class="form-row">
-        <div class="form-group"><label>Артикул *</label><input id="fArticle" value="${instr?.article||''}" placeholder="INSTR-XXXX"></div>
-        <div class="form-group"><label>Название *</label><input id="fName" value="${instr?.name||''}"></div>
-      </div>
-      <div class="form-group"><label>Описание</label><textarea id="fDesc" rows="2">${instr?.description||''}</textarea></div>
-      <div class="form-group"><label>Категория</label><select id="fCategory"><option value="">Без категории</option>${db.categories.map(c=>`<option value="${c.id}" ${instr?.categoryId===c.id?'selected':''}>${getCategoryPath(c.id)}</option>`).join('')}</select></div>
-      <div style="display:flex;gap:10px;"><button class="btn btn-green" id="saveInstrBtn" style="flex:1;">💾 Сохранить</button><button class="btn btn-gray" id="cancelInstrBtn" style="flex:1;">Отмена</button></div>
-    `;
+    const form = document.getElementById('instrForm'); form.classList.remove('hidden');
+    form.innerHTML = `<h4>${id?'✏️ Редактировать':'➕ Добавить'}</h4><div class="form-row"><div class="form-group"><label>Артикул *</label><input id="fArticle" value="${instr?.article||''}" placeholder="INSTR-XXXX"></div><div class="form-group"><label>Название *</label><input id="fName" value="${instr?.name||''}"></div></div><div class="form-group"><label>Описание</label><textarea id="fDesc" rows="2">${instr?.description||''}</textarea></div><div class="form-group"><label>Категория</label><select id="fCategory"><option value="">Без категории</option>${db.categories.map(c=>`<option value="${c.id}" ${instr?.categoryId===c.id?'selected':''}>${getCategoryPath(c.id)}</option>`).join('')}</select></div><div style="display:flex;gap:10px;"><button class="btn btn-green" id="saveInstrBtn" style="flex:1;">💾 Сохранить</button><button class="btn btn-gray" id="cancelInstrBtn" style="flex:1;">Отмена</button></div>`;
     document.getElementById('saveInstrBtn').addEventListener('click', () => {
-      const article = document.getElementById('fArticle').value.trim();
-      const name = document.getElementById('fName').value.trim();
-      if (!article||!name) { alert('Артикул и название обязательны'); return; }
-      if (id) {
-        if (db.instruments.find(i=>i.article===article&&i.id!==id)) { alert('Артикул занят'); return; }
-        Object.assign(instr, {article,name,description:document.getElementById('fDesc').value,categoryId:document.getElementById('fCategory').value||null});
-      } else {
-        if (db.instruments.find(i=>i.article===article)) { alert('Артикул занят'); return; }
-        db.instruments.push({id:'i'+Date.now(),article,name,description:document.getElementById('fDesc').value,categoryId:document.getElementById('fCategory').value||null,status:'in_stock',currentHolderId:null});
-      }
+      const article = document.getElementById('fArticle').value.trim(), name = document.getElementById('fName').value.trim();
+      if (!article||!name) { alert('Заполните обязательные поля'); return; }
+      if (id) { if (db.instruments.find(i=>i.article===article&&i.id!==id)) { alert('Артикул занят'); return; } Object.assign(instr, {article,name,description:document.getElementById('fDesc').value,categoryId:document.getElementById('fCategory').value||null}); }
+      else { if (db.instruments.find(i=>i.article===article)) { alert('Артикул занят'); return; } db.instruments.push({id:'i'+Date.now(),article,name,description:document.getElementById('fDesc').value,categoryId:document.getElementById('fCategory').value||null,status:'in_stock',currentHolderId:null}); }
       saveDB(db); form.classList.add('hidden'); renderTree(); refreshTable();
     });
     document.getElementById('cancelInstrBtn').addEventListener('click', () => form.classList.add('hidden'));
@@ -1389,140 +654,66 @@ function renderAdminInstruments(container) {
 
 // ============ АДМИН: КАТЕГОРИИ ============
 function renderAdminCategories(container) {
-  container.innerHTML = `
-    <div class="full-width" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;"><h3>📁 Категории</h3><button class="btn btn-green btn-sm" id="addCatBtn">+ Добавить</button></div>
-    <div class="card full-width"><div id="catList"></div></div>
-    <div id="catForm" class="hidden full-width card"></div>
-  `;
-
+  container.innerHTML = `<div class="full-width" style="display:flex;justify-content:space-between;align-items:center;"><h3>📁 Категории</h3><button class="btn btn-green btn-sm" id="addCatBtn">+ Добавить</button></div><div class="card full-width"><div id="catList"></div></div><div id="catForm" class="hidden full-width card"></div>`;
   function refresh() {
-    const build = (parentId=null,level=0) => db.categories.filter(c=>c.parentId===parentId).map(c=>`
-      <div style="padding:10px 14px;border-bottom:1px solid #eee;display:flex;align-items:center;gap:10px;">
-        <span style="padding-left:${level*20}px;">📁 <b>${c.name}</b> <span style="font-size:11px;color:#999;">(${db.instruments.filter(i=>i.categoryId===c.id).length})</span></span>
-        <span style="flex:1;"></span>
-        <button class="btn-xs btn-gray editCat" data-id="${c.id}">✏️</button>
-        <button class="btn-xs btn-red delCat" data-id="${c.id}">🗑</button>
-      </div>${build(c.id,level+1)}`).join('');
+    const build = (parentId=null,level=0) => db.categories.filter(c=>c.parentId===parentId).map(c=>`<div style="padding:10px 14px;border-bottom:1px solid #eee;display:flex;align-items:center;gap:10px;"><span style="padding-left:${level*20}px;">📁 <b>${c.name}</b> (${db.instruments.filter(i=>i.categoryId===c.id).length})</span><span style="flex:1;"></span><button class="btn-xs btn-gray editCat" data-id="${c.id}">✏️</button><button class="btn-xs btn-red delCat" data-id="${c.id}">🗑</button></div>${build(c.id,level+1)}`).join('');
     document.getElementById('catList').innerHTML = build() || '<p style="padding:14px;color:#888;">Нет категорий.</p>';
     document.querySelectorAll('.editCat').forEach(b=>b.addEventListener('click',()=>showForm(b.dataset.id)));
-    document.querySelectorAll('.delCat').forEach(b=>b.addEventListener('click',()=>{
-      if(confirm('Удалить категорию?')){db.categories=db.categories.filter(c=>c.id!==b.dataset.id&&c.parentId!==b.dataset.id);db.instruments.forEach(i=>{if(i.categoryId===b.dataset.id)i.categoryId=null;});saveDB(db);refresh();}
-    }));
+    document.querySelectorAll('.delCat').forEach(b=>b.addEventListener('click',()=>{if(confirm('Удалить?')){db.categories=db.categories.filter(c=>c.id!==b.dataset.id&&c.parentId!==b.dataset.id);db.instruments.forEach(i=>{if(i.categoryId===b.dataset.id)i.categoryId=null;});saveDB(db);refresh();}}));
   }
-
-  refresh();
-  document.getElementById('addCatBtn').addEventListener('click',()=>showForm());
-
+  refresh(); document.getElementById('addCatBtn').addEventListener('click',()=>showForm());
   function showForm(id=null){
     const cat=id?db.categories.find(c=>c.id===id):null;
-    const form=document.getElementById('catForm'); form.classList.remove('hidden');
-    form.innerHTML=`
-      <h4>${id?'✏️ Редактировать':'➕ Добавить'} категорию</h4>
-      <div class="form-group"><label>Название *</label><input id="fCatName" value="${cat?.name||''}"></div>
-      <div class="form-group"><label>Родительская</label><select id="fCatParent"><option value="">Нет</option>${db.categories.filter(c=>c.id!==id).map(c=>`<option value="${c.id}" ${cat?.parentId===c.id?'selected':''}>${getCategoryPath(c.id)}</option>`).join('')}</select></div>
-      <div style="display:flex;gap:10px;"><button class="btn btn-green" id="saveCatBtn" style="flex:1;">💾 Сохранить</button><button class="btn btn-gray" id="cancelCatBtn" style="flex:1;">Отмена</button></div>
-    `;
-    document.getElementById('saveCatBtn').addEventListener('click',()=>{
-      const name=document.getElementById('fCatName').value.trim();
-      if(!name){alert('Название обязательно');return;}
-      if(id){Object.assign(cat,{name,parentId:document.getElementById('fCatParent').value||null});}
-      else{db.categories.push({id:'c'+Date.now(),name,parentId:document.getElementById('fCatParent').value||null});}
-      saveDB(db);form.classList.add('hidden');refresh();
-    });
-    document.getElementById('cancelCatBtn').addEventListener('click',()=>form.classList.add('hidden'));
+    document.getElementById('catForm').classList.remove('hidden');
+    document.getElementById('catForm').innerHTML=`<h4>${id?'✏️ Редактировать':'➕ Добавить'}</h4><div class="form-group"><label>Название *</label><input id="fCatName" value="${cat?.name||''}"></div><div class="form-group"><label>Родительская</label><select id="fCatParent"><option value="">Нет</option>${db.categories.filter(c=>c.id!==id).map(c=>`<option value="${c.id}" ${cat?.parentId===c.id?'selected':''}>${getCategoryPath(c.id)}</option>`).join('')}</select></div><div style="display:flex;gap:10px;"><button class="btn btn-green" id="saveCatBtn" style="flex:1;">💾 Сохранить</button><button class="btn btn-gray" id="cancelCatBtn" style="flex:1;">Отмена</button></div>`;
+    document.getElementById('saveCatBtn').addEventListener('click',()=>{const n=document.getElementById('fCatName').value.trim();if(!n){alert('Название обязательно');return;}if(id){Object.assign(cat,{name:n,parentId:document.getElementById('fCatParent').value||null});}else{db.categories.push({id:'c'+Date.now(),name:n,parentId:document.getElementById('fCatParent').value||null});}saveDB(db);document.getElementById('catForm').classList.add('hidden');refresh();});
+    document.getElementById('cancelCatBtn').addEventListener('click',()=>document.getElementById('catForm').classList.add('hidden'));
   }
 }
 
 // ============ АДМИН: ПОЛЬЗОВАТЕЛИ ============
 function renderAdminUsers(container) {
-  container.innerHTML = `
-    <div class="full-width" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;"><h3>👥 Пользователи</h3><button class="btn btn-green btn-sm" id="addUserBtn">+ Добавить</button></div>
-    <div class="card full-width"><div class="scroll-table"><table><thead><tr><th>ФИО</th><th>Логин</th><th>Роль</th><th>Артикул</th><th>Действия</th></tr></thead><tbody id="usersTbody"></tbody></table></div></div>
-    <div id="userForm" class="hidden full-width card"></div>
-  `;
-
-  function refresh(){
-    document.getElementById('usersTbody').innerHTML=db.users.map(u=>`<tr>
-      <td><b>${u.fullName}</b></td><td>${u.login}</td>
-      <td>${u.role==='admin'?'🛡️ Админ':u.role==='foreman'?'🪖 Бригадир':'🦺 Сотрудник'}</td>
-      <td><code>${u.personalArticle}</code></td>
-      <td><button class="btn-xs btn-gray editUser" data-id="${u.id}">✏️</button>${u.id!==currentUser.id?`<button class="btn-xs btn-red delUser" data-id="${u.id}">🗑</button>`:''}</td>
-    </tr>`).join('');
-    document.querySelectorAll('.editUser').forEach(b=>b.addEventListener('click',()=>showForm(b.dataset.id)));
-    document.querySelectorAll('.delUser').forEach(b=>b.addEventListener('click',()=>{if(confirm('Удалить?')){db.users=db.users.filter(u=>u.id!==b.dataset.id);saveDB(db);refresh();}}));
-  }
-
-  refresh();
-  document.getElementById('addUserBtn').addEventListener('click',()=>showForm());
-
+  container.innerHTML = `<div class="full-width" style="display:flex;justify-content:space-between;align-items:center;"><h3>👥 Пользователи</h3><button class="btn btn-green btn-sm" id="addUserBtn">+ Добавить</button></div><div class="card full-width"><div class="scroll-table"><table><thead><tr><th>ФИО</th><th>Логин</th><th>Роль</th><th>Артикул</th><th>Действия</th></tr></thead><tbody id="usersTbody"></tbody></table></div></div><div id="userForm" class="hidden full-width card"></div>`;
+  function refresh(){document.getElementById('usersTbody').innerHTML=db.users.map(u=>`<tr><td><b>${u.fullName}</b></td><td>${u.login}</td><td>${u.role==='admin'?'🛡️':u.role==='foreman'?'🪖':'🦺'} ${u.role==='admin'?'Админ':u.role==='foreman'?'Бригадир':'Сотрудник'}</td><td><code>${u.personalArticle}</code></td><td><button class="btn-xs btn-gray editUser" data-id="${u.id}">✏️</button>${u.id!==currentUser.id?`<button class="btn-xs btn-red delUser" data-id="${u.id}">🗑</button>`:''}</td></tr>`).join('');document.querySelectorAll('.editUser').forEach(b=>b.addEventListener('click',()=>showForm(b.dataset.id)));document.querySelectorAll('.delUser').forEach(b=>b.addEventListener('click',()=>{if(confirm('Удалить?')){db.users=db.users.filter(u=>u.id!==b.dataset.id);saveDB(db);refresh();}}));}
+  refresh(); document.getElementById('addUserBtn').addEventListener('click',()=>showForm());
   function showForm(id=null){
     const user=id?db.users.find(u=>u.id===id):null;
-    const form=document.getElementById('userForm'); form.classList.remove('hidden');
-    form.innerHTML=`
-      <h4>${id?'✏️ Редактировать':'➕ Добавить'} пользователя</h4>
-      <div class="form-row"><div class="form-group"><label>ФИО *</label><input id="ufName" value="${user?.fullName||''}"></div><div class="form-group"><label>Логин *</label><input id="ufLogin" value="${user?.login||''}"></div></div>
-      <div class="form-row"><div class="form-group"><label>Пароль *</label><input id="ufPass" type="text" value="${user?.password||''}"></div><div class="form-group"><label>Роль *</label><select id="ufRole"><option value="employee" ${user?.role==='employee'?'selected':''}>🦺 Сотрудник</option><option value="foreman" ${user?.role==='foreman'?'selected':''}>🪖 Бригадир</option><option value="admin" ${user?.role==='admin'?'selected':''}>🛡️ Админ</option></select></div></div>
-      <div class="form-row"><div class="form-group"><label>Артикул *</label><input id="ufArticle" value="${user?.personalArticle||''}"></div><div class="form-group"><label>&nbsp;</label><button class="btn btn-gray btn-sm" id="genArticle">🎲 Сгенерировать</button></div></div>
-      <div style="display:flex;gap:10px;"><button class="btn btn-green" id="saveUserBtn" style="flex:1;">💾 Сохранить</button><button class="btn btn-gray" id="cancelUserBtn" style="flex:1;">Отмена</button></div>
-    `;
+    document.getElementById('userForm').classList.remove('hidden');
+    document.getElementById('userForm').innerHTML=`<h4>${id?'✏️ Редактировать':'➕ Добавить'}</h4><div class="form-row"><div class="form-group"><label>ФИО *</label><input id="ufName" value="${user?.fullName||''}"></div><div class="form-group"><label>Логин *</label><input id="ufLogin" value="${user?.login||''}"></div></div><div class="form-row"><div class="form-group"><label>Пароль *</label><input id="ufPass" type="text" value="${user?.password||''}"></div><div class="form-group"><label>Роль *</label><select id="ufRole"><option value="employee" ${user?.role==='employee'?'selected':''}>🦺 Сотрудник</option><option value="foreman" ${user?.role==='foreman'?'selected':''}>🪖 Бригадир</option><option value="admin" ${user?.role==='admin'?'selected':''}>🛡️ Админ</option></select></div></div><div class="form-row"><div class="form-group"><label>Артикул *</label><input id="ufArticle" value="${user?.personalArticle||''}"></div><div class="form-group"><label>&nbsp;</label><button class="btn btn-gray btn-sm" id="genArticle">🎲 Сгенерировать</button></div></div><div style="display:flex;gap:10px;"><button class="btn btn-green" id="saveUserBtn" style="flex:1;">💾 Сохранить</button><button class="btn btn-gray" id="cancelUserBtn" style="flex:1;">Отмена</button></div>`;
     document.getElementById('genArticle').addEventListener('click',()=>{document.getElementById('ufArticle').value=generateArticle();});
     document.getElementById('saveUserBtn').addEventListener('click',()=>{
       const d={fullName:document.getElementById('ufName').value.trim(),login:document.getElementById('ufLogin').value.trim(),password:document.getElementById('ufPass').value.trim(),role:document.getElementById('ufRole').value,personalArticle:document.getElementById('ufArticle').value.trim()};
       if(!d.fullName||!d.login||!d.password||!d.personalArticle){alert('Все поля обязательны');return;}
-      if(id){if(db.users.find(u=>u.login===d.login&&u.id!==id)){alert('Логин занят');return;}if(db.users.find(u=>u.personalArticle===d.personalArticle&&u.id!==id)){alert('Артикул занят');return;}Object.assign(user,d);}
-      else{if(db.users.find(u=>u.login===d.login)){alert('Логин занят');return;}if(db.users.find(u=>u.personalArticle===d.personalArticle)){alert('Артикул занят');return;}db.users.push({id:'u'+Date.now(),...d});}
-      saveDB(db);form.classList.add('hidden');refresh();
+      if(id){if(db.users.find(u=>u.login===d.login&&u.id!==id)){alert('Логин занят');return;}Object.assign(user,d);}
+      else{if(db.users.find(u=>u.login===d.login)){alert('Логин занят');return;}db.users.push({id:'u'+Date.now(),...d});}
+      saveDB(db);document.getElementById('userForm').classList.add('hidden');refresh();
     });
-    document.getElementById('cancelUserBtn').addEventListener('click',()=>form.classList.add('hidden'));
+    document.getElementById('cancelUserBtn').addEventListener('click',()=>document.getElementById('userForm').classList.add('hidden'));
   }
 }
 
 // ============ АДМИН: ЖУРНАЛ ============
 function renderAdminLog(container) {
-  container.innerHTML = `
-    <div class="full-width" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;"><h3>📊 Журнал событий</h3><button class="btn btn-blue btn-sm" id="exportCSV">📥 CSV</button></div>
-    <div class="card full-width">
-      <div class="form-row" style="margin-bottom:12px;">
-        <div class="form-group"><label>Инструмент</label><input id="logFilterInstr" placeholder="Артикул или название..."></div>
-        <div class="form-group"><label>Сотрудник</label><input id="logFilterUser" placeholder="ФИО..."></div>
-        <div class="form-group"><label>Действие</label><select id="logFilterAction"><option value="">Все</option><option value="taken">Взял</option><option value="returned">Вернул</option><option value="issued_by_foreman">Выдал</option><option value="force_returned">Принуд. возврат</option></select></div>
-      </div>
-      <div class="scroll-table"><table id="logTable"><thead><tr><th>Дата</th><th>Инструмент</th><th>Действие</th><th>Инициатор</th><th>Цель</th><th>Комментарий</th></tr></thead><tbody></tbody></table></div>
-    </div>
-  `;
-
-  const actions={taken:'🔴 Взял',returned:'🔵 Вернул',issued_by_foreman:'🟠 Выдал',force_returned:'🟣 Принуд. возврат'};
-
+  container.innerHTML = `<div class="full-width" style="display:flex;justify-content:space-between;align-items:center;"><h3>📊 Журнал</h3><button class="btn btn-blue btn-sm" id="exportCSV">📥 CSV</button></div><div class="card full-width"><div class="form-row" style="margin-bottom:12px;"><div class="form-group"><label>Инструмент</label><input id="logFilterInstr" placeholder="Поиск..."></div><div class="form-group"><label>Сотрудник</label><input id="logFilterUser" placeholder="ФИО..."></div><div class="form-group"><label>Действие</label><select id="logFilterAction"><option value="">Все</option><option value="taken">Взял</option><option value="returned">Вернул</option><option value="return_requested">Запросил возврат</option><option value="issued_by_foreman">Выдал</option><option value="force_returned">Принуд. возврат</option></select></div></div><div class="scroll-table"><table id="logTable"><thead><tr><th>Дата</th><th>Инструмент</th><th>Действие</th><th>Инициатор</th><th>Цель</th><th>Комментарий</th></tr></thead><tbody></tbody></table></div></div>`;
+  const actions={taken:'🔴 Взял',returned:'🔵 Вернул',return_requested:'🟡 Запросил возврат',issued_by_foreman:'🟠 Выдал',force_returned:'🟣 Принуд. возврат',return_rejected:'🔴 Отклонён возврат'};
   function refresh(){
-    const fi=(document.getElementById('logFilterInstr')?.value||'').toLowerCase();
-    const fu=(document.getElementById('logFilterUser')?.value||'').toLowerCase();
-    const fa=document.getElementById('logFilterAction')?.value||'';
+    const fi=(document.getElementById('logFilterInstr')?.value||'').toLowerCase(),fu=(document.getElementById('logFilterUser')?.value||'').toLowerCase(),fa=document.getElementById('logFilterAction')?.value||'';
     let filtered=[...db.log];
     if(fi) filtered=filtered.filter(e=>{const i=db.instruments.find(x=>x.id===e.instrumentId);return i&&(i.article.toLowerCase().includes(fi)||i.name.toLowerCase().includes(fi));});
-    if(fu) filtered=filtered.filter(e=>{const ini=db.users.find(u=>u.id===e.initiatorId);const tar=db.users.find(u=>u.id===e.targetId);return (ini?.fullName.toLowerCase().includes(fu))||(tar?.fullName.toLowerCase().includes(fu));});
+    if(fu) filtered=filtered.filter(e=>{const ini=db.users.find(u=>u.id===e.initiatorId),tar=db.users.find(u=>u.id===e.targetId);return (ini?.fullName.toLowerCase().includes(fu))||(tar?.fullName.toLowerCase().includes(fu));});
     if(fa) filtered=filtered.filter(e=>e.action===fa);
     filtered.sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp));
-    document.querySelector('#logTable tbody').innerHTML=filtered.map(e=>{
-      const i=db.instruments.find(x=>x.id===e.instrumentId);
-      const ini=db.users.find(u=>u.id===e.initiatorId);
-      const tar=db.users.find(u=>u.id===e.targetId);
-      return `<tr><td>${formatDate(e.timestamp)}</td><td>${i?.article||'?'} ${i?.name||''}</td><td>${actions[e.action]||e.action}</td><td>${ini?.fullName||'?'}</td><td>${tar?.fullName||'?'}</td><td>${e.comment||'—'}</td></tr>`;
-    }).join('');
+    document.querySelector('#logTable tbody').innerHTML=filtered.map(e=>{const i=db.instruments.find(x=>x.id===e.instrumentId),ini=db.users.find(u=>u.id===e.initiatorId),tar=db.users.find(u=>u.id===e.targetId);return`<tr><td>${formatDate(e.timestamp)}</td><td>${i?.article||'?'} ${i?.name||''}</td><td>${actions[e.action]||e.action}</td><td>${ini?.fullName||'?'}</td><td>${tar?.fullName||'?'}</td><td>${e.comment||'—'}</td></tr>`;}).join('');
   }
-
   refresh();
   document.getElementById('logFilterInstr').addEventListener('input',refresh);
   document.getElementById('logFilterUser').addEventListener('input',refresh);
   document.getElementById('logFilterAction').addEventListener('change',refresh);
   document.getElementById('exportCSV').addEventListener('click',()=>{
     const rows=[['Дата','Артикул','Название','Действие','Инициатор','Цель','Комментарий']];
-    [...db.log].sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp)).forEach(e=>{
-      const i=db.instruments.find(x=>x.id===e.instrumentId);
-      rows.push([formatDate(e.timestamp),i?.article||'',i?.name||'',actions[e.action]||e.action,db.users.find(u=>u.id===e.initiatorId)?.fullName||'',db.users.find(u=>u.id===e.targetId)?.fullName||'',e.comment||'']);
-    });
+    [...db.log].sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp)).forEach(e=>{const i=db.instruments.find(x=>x.id===e.instrumentId);rows.push([formatDate(e.timestamp),i?.article||'',i?.name||'',actions[e.action]||e.action,db.users.find(u=>u.id===e.initiatorId)?.fullName||'',db.users.find(u=>u.id===e.targetId)?.fullName||'',e.comment||'']);});
     const csv='\uFEFF'+rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
-    const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
-    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='journal_'+new Date().toISOString().slice(0,10)+'.csv';a.click();
+    const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='journal.csv';a.click();
   });
 }
 
