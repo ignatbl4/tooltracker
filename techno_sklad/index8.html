@@ -3,134 +3,480 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Учёт инструментов</title>
+<title>🔧 Учёт инструментов</title>
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: #f0f2f5;
-  color: #222;
+/* ============ СБРОС И БАЗА ============ */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
+
+body {
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  background: #0a0a1a;
+  color: #222;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+/* ============ АНИМИРОВАННЫЙ ФОН ЛОГИНА ============ */
+.login-wrapper {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0f0c29, #1a1a3e, #24243e);
+  overflow: hidden;
+}
+
+/* Анимированные частицы */
+.particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  animation: floatUp linear infinite;
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(100vh) scale(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100px) scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* Геометрические фигуры */
+.geo-shapes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.geo-shape {
+  position: absolute;
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  animation: rotateSlow linear infinite;
+}
+
+.geo-shape.circle {
+  border-radius: 50%;
+}
+
+.geo-shape.square {
+  border-radius: 15px;
+}
+
+.geo-shape.triangle {
+  width: 0 !important;
+  height: 0 !important;
+  border-left: 80px solid transparent;
+  border-right: 80px solid transparent;
+  border-bottom: 140px solid rgba(255, 255, 255, 0.04);
+  background: none !important;
+}
+
+@keyframes rotateSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Карточка логина */
+.login-card {
+  position: relative;
+  z-index: 1;
+  width: 90%;
+  max-width: 420px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 35px 30px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  animation: cardEntry 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes cardEntry {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.login-logo {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.login-logo .icon {
+  font-size: 60px;
+  display: block;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
+.login-logo h1 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-top: 8px;
+  letter-spacing: -0.5px;
+}
+
+.login-logo p {
+  font-size: 13px;
+  color: #888;
+  margin-top: 4px;
+}
+
+.login-card .form-group {
+  margin-bottom: 16px;
+}
+
+.login-card .form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 6px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.login-card input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid #e8e8e8;
+  border-radius: 14px;
+  font-size: 16px;
+  background: #fafafa;
+  transition: all 0.3s;
+  outline: none;
+}
+
+.login-card input:focus {
+  border-color: #007bff;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.1);
+}
+
+.login-btn {
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: all 0.3s;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(0, 123, 255, 0.3);
+}
+
+.login-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 5px 15px rgba(0, 123, 255, 0.2);
+}
+
+.login-btn::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.login-btn:active::after {
+  width: 300px;
+  height: 300px;
+}
+
+.login-error {
+  background: #ffe0e0;
+  color: #cc0000;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  text-align: center;
+  margin-bottom: 15px;
+  animation: shake 0.5s;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  50% { transform: translateX(8px); }
+  75% { transform: translateX(-4px); }
+}
+
+.login-hint {
+  text-align: center;
+  font-size: 11px;
+  color: #aaa;
+  margin-top: 16px;
+  line-height: 1.5;
+}
+
+.login-hint b {
+  color: #666;
+}
+
+/* Светящиеся точки */
+.glow-dot {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, transparent 70%);
+  animation: pulse 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(0.8); opacity: 0.3; }
+  50% { transform: scale(1.4); opacity: 0.7; }
+}
+
+/* ============ ОСНОВНОЕ ПРИЛОЖЕНИЕ ============ */
 .app {
   width: 100%;
   min-height: 100vh;
-  background: #fff;
+  min-height: 100dvh;
+  background: #f0f2f5;
   display: flex;
   flex-direction: column;
 }
 
-/* Адаптивность */
+/* Адаптивная сетка */
 @media (min-width: 768px) {
   .app {
-    max-width: 100%;
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-  .header {
-    width: 100%;
-  }
-  .tabs {
-    width: 100%;
+    display: grid;
+    grid-template-rows: auto auto 1fr;
   }
   .content {
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
     gap: 16px;
-    padding: 20px;
-  }
-  .content > * {
-    flex: 1 1 45%;
-    min-width: 400px;
+    align-content: start;
   }
   .content .full-width {
-    flex: 1 1 100%;
-  }
-  .card {
-    height: fit-content;
+    grid-column: 1 / -1;
   }
 }
 
 @media (min-width: 1200px) {
-  .content > * {
-    flex: 1 1 30%;
+  .content {
+    grid-template-columns: repeat(3, 1fr);
   }
   .content .full-width {
-    flex: 1 1 100%;
+    grid-column: 1 / -1;
   }
 }
 
+/* Хедер */
 .header {
-  background: #1a1a2e;
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
   color: #fff;
-  padding: 12px 20px;
+  padding: 14px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
   gap: 10px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.2);
 }
-.header .user-info { font-size: 14px; }
-.header .user-info .role { font-size: 11px; opacity: 0.8; }
-.header-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.header .user-info {
+  font-size: 14px;
+}
+
+.header .user-info strong {
+  font-size: 16px;
+}
+
+.header .user-info .role {
+  font-size: 11px;
+  opacity: 0.8;
+  background: rgba(255,255,255,0.1);
+  padding: 2px 10px;
+  border-radius: 20px;
+  margin-left: 6px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 .header-actions button {
-  background: #e94560;
+  background: rgba(255,255,255,0.1);
   color: #fff;
-  border: none;
+  border: 1px solid rgba(255,255,255,0.2);
   padding: 8px 14px;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
   font-size: 13px;
   white-space: nowrap;
+  transition: all 0.2s;
+  backdrop-filter: blur(10px);
 }
+
+.header-actions button:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+.header-actions button:last-child {
+  background: rgba(233, 69, 96, 0.3);
+  border-color: rgba(233, 69, 96, 0.5);
+}
+
+.header-actions button:last-child:hover {
+  background: rgba(233, 69, 96, 0.5);
+}
+
+/* Табы */
 .tabs {
   display: flex;
   gap: 4px;
   padding: 10px 16px;
   flex-wrap: wrap;
-  background: #fafafa;
+  background: #fff;
   border-bottom: 1px solid #eee;
   overflow-x: auto;
+  position: sticky;
+  top: 60px;
+  z-index: 99;
 }
+
 .tabs button {
   padding: 8px 16px;
-  border: 1px solid #ddd;
+  border: 1px solid #e0e0e0;
   border-radius: 20px;
   background: #fff;
   cursor: pointer;
   font-size: 13px;
   white-space: nowrap;
+  transition: all 0.2s;
 }
+
+.tabs button:hover {
+  background: #f0f2f5;
+}
+
 .tabs button.active {
   background: #1a1a2e;
   color: #fff;
   border-color: #1a1a2e;
+  box-shadow: 0 2px 8px rgba(26,26,46,0.3);
 }
+
+/* Контент */
 .content {
   flex: 1;
   padding: 16px;
   overflow-y: auto;
-  background: #fafafa;
+  background: #f0f2f5;
 }
+
+/* Карточки */
 .card {
   background: #fff;
   border-radius: 16px;
   padding: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  margin-bottom: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  margin-bottom: 0;
+  height: fit-content;
+  transition: box-shadow 0.2s;
 }
-.card h3 { margin-bottom: 10px; }
-.card h4 { margin-bottom: 8px; color: #555; }
+
+.card:hover {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+
+.card h3 {
+  margin-bottom: 10px;
+  font-size: 18px;
+  color: #1a1a2e;
+}
+
+.card h4 {
+  margin-bottom: 8px;
+  color: #555;
+  font-size: 15px;
+}
+
+/* Статус бейджи */
 .status-badge {
   display: inline-block;
-  padding: 4px 14px;
+  padding: 5px 14px;
   border-radius: 20px;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
 }
-.status-in_stock { background: #d4edda; color: #155724; }
-.status-taken { background: #f8d7da; color: #721c24; }
+
+.status-in_stock {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-taken {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+/* Кнопки */
 .btn {
   display: block;
   width: 100%;
@@ -141,22 +487,34 @@ body {
   font-weight: 600;
   cursor: pointer;
   margin-top: 8px;
-  transition: opacity 0.2s;
+  transition: all 0.2s;
+  text-align: center;
 }
-.btn:active { opacity: 0.8; }
+
+.btn:active {
+  transform: scale(0.98);
+}
+
 .btn-green { background: #28a745; color: #fff; }
+.btn-green:hover { background: #218838; }
 .btn-blue { background: #007bff; color: #fff; }
+.btn-blue:hover { background: #0069d9; }
 .btn-red { background: #dc3545; color: #fff; }
+.btn-red:hover { background: #c82333; }
 .btn-gray { background: #6c757d; color: #fff; }
+.btn-gray:hover { background: #5a6268; }
 .btn-orange { background: #fd7e14; color: #fff; }
+.btn-orange:hover { background: #e66a00; }
+
 .btn-sm {
-  padding: 6px 14px;
+  padding: 7px 16px;
   font-size: 13px;
   width: auto;
   display: inline-block;
   border-radius: 8px;
   margin: 2px;
 }
+
 .btn-xs {
   padding: 4px 10px;
   font-size: 11px;
@@ -165,84 +523,186 @@ body {
   border-radius: 6px;
   margin: 2px;
 }
+
+/* Формы */
 input, select, textarea {
   width: 100%;
-  padding: 10px 12px;
+  padding: 10px 14px;
   margin: 5px 0 10px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  border: 2px solid #e8e8e8;
+  border-radius: 10px;
   font-size: 15px;
-  background: #fff;
-}
-input:focus, select:focus {
+  background: #fafafa;
+  transition: all 0.2s;
   outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+  font-family: inherit;
 }
-.form-group { margin-bottom: 8px; }
-.form-group label { font-size: 13px; color: #555; display: block; margin-bottom: 2px; font-weight: 500; }
-.form-row { display: flex; gap: 10px; flex-wrap: wrap; }
-.form-row > * { flex: 1; min-width: 150px; }
-.error { background: #f8d7da; color: #721c24; padding: 12px; border-radius: 8px; margin: 8px 0; font-size: 14px; }
-.success { background: #d4edda; color: #155724; padding: 12px; border-radius: 8px; margin: 8px 0; font-size: 14px; }
-.warning { background: #fff3cd; color: #856404; padding: 12px; border-radius: 8px; margin: 8px 0; font-size: 14px; }
-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-table th, table td { padding: 10px 8px; text-align: left; border-bottom: 1px solid #eee; }
+
+input:focus, select:focus, textarea:focus {
+  border-color: #007bff;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(0,123,255,0.08);
+}
+
+.form-group {
+  margin-bottom: 8px;
+}
+
+.form-group label {
+  font-size: 12px;
+  color: #555;
+  display: block;
+  margin-bottom: 2px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.form-row > * {
+  flex: 1;
+  min-width: 140px;
+}
+
+/* Таблицы */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+table th, table td {
+  padding: 10px 8px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
 table th {
   background: #f8f9fa;
   position: sticky;
   top: 0;
-  font-weight: 600;
-  font-size: 12px;
+  font-weight: 700;
+  font-size: 11px;
   text-transform: uppercase;
   color: #555;
+  letter-spacing: 0.5px;
 }
-table tr:hover { background: #f8f9fa; }
+
+table tr:hover {
+  background: #f8f9fa;
+}
+
 .scroll-table {
-  max-height: 50vh;
+  max-height: 55vh;
   overflow-y: auto;
   border: 1px solid #eee;
-  border-radius: 8px;
+  border-radius: 10px;
 }
-.history-item {
+
+/* Сообщения */
+.error {
+  background: #f8d7da;
+  color: #721c24;
   padding: 12px;
+  border-radius: 10px;
+  margin: 8px 0;
+  font-size: 13px;
+  border-left: 4px solid #dc3545;
+}
+
+.success {
+  background: #d4edda;
+  color: #155724;
+  padding: 12px;
+  border-radius: 10px;
+  margin: 8px 0;
+  font-size: 13px;
+  border-left: 4px solid #28a745;
+}
+
+.warning {
+  background: #fff3cd;
+  color: #856404;
+  padding: 12px;
+  border-radius: 10px;
+  margin: 8px 0;
+  font-size: 13px;
+  border-left: 4px solid #ffc107;
+}
+
+/* История */
+.history-item {
+  padding: 14px;
   border-bottom: 1px solid #eee;
   display: flex;
   align-items: flex-start;
   gap: 12px;
+  transition: background 0.2s;
 }
-.history-item:last-child { border-bottom: none; }
+
+.history-item:hover {
+  background: #fafafa;
+}
+
+.history-item:last-child {
+  border-bottom: none;
+}
+
 .history-dot {
   width: 14px;
   height: 14px;
   border-radius: 50%;
   flex-shrink: 0;
-  margin-top: 3px;
+  margin-top: 2px;
 }
+
 .dot-red { background: #dc3545; }
 .dot-blue { background: #007bff; }
 .dot-orange { background: #fd7e14; }
 .dot-purple { background: #6f42c1; }
-.hidden { display: none !important; }
+
+/* Сканер */
 #reader {
   width: 100%;
   max-width: 500px;
   margin: 0 auto;
-  border-radius: 12px;
+  border-radius: 14px;
   overflow: hidden;
+  border: 2px solid #e0e0e0;
 }
+
+/* Дерево категорий */
 .tree-item {
-  padding: 8px 12px;
+  padding: 9px 14px;
   cursor: pointer;
-  border-radius: 6px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   gap: 8px;
   font-size: 14px;
+  transition: all 0.15s;
+  margin: 2px 0;
 }
-.tree-item:hover { background: #f0f2f5; }
-.tree-item.active { background: #e3f2fd; font-weight: 600; }
-.tree-children { padding-left: 24px; }
+
+.tree-item:hover {
+  background: #f0f2f5;
+}
+
+.tree-item.active {
+  background: #e3f2fd;
+  font-weight: 600;
+  color: #007bff;
+}
+
+.tree-children {
+  padding-left: 20px;
+}
+
 .category-badge {
   display: inline-block;
   padding: 3px 10px;
@@ -251,40 +711,136 @@ table tr:hover { background: #f8f9fa; }
   background: #e9ecef;
   color: #495057;
   margin: 2px;
+  font-weight: 500;
 }
+
+/* Модальное окно */
 .modal-overlay {
   position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.5);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s;
 }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 .modal {
   background: #fff;
-  border-radius: 16px;
-  padding: 24px;
+  border-radius: 20px;
+  padding: 28px;
   max-width: 500px;
-  width: 90%;
-  max-height: 80vh;
+  width: 92%;
+  max-height: 85vh;
   overflow-y: auto;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+  animation: slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hidden {
+  display: none !important;
+}
+
+code {
+  background: #f0f2f5;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: 'SF Mono', 'Consolas', monospace;
+}
+
+/* Мобильная адаптация */
 @media (max-width: 767px) {
-  .header { padding: 10px 12px; }
-  .tabs { padding: 8px 8px; gap: 2px; }
-  .tabs button { padding: 6px 12px; font-size: 12px; }
-  .content { padding: 10px; }
-  .card { padding: 14px; }
-  .btn { padding: 12px; font-size: 15px; }
-  table { font-size: 11px; }
-  table th, table td { padding: 6px 4px; }
+  .header {
+    padding: 10px 12px;
+  }
+
+  .header .user-info {
+    font-size: 12px;
+  }
+
+  .header .user-info strong {
+    font-size: 14px;
+  }
+
+  .tabs {
+    padding: 8px;
+    gap: 2px;
+    top: 52px;
+  }
+
+  .tabs button {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+
+  .content {
+    padding: 8px;
+  }
+
+  .card {
+    padding: 14px;
+    border-radius: 12px;
+  }
+
+  .btn {
+    padding: 12px;
+    font-size: 15px;
+    border-radius: 10px;
+  }
+
+  table {
+    font-size: 11px;
+  }
+
+  table th, table td {
+    padding: 6px 4px;
+  }
+
+  .login-card {
+    padding: 25px 18px;
+    border-radius: 20px;
+  }
+
+  .login-logo .icon {
+    font-size: 45px;
+  }
+
+  .login-logo h1 {
+    font-size: 20px;
+  }
+
+  #reader {
+    max-width: 100%;
+  }
+}
+
+/* Планшет */
+@media (min-width: 768px) and (max-width: 1199px) {
+  .content {
+    padding: 14px;
+    gap: 12px;
+  }
 }
 </style>
 </head>
 <body>
-<div class="app" id="app"></div>
+<div id="app"></div>
 
 <script>
 // ============ БАЗА ДАННЫХ (localStorage) ============
@@ -336,20 +892,15 @@ let db = getDB();
 let html5QrCode = null;
 
 // ============ ХЕЛПЕРЫ ============
-const app = document.getElementById('app');
+const appEl = document.getElementById('app');
 
 function render(html) {
-  app.innerHTML = html;
+  appEl.innerHTML = html;
 }
 
 function getUserName(id) {
   const u = db.users.find(u => u.id === id);
   return u ? u.fullName : '?';
-}
-
-function getInstrumentName(id) {
-  const i = db.instruments.find(i => i.id === id);
-  return i ? `${i.article} ${i.name}` : 'Неизвестный инструмент';
 }
 
 function getCategoryName(id) {
@@ -376,24 +927,71 @@ function formatDate(iso) {
   return new Date(iso).toLocaleString('ru-RU');
 }
 
-// ============ РЕНДЕРИНГ ЭКРАНОВ ============
-
-// --- Логин ---
+// ============ СТРАНИЦА ВХОДА (АНИМИРОВАННАЯ) ============
 function renderLogin(error = '') {
+  // Создаём частицы
+  const particlesHTML = Array.from({length: 30}, (_, i) => {
+    const size = Math.random() * 6 + 2;
+    const left = Math.random() * 100;
+    const delay = Math.random() * 8;
+    const duration = Math.random() * 10 + 8;
+    return `<div class="particle" style="width:${size}px;height:${size}px;left:${left}%;animation-delay:${delay}s;animation-duration:${duration}s;"></div>`;
+  }).join('');
+
   render(`
-    <div class="content" style="display:flex;flex-direction:column;justify-content:center;align-items:center;max-width:400px;margin:0 auto;width:100%;">
-      <h2 style="text-align:center;margin-bottom:24px;">🔧 Учёт инструментов</h2>
-      ${error ? `<div class="error">${error}</div>` : ''}
-      <div class="card" style="width:100%;">
-        <div class="form-group"><label>Логин</label><input id="loginInput" type="text" placeholder="Введите логин" autocomplete="username"></div>
-        <div class="form-group"><label>Пароль</label><input id="passInput" type="password" placeholder="Введите пароль" autocomplete="current-password"></div>
-        <button class="btn btn-blue" id="loginBtn">Войти</button>
+    <div class="login-wrapper">
+      <div class="particles">${particlesHTML}</div>
+
+      <!-- Геометрические фигуры -->
+      <div class="geo-shapes">
+        <div class="geo-shape circle" style="width:200px;height:200px;top:-50px;right:-50px;animation-duration:25s;"></div>
+        <div class="geo-shape square" style="width:150px;height:150px;bottom:10%;left:-40px;animation-duration:30s;"></div>
+        <div class="geo-shape circle" style="width:100px;height:100px;bottom:20%;right:15%;animation-duration:20s;"></div>
+        <div class="geo-shape square" style="width:80px;height:80px;top:15%;left:10%;animation-duration:35s;"></div>
       </div>
-      <p style="text-align:center;font-size:12px;color:#888;margin-top:12px;">
-        Тест: <b>admin/admin</b> (админ), <b>sergey/123456</b> (бригадир), <b>zhanibek/123456</b> (сотрудник), <b>petr/123456</b> (сотрудник)
-      </p>
+
+      <!-- Светящиеся точки -->
+      <div class="glow-dot" style="width:80px;height:80px;top:10%;left:20%;animation-delay:0s;"></div>
+      <div class="glow-dot" style="width:60px;height:60px;bottom:15%;right:25%;animation-delay:1.5s;"></div>
+
+      <!-- Карточка логина -->
+      <div class="login-card">
+        <div class="login-logo">
+          <span class="icon">🔧</span>
+          <h1>ToolTracker</h1>
+          <p>Система учёта инструментов</p>
+        </div>
+
+        ${error ? `<div class="login-error">${error}</div>` : ''}
+
+        <div class="form-group">
+          <label>👤 Логин</label>
+          <input id="loginInput" type="text" placeholder="Введите логин" autocomplete="username">
+        </div>
+
+        <div class="form-group">
+          <label>🔒 Пароль</label>
+          <input id="passInput" type="password" placeholder="Введите пароль" autocomplete="current-password">
+        </div>
+
+        <button class="login-btn" id="loginBtn">Войти в систему</button>
+
+        <p class="login-hint">
+          Тестовые доступы:<br>
+          <b>admin / admin</b> (администратор)<br>
+          <b>sergey / 123456</b> (бригадир)<br>
+          <b>zhanibek / 123456</b> (сотрудник)
+        </p>
+      </div>
     </div>
   `);
+
+  // Фокус на поле логина
+  setTimeout(() => {
+    document.getElementById('loginInput')?.focus();
+  }, 500);
+
+  // Обработчик входа
   document.getElementById('loginBtn').addEventListener('click', () => {
     const loginVal = document.getElementById('loginInput').value.trim();
     const pass = document.getElementById('passInput').value.trim();
@@ -403,15 +1001,17 @@ function renderLogin(error = '') {
       db = getDB();
       renderMain();
     } else {
-      renderLogin('Неверный логин или пароль');
+      renderLogin('❌ Неверный логин или пароль');
     }
   });
+
+  // Enter на поле пароля
   document.getElementById('passInput')?.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') document.getElementById('loginBtn').click();
   });
 }
 
-// --- Главный интерфейс ---
+// ============ ГЛАВНЫЙ ИНТЕРФЕЙС ============
 function renderMain(tab = 'scanner', message = '') {
   const role = currentUser.role;
   const allTabs = [
@@ -423,24 +1023,26 @@ function renderMain(tab = 'scanner', message = '') {
     { id: 'admin_log', label: '📊 Журнал', roles: ['admin'] }
   ];
   const tabs = allTabs.filter(t => t.roles.includes(role));
-
-  // Нормализация таба
   if (!tabs.find(t => t.id === tab)) tab = tabs[0].id;
 
   render(`
-    <div class="header">
-      <div class="user-info">
-        <strong>${currentUser.fullName}</strong><br>
-        <span class="role">${role === 'admin' ? '🛡️ Администратор' : role === 'foreman' ? '🪖 Бригадир' : '🦺 Сотрудник'}</span>
+    <div class="app">
+      <div class="header">
+        <div class="user-info">
+          <strong>${currentUser.fullName}</strong>
+          <span class="role">${role === 'admin' ? '🛡️ Администратор' : role === 'foreman' ? '🪖 Бригадир' : '🦺 Сотрудник'}</span>
+        </div>
+        <div class="header-actions">
+          <button id="profileBtn">🔑 Сменить пароль</button>
+          <button id="logoutBtn">🚪 Выйти</button>
+        </div>
       </div>
-      <div class="header-actions">
-        <button id="profileBtn">🔑 Сменить пароль</button>
-        <button id="logoutBtn">🚪 Выйти</button>
+
+      <div class="tabs">${tabs.map(t => `<button class="${tab===t.id?'active':''}" data-tab="${t.id}">${t.label}</button>`).join('')}</div>
+
+      <div class="content" id="tabContent">
+        ${message ? `<div class="full-width ${message.includes('✅')?'success':message.includes('⚠')?'warning':'error'}">${message}</div>` : ''}
       </div>
-    </div>
-    <div class="tabs">${tabs.map(t => `<button class="${tab===t.id?'active':''}" data-tab="${t.id}">${t.label}</button>`).join('')}</div>
-    <div class="content" id="tabContent">
-      ${message ? `<div class="full-width ${message.includes('✅')?'success':message.includes('⚠')?'warning':'error'}">${message}</div>` : ''}
     </div>
   `);
 
@@ -448,11 +1050,13 @@ function renderMain(tab = 'scanner', message = '') {
   document.querySelectorAll('.tabs button').forEach(btn => {
     btn.addEventListener('click', () => renderMain(btn.dataset.tab));
   });
+
   document.getElementById('logoutBtn').addEventListener('click', () => {
     currentUser = null;
     if (html5QrCode) { html5QrCode.stop().catch(()=>{}); html5QrCode = null; }
     renderLogin();
   });
+
   document.getElementById('profileBtn').addEventListener('click', () => renderProfile());
 
   // Контент вкладки
@@ -467,14 +1071,8 @@ function renderMain(tab = 'scanner', message = '') {
   }
 }
 
-// --- Профиль / смена пароля ---
+// ============ ПРОФИЛЬ / СМЕНА ПАРОЛЯ ============
 function renderProfile() {
-  const msgDiv = document.createElement('div');
-  msgDiv.className = 'full-width';
-  const content = document.getElementById('tabContent');
-  content.insertBefore(msgDiv, content.firstChild);
-
-  // Создаём модальное окно
   const overlay = document.createElement('div');
   overlay.className = 'modal-overlay';
   overlay.innerHTML = `
@@ -483,8 +1081,8 @@ function renderProfile() {
       <div class="form-group"><label>Старый пароль</label><input id="oldPass" type="password"></div>
       <div class="form-group"><label>Новый пароль</label><input id="newPass1" type="password"></div>
       <div class="form-group"><label>Повторите новый</label><input id="newPass2" type="password"></div>
-      <div style="display:flex;gap:10px;">
-        <button class="btn btn-blue" id="changePassBtn" style="flex:1;">Сохранить</button>
+      <div style="display:flex;gap:10px;margin-top:15px;">
+        <button class="btn btn-blue" id="changePassBtn" style="flex:1;">💾 Сохранить</button>
         <button class="btn btn-gray" id="closeModalBtn" style="flex:1;">Отмена</button>
       </div>
       <div id="profileMsg" style="margin-top:10px;"></div>
@@ -505,22 +1103,16 @@ function renderProfile() {
     currentUser.password = n1;
     saveDB(db);
     msg.innerHTML = '<div class="success">✅ Пароль успешно изменён!</div>';
-    setTimeout(() => { document.body.removeChild(overlay); }, 1500);
+    setTimeout(() => document.body.removeChild(overlay), 1500);
   });
 
-  document.getElementById('closeModalBtn').addEventListener('click', () => {
-    document.body.removeChild(overlay);
-  });
-  overlay.addEventListener('click', (e) => {
-    if (e.target === overlay) document.body.removeChild(overlay);
-  });
+  document.getElementById('closeModalBtn').addEventListener('click', () => document.body.removeChild(overlay));
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) document.body.removeChild(overlay); });
 }
 
-// --- Сканер (единый для всех ролей) ---
+// ============ СКАНЕР ============
 function renderScanner(container) {
-  const isForeman = currentUser.role === 'foreman';
-  const isAdmin = currentUser.role === 'admin';
-  const canIssue = isForeman || isAdmin;
+  const canIssue = currentUser.role === 'foreman' || currentUser.role === 'admin';
 
   container.innerHTML = `
     <div class="card full-width">
@@ -529,14 +1121,16 @@ function renderScanner(container) {
         <button id="modeSelf" class="btn-sm btn-blue" style="flex:1;">👤 Взять / Вернуть себе</button>
         <button id="modeEmployee" class="btn-sm btn-gray" style="flex:1;">👥 Выдать сотруднику</button>
       </div>
-      <div id="foremanStep" style="font-size:13px;color:#555;margin-bottom:10px;padding:8px;background:#f0f2f5;border-radius:8px;">Режим: <b>взять / вернуть себе</b></div>
+      <div id="foremanStep" style="font-size:13px;color:#555;margin-bottom:10px;padding:10px;background:#f0f2f5;border-radius:10px;">
+        Режим: <b>взять / вернуть себе</b>
+      </div>
       ` : ''}
       <div id="reader"></div>
       <button class="btn btn-gray" id="manualInputBtn" style="margin-top:10px;">⌨️ Ввести артикул вручную</button>
       <div id="manualInputArea" class="hidden" style="margin-top:10px;">
         <div style="display:flex;gap:8px;">
           <input id="manualArticle" type="text" placeholder="INSTR-XXXX или артикул сотрудника" style="flex:1;">
-          <button class="btn btn-blue btn-sm" id="submitManual" style="margin-top:0;width:auto;">Найти</button>
+          <button class="btn btn-blue btn-sm" id="submitManual" style="margin-top:0;width:auto;white-space:nowrap;">🔍 Найти</button>
         </div>
       </div>
     </div>
@@ -568,7 +1162,6 @@ function renderScanner(container) {
     const result = document.getElementById('scanResult');
     db = getDB();
 
-    // Если режим выдачи сотруднику и ещё не выбран сотрудник
     if (canIssue && foremanMode === 'employee' && !pendingEmployee) {
       const emp = db.users.find(u => u.personalArticle === code && u.role === 'employee');
       if (!emp) {
@@ -576,63 +1169,51 @@ function renderScanner(container) {
         return;
       }
       pendingEmployee = emp;
-      document.getElementById('foremanStep').innerHTML = `👤 Сотрудник: <b>${emp.fullName}</b> (${emp.personalArticle}). Теперь сканируйте инструмент.`;
-      msg.innerHTML = '<div class="success">✅ Сотрудник найден! Сканируйте инструмент для выдачи.</div>';
+      document.getElementById('foremanStep').innerHTML = `👤 Сотрудник: <b>${emp.fullName}</b> (${emp.personalArticle})<br>Теперь сканируйте инструмент для выдачи.`;
+      msg.innerHTML = '<div class="success">✅ Сотрудник найден! Сканируйте инструмент.</div>';
       return;
     }
 
-    // Ищем инструмент
     const instr = db.instruments.find(i => i.article === code);
     if (!instr) {
-      // Может быть, это артикул пользователя?
       const user = db.users.find(u => u.personalArticle === code);
       if (user) {
         msg.innerHTML = `<div class="warning">⚠️ Это артикул пользователя <b>${user.fullName}</b>. Сканируйте инструмент.</div>`;
         return;
       }
-      msg.innerHTML = `<div class="error">❌ Инструмент с артикулом <b>${code}</b> не найден в системе.</div>`;
+      msg.innerHTML = `<div class="error">❌ Инструмент с артикулом <b>${code}</b> не найден.</div>`;
       return;
     }
     showInstrumentCard(instr, result, msg);
   }
 
-  function showInstrumentCard(instr, container, msgEl) {
+  function showInstrumentCard(instr, containerEl, msgEl) {
     const holder = instr.currentHolderId ? db.users.find(u => u.id === instr.currentHolderId) : null;
     const isHeldByMe = instr.currentHolderId === currentUser.id;
     const catPath = getCategoryPath(instr.categoryId);
 
-    container.innerHTML = `
+    containerEl.innerHTML = `
       <div class="card">
         <h3>${instr.name}</h3>
-        <p style="color:#666;">Артикул: <b>${instr.article}</b></p>
-        ${catPath !== 'Без категории' ? `<p style="color:#666;">Категория: <span class="category-badge">${catPath}</span></p>` : ''}
-        ${instr.description ? `<p style="color:#888;font-size:14px;">${instr.description}</p>` : ''}
+        <p style="color:#666;margin:4px 0;">Артикул: <code>${instr.article}</code></p>
+        ${catPath !== 'Без категории' ? `<p style="color:#666;margin:4px 0;">📁 <span class="category-badge">${catPath}</span></p>` : ''}
+        ${instr.description ? `<p style="color:#888;font-size:14px;margin:8px 0;">${instr.description}</p>` : ''}
         <div style="margin:12px 0;">
           <span class="status-badge status-${instr.status}">${instr.status === 'in_stock' ? '🟢 На складе' : '🔴 На руках'}</span>
         </div>
-        ${holder ? `<p>Держатель: <b>${holder.fullName}</b> (${holder.personalArticle})</p>` : ''}
+        ${holder ? `<p style="margin:8px 0;">👤 Держатель: <b>${holder.fullName}</b></p>` : ''}
 
-        ${instr.status === 'in_stock' && !pendingEmployee ? `
-          <button class="btn btn-green" id="takeBtn">🟢 ВЗЯТЬ</button>
-        ` : ''}
-        ${instr.status === 'in_stock' && pendingEmployee ? `
-          <button class="btn btn-orange" id="issueBtn">🟠 ВЫДАТЬ: ${pendingEmployee.fullName}</button>
-        ` : ''}
-        ${isHeldByMe ? `
-          <button class="btn btn-blue" id="returnBtn">🔵 ВЕРНУТЬ НА СКЛАД</button>
-        ` : ''}
-        ${currentUser.role === 'admin' && instr.status === 'taken' && !isHeldByMe ? `
-          <button class="btn btn-red" id="forceReturnBtn">⚠️ ПРИНУДИТЕЛЬНЫЙ ВОЗВРАТ</button>
-        ` : ''}
-        ${instr.status === 'taken' && !isHeldByMe && currentUser.role !== 'admin' ? `
-          <div class="warning">Инструмент находится у <b>${holder?.fullName || 'другого сотрудника'}</b>. Обратитесь к администратору для возврата.</div>
-        ` : ''}
+        ${instr.status === 'in_stock' && !pendingEmployee ? `<button class="btn btn-green" id="takeBtn">🟢 ВЗЯТЬ</button>` : ''}
+        ${instr.status === 'in_stock' && pendingEmployee ? `<button class="btn btn-orange" id="issueBtn">🟠 ВЫДАТЬ: ${pendingEmployee.fullName}</button>` : ''}
+        ${isHeldByMe ? `<button class="btn btn-blue" id="returnBtn">🔵 ВЕРНУТЬ НА СКЛАД</button>` : ''}
+        ${currentUser.role === 'admin' && instr.status === 'taken' && !isHeldByMe ? `<button class="btn btn-red" id="forceReturnBtn">⚠️ ПРИНУДИТЕЛЬНЫЙ ВОЗВРАТ</button>` : ''}
+        ${instr.status === 'taken' && !isHeldByMe && currentUser.role !== 'admin' ? `<div class="warning">Инструмент у <b>${holder?.fullName || 'другого сотрудника'}</b>. Обратитесь к администратору.</div>` : ''}
         <button class="btn btn-gray btn-sm" id="closeCardBtn" style="margin-top:8px;">✕ Закрыть</button>
       </div>
     `;
 
     document.getElementById('closeCardBtn')?.addEventListener('click', () => {
-      container.innerHTML = '';
+      containerEl.innerHTML = '';
       pendingEmployee = null;
       if (canIssue) document.getElementById('foremanStep').innerHTML = 'Режим: <b>взять / вернуть себе</b>';
       msgEl.innerHTML = '';
@@ -641,98 +1222,62 @@ function renderScanner(container) {
     document.getElementById('takeBtn')?.addEventListener('click', () => {
       instr.status = 'taken';
       instr.currentHolderId = currentUser.id;
-      db.log.push({
-        id: 'l' + Date.now(),
-        instrumentId: instr.id,
-        action: 'taken',
-        initiatorId: currentUser.id,
-        targetId: currentUser.id,
-        timestamp: new Date().toISOString(),
-        comment: ''
-      });
+      db.log.push({ id: 'l' + Date.now(), instrumentId: instr.id, action: 'taken', initiatorId: currentUser.id, targetId: currentUser.id, timestamp: new Date().toISOString(), comment: '' });
       saveDB(db);
       msgEl.innerHTML = '<div class="success">✅ Инструмент успешно взят!</div>';
-      setTimeout(() => { container.innerHTML = ''; msgEl.innerHTML = ''; }, 1500);
+      setTimeout(() => { containerEl.innerHTML = ''; msgEl.innerHTML = ''; }, 1500);
     });
 
     document.getElementById('issueBtn')?.addEventListener('click', () => {
       instr.status = 'taken';
       instr.currentHolderId = pendingEmployee.id;
-      db.log.push({
-        id: 'l' + Date.now(),
-        instrumentId: instr.id,
-        action: 'issued_by_foreman',
-        initiatorId: currentUser.id,
-        targetId: pendingEmployee.id,
-        timestamp: new Date().toISOString(),
-        comment: ''
-      });
+      db.log.push({ id: 'l' + Date.now(), instrumentId: instr.id, action: 'issued_by_foreman', initiatorId: currentUser.id, targetId: pendingEmployee.id, timestamp: new Date().toISOString(), comment: '' });
       saveDB(db);
-      msgEl.innerHTML = `<div class="success">✅ Инструмент выдан сотруднику <b>${pendingEmployee.fullName}</b>!</div>`;
+      msgEl.innerHTML = `<div class="success">✅ Инструмент выдан <b>${pendingEmployee.fullName}</b>!</div>`;
       pendingEmployee = null;
-      if (canIssue) document.getElementById('foremanStep').innerHTML = 'Режим: <b>выдать сотруднику</b>. Сканируйте бейдж сотрудника.';
-      setTimeout(() => { container.innerHTML = ''; msgEl.innerHTML = ''; }, 2000);
+      if (canIssue) document.getElementById('foremanStep').innerHTML = 'Режим: <b>выдать сотруднику</b>. Сканируйте бейдж.';
+      setTimeout(() => { containerEl.innerHTML = ''; msgEl.innerHTML = ''; }, 2000);
     });
 
     document.getElementById('returnBtn')?.addEventListener('click', () => {
       instr.status = 'in_stock';
       instr.currentHolderId = null;
-      db.log.push({
-        id: 'l' + Date.now(),
-        instrumentId: instr.id,
-        action: 'returned',
-        initiatorId: currentUser.id,
-        targetId: currentUser.id,
-        timestamp: new Date().toISOString(),
-        comment: ''
-      });
+      db.log.push({ id: 'l' + Date.now(), instrumentId: instr.id, action: 'returned', initiatorId: currentUser.id, targetId: currentUser.id, timestamp: new Date().toISOString(), comment: '' });
       saveDB(db);
       msgEl.innerHTML = '<div class="success">✅ Инструмент возвращён на склад!</div>';
-      setTimeout(() => { container.innerHTML = ''; msgEl.innerHTML = ''; }, 1500);
+      setTimeout(() => { containerEl.innerHTML = ''; msgEl.innerHTML = ''; }, 1500);
     });
 
     document.getElementById('forceReturnBtn')?.addEventListener('click', () => {
       const reason = prompt('Укажите причину принудительного возврата:');
       if (reason === null) return;
-      const prevHolderId = instr.currentHolderId;
+      const prevHolder = instr.currentHolderId;
       instr.status = 'in_stock';
       instr.currentHolderId = null;
-      db.log.push({
-        id: 'l' + Date.now(),
-        instrumentId: instr.id,
-        action: 'force_returned',
-        initiatorId: currentUser.id,
-        targetId: prevHolderId,
-        timestamp: new Date().toISOString(),
-        comment: reason || 'Без причины'
-      });
+      db.log.push({ id: 'l' + Date.now(), instrumentId: instr.id, action: 'force_returned', initiatorId: currentUser.id, targetId: prevHolder, timestamp: new Date().toISOString(), comment: reason || '' });
       saveDB(db);
       msgEl.innerHTML = '<div class="success">✅ Принудительный возврат выполнен.</div>';
-      setTimeout(() => { container.innerHTML = ''; msgEl.innerHTML = ''; }, 1500);
+      setTimeout(() => { containerEl.innerHTML = ''; msgEl.innerHTML = ''; }, 1500);
     });
   }
 
-  // Режимы бригадира / админа
   if (canIssue) {
     document.getElementById('modeSelf').addEventListener('click', () => {
-      foremanMode = 'self';
-      pendingEmployee = null;
+      foremanMode = 'self'; pendingEmployee = null;
       document.getElementById('foremanStep').innerHTML = 'Режим: <b>взять / вернуть себе</b>';
       document.getElementById('modeSelf').className = 'btn-sm btn-blue';
       document.getElementById('modeEmployee').className = 'btn-sm btn-gray';
       document.getElementById('scanResult').innerHTML = '';
     });
     document.getElementById('modeEmployee').addEventListener('click', () => {
-      foremanMode = 'employee';
-      pendingEmployee = null;
-      document.getElementById('foremanStep').innerHTML = 'Режим: <b>выдать сотруднику</b>. Сканируйте бейдж сотрудника.';
+      foremanMode = 'employee'; pendingEmployee = null;
+      document.getElementById('foremanStep').innerHTML = 'Режим: <b>выдать сотруднику</b>. Сканируйте бейдж.';
       document.getElementById('modeEmployee').className = 'btn-sm btn-blue';
       document.getElementById('modeSelf').className = 'btn-sm btn-gray';
       document.getElementById('scanResult').innerHTML = '';
     });
   }
 
-  // Ручной ввод
   document.getElementById('manualInputBtn').addEventListener('click', () => {
     document.getElementById('manualInputArea').classList.toggle('hidden');
   });
@@ -748,39 +1293,20 @@ function renderScanner(container) {
   });
 }
 
-// --- История (исправлено) ---
+// ============ ИСТОРИЯ ============
 function renderHistory(container) {
-  container.innerHTML = '<div class="full-width"><h3>📋 Моя история операций</h3></div>';
-  const content = container;
-
-  // Получаем ВСЕ операции, где пользователь фигурирует
-  let myLog = [];
-  if (currentUser.role === 'employee') {
-    // Сотрудник видит операции, где он target (инструмент на нём) или initiator (он сам брал/возвращал)
-    myLog = db.log.filter(e => e.initiatorId === currentUser.id || e.targetId === currentUser.id);
-  } else if (currentUser.role === 'foreman') {
-    // Бригадир видит свои операции + операции выдачи сотрудникам
-    myLog = db.log.filter(e => e.initiatorId === currentUser.id);
-  } else if (currentUser.role === 'admin') {
-    // Админ видит всё (но в этом разделе — только свои)
+  let myLog = db.log.filter(e => e.initiatorId === currentUser.id || e.targetId === currentUser.id);
+  if (currentUser.role === 'foreman') {
     myLog = db.log.filter(e => e.initiatorId === currentUser.id);
   }
 
-  const actionLabels = {
-    taken: 'Взял',
-    returned: 'Вернул',
-    issued_by_foreman: 'Выдал сотруднику',
-    force_returned: 'Принудительный возврат'
-  };
-  const actionDots = {
-    taken: 'dot-red',
-    returned: 'dot-blue',
-    issued_by_foreman: 'dot-orange',
-    force_returned: 'dot-purple'
-  };
+  const actionLabels = { taken: 'Взял', returned: 'Вернул', issued_by_foreman: 'Выдал сотруднику', force_returned: 'Принудительный возврат' };
+  const actionDots = { taken: 'dot-red', returned: 'dot-blue', issued_by_foreman: 'dot-orange', force_returned: 'dot-purple' };
+
+  container.innerHTML = '<div class="full-width"><h3>📋 Моя история операций</h3></div>';
 
   if (myLog.length === 0) {
-    content.innerHTML += '<div class="card full-width"><p>У вас пока нет операций.</p></div>';
+    container.innerHTML += '<div class="card full-width"><p style="text-align:center;color:#888;">У вас пока нет операций.</p></div>';
     return;
   }
 
@@ -804,37 +1330,33 @@ function renderHistory(container) {
             <b>${actionLabels[entry.action] || entry.action}</b>
             — ${instr?.article || '?'} ${instr?.name || 'Неизвестный инструмент'}
             ${entry.action === 'issued_by_foreman' ? `<br><small>👤 Выдано: ${targetUser?.fullName || '?'}</small>` : ''}
-            ${entry.action === 'force_returned' ? `<br><small>👤 У кого забрали: ${targetUser?.fullName || '?'}</small>` : ''}
-            ${entry.comment ? `<br><small>💬 Причина: ${entry.comment}</small>` : ''}
+            ${entry.action === 'force_returned' ? `<br><small>👤 Забрано у: ${targetUser?.fullName || '?'}</small>` : ''}
+            ${entry.comment ? `<br><small>💬 ${entry.comment}</small>` : ''}
             <br><small style="color:#888;">🕐 ${formatDate(entry.timestamp)}</small>
           </div>
-        </div>
-      `;
+        </div>`;
     });
     html += '</div>';
   }
-  content.innerHTML += html;
+  container.innerHTML += html;
 }
 
-// --- Админ: Инструменты (с категориями) ---
+// ============ АДМИН: ИНСТРУМЕНТЫ ============
 function renderAdminInstruments(container) {
   container.innerHTML = `
     <div class="full-width" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
       <h3>🛠️ Управление инструментами</h3>
-      <button class="btn btn-green btn-sm" id="addInstrBtn">+ Добавить инструмент</button>
+      <button class="btn btn-green btn-sm" id="addInstrBtn">+ Добавить</button>
     </div>
-    <div class="card" style="flex: 0 0 280px; max-height: 60vh; overflow-y: auto;">
+    <div class="card" style="max-height:60vh;overflow-y:auto;">
       <h4>📁 Категории</h4>
       <div id="categoryTree"></div>
       <button class="btn btn-gray btn-sm" id="showAllInstr" style="margin-top:8px;">📋 Показать все</button>
     </div>
-    <div class="card" style="flex: 1; min-width: 350px;">
-      <input type="text" placeholder="🔍 Поиск по артикулу или названию..." id="instrSearch">
+    <div class="card" style="min-width:350px;">
+      <input type="text" placeholder="🔍 Поиск..." id="instrSearch">
       <div class="scroll-table" style="margin-top:8px;">
-        <table id="instrTable">
-          <thead><tr><th>Артикул</th><th>Название</th><th>Категория</th><th>Статус</th><th>У кого</th><th>Действия</th></tr></thead>
-          <tbody></tbody>
-        </table>
+        <table id="instrTable"><thead><tr><th>Артикул</th><th>Название</th><th>Категория</th><th>Статус</th><th>У кого</th><th>Действия</th></tr></thead><tbody></tbody></table>
       </div>
     </div>
     <div id="instrForm" class="hidden full-width card"></div>
@@ -842,435 +1364,237 @@ function renderAdminInstruments(container) {
 
   let selectedCategoryId = null;
 
-  function renderCategoryTree() {
+  function renderTree() {
     const tree = document.getElementById('categoryTree');
-    const buildTree = (parentId = null, level = 0) => {
+    const build = (parentId = null, level = 0) => {
       const children = db.categories.filter(c => c.parentId === parentId);
-      if (children.length === 0) return '';
       return children.map(c => `
         <div class="tree-item ${selectedCategoryId === c.id ? 'active' : ''}" data-cat-id="${c.id}" style="padding-left:${12 + level * 20}px;">
-          📁 ${c.name}
-          <span style="font-size:10px;color:#999;margin-left:auto;">${db.instruments.filter(i => i.categoryId === c.id).length}</span>
+          📁 ${c.name} <span style="font-size:10px;color:#999;margin-left:auto;">${db.instruments.filter(i => i.categoryId === c.id).length}</span>
         </div>
-        <div class="tree-children">${buildTree(c.id, level + 1)}</div>
+        <div class="tree-children">${build(c.id, level + 1)}</div>
       `).join('');
     };
     tree.innerHTML = `
-      <div class="tree-item ${selectedCategoryId === null ? 'active' : ''}" data-cat-id="">
-        📋 Все инструменты
-        <span style="font-size:10px;color:#999;margin-left:auto;">${db.instruments.length}</span>
-      </div>
-      <div class="tree-item ${selectedCategoryId === 'none' ? 'active' : ''}" data-cat-id="none">
-        ❓ Без категории
-        <span style="font-size:10px;color:#999;margin-left:auto;">${db.instruments.filter(i => !i.categoryId).length}</span>
-      </div>
-      ${buildTree(null)}
+      <div class="tree-item ${selectedCategoryId === null ? 'active' : ''}" data-cat-id="">📋 Все (${db.instruments.length})</div>
+      <div class="tree-item ${selectedCategoryId === 'none' ? 'active' : ''}" data-cat-id="none">❓ Без категории (${db.instruments.filter(i => !i.categoryId).length})</div>
+      ${build(null)}
     `;
-
     tree.querySelectorAll('.tree-item').forEach(item => {
       item.addEventListener('click', () => {
-        const catId = item.dataset.catId;
-        selectedCategoryId = catId === '' ? null : (catId === 'none' ? 'none' : catId);
-        renderCategoryTree();
-        refreshTable(document.getElementById('instrSearch')?.value || '');
+        selectedCategoryId = item.dataset.catId === '' ? null : (item.dataset.catId === 'none' ? 'none' : item.dataset.catId);
+        renderTree();
+        refreshTable();
       });
     });
   }
 
-  function refreshTable(filter = '') {
-    const tbody = document.querySelector('#instrTable tbody');
-    let filtered = db.instruments.filter(i =>
-      i.article.toLowerCase().includes(filter.toLowerCase()) ||
-      i.name.toLowerCase().includes(filter.toLowerCase())
-    );
-    if (selectedCategoryId === 'none') {
-      filtered = filtered.filter(i => !i.categoryId);
-    } else if (selectedCategoryId) {
-      filtered = filtered.filter(i => i.categoryId === selectedCategoryId);
-    }
-    tbody.innerHTML = filtered.map(i => {
+  function refreshTable() {
+    const filter = (document.getElementById('instrSearch')?.value || '').toLowerCase();
+    let filtered = db.instruments.filter(i => i.article.toLowerCase().includes(filter) || i.name.toLowerCase().includes(filter));
+    if (selectedCategoryId === 'none') filtered = filtered.filter(i => !i.categoryId);
+    else if (selectedCategoryId) filtered = filtered.filter(i => i.categoryId === selectedCategoryId);
+
+    document.querySelector('#instrTable tbody').innerHTML = filtered.map(i => {
       const holder = i.currentHolderId ? db.users.find(u => u.id === i.currentHolderId) : null;
-      return `
-        <tr>
-          <td><b>${i.article}</b></td>
-          <td>${i.name}</td>
-          <td><span class="category-badge">${getCategoryName(i.categoryId)}</span></td>
-          <td><span class="status-badge status-${i.status}">${i.status === 'in_stock' ? 'Склад' : 'На руках'}</span></td>
-          <td>${holder?.fullName || '—'}</td>
-          <td>
-            <button class="btn-xs btn-gray editInstr" data-id="${i.id}">✏️</button>
-            ${i.status === 'taken' ? `<button class="btn-xs btn-red forceRet" data-id="${i.id}">↩️</button>` : ''}
-            <button class="btn-xs btn-red delInstr" data-id="${i.id}">🗑</button>
-          </td>
-        </tr>
-      `;
+      return `<tr>
+        <td><code>${i.article}</code></td><td>${i.name}</td>
+        <td><span class="category-badge">${getCategoryName(i.categoryId)}</span></td>
+        <td><span class="status-badge status-${i.status}">${i.status==='in_stock'?'Склад':'На руках'}</span></td>
+        <td>${holder?.fullName || '—'}</td>
+        <td>
+          <button class="btn-xs btn-gray editInstr" data-id="${i.id}">✏️</button>
+          ${i.status==='taken'?`<button class="btn-xs btn-red forceRet" data-id="${i.id}">↩️</button>`:''}
+          <button class="btn-xs btn-red delInstr" data-id="${i.id}">🗑</button>
+        </td></tr>`;
     }).join('');
 
-    tbody.querySelectorAll('.editInstr').forEach(b => b.addEventListener('click', () => showInstrForm(b.dataset.id)));
-    tbody.querySelectorAll('.forceRet').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('.editInstr').forEach(b => b.addEventListener('click', () => showForm(b.dataset.id)));
+    document.querySelectorAll('.forceRet').forEach(b => b.addEventListener('click', () => {
       const instr = db.instruments.find(i => i.id === b.dataset.id);
-      const reason = prompt('Причина принудительного возврата:');
+      const reason = prompt('Причина:');
       if (reason === null) return;
-      db.log.push({
-        id: 'l' + Date.now(),
-        instrumentId: instr.id,
-        action: 'force_returned',
-        initiatorId: currentUser.id,
-        targetId: instr.currentHolderId,
-        timestamp: new Date().toISOString(),
-        comment: reason || ''
-      });
-      instr.status = 'in_stock';
-      instr.currentHolderId = null;
-      saveDB(db);
-      refreshTable(document.getElementById('instrSearch')?.value || '');
+      db.log.push({ id: 'l'+Date.now(), instrumentId: instr.id, action: 'force_returned', initiatorId: currentUser.id, targetId: instr.currentHolderId, timestamp: new Date().toISOString(), comment: reason });
+      instr.status = 'in_stock'; instr.currentHolderId = null;
+      saveDB(db); refreshTable();
     }));
-    tbody.querySelectorAll('.delInstr').forEach(b => b.addEventListener('click', () => {
-      if (confirm('Удалить инструмент? Это действие нельзя отменить.')) {
-        db.instruments = db.instruments.filter(i => i.id !== b.dataset.id);
-        saveDB(db);
-        renderCategoryTree();
-        refreshTable(document.getElementById('instrSearch')?.value || '');
-      }
+    document.querySelectorAll('.delInstr').forEach(b => b.addEventListener('click', () => {
+      if (confirm('Удалить?')) { db.instruments = db.instruments.filter(i => i.id !== b.dataset.id); saveDB(db); renderTree(); refreshTable(); }
     }));
   }
 
-  renderCategoryTree();
-  refreshTable();
-  document.getElementById('instrSearch').addEventListener('input', e => refreshTable(e.target.value));
-  document.getElementById('showAllInstr').addEventListener('click', () => {
-    selectedCategoryId = null;
-    renderCategoryTree();
-    refreshTable(document.getElementById('instrSearch')?.value || '');
-  });
-  document.getElementById('addInstrBtn').addEventListener('click', () => showInstrForm());
+  renderTree(); refreshTable();
+  document.getElementById('instrSearch').addEventListener('input', refreshTable);
+  document.getElementById('showAllInstr').addEventListener('click', () => { selectedCategoryId = null; renderTree(); refreshTable(); });
+  document.getElementById('addInstrBtn').addEventListener('click', () => showForm());
 
-  function showInstrForm(id = null) {
+  function showForm(id = null) {
     const instr = id ? db.instruments.find(i => i.id === id) : null;
     const form = document.getElementById('instrForm');
     form.classList.remove('hidden');
-    const catOptions = db.categories.map(c => `<option value="${c.id}" ${instr?.categoryId === c.id ? 'selected' : ''}>${getCategoryPath(c.id)}</option>`).join('');
     form.innerHTML = `
-      <h4>${id ? '✏️ Редактировать' : '➕ Добавить'} инструмент</h4>
+      <h4>${id?'✏️ Редактировать':'➕ Добавить'} инструмент</h4>
       <div class="form-row">
-        <div class="form-group"><label>Артикул *</label><input id="fArticle" value="${instr?.article || ''}" placeholder="INSTR-XXXX"></div>
-        <div class="form-group"><label>Название *</label><input id="fName" value="${instr?.name || ''}" placeholder="Название инструмента"></div>
+        <div class="form-group"><label>Артикул *</label><input id="fArticle" value="${instr?.article||''}" placeholder="INSTR-XXXX"></div>
+        <div class="form-group"><label>Название *</label><input id="fName" value="${instr?.name||''}"></div>
       </div>
-      <div class="form-group"><label>Описание</label><textarea id="fDesc" rows="2">${instr?.description || ''}</textarea></div>
-      <div class="form-group"><label>Категория</label><select id="fCategory"><option value="">Без категории</option>${catOptions}</select></div>
-      <div style="display:flex;gap:10px;">
-        <button class="btn btn-green" id="saveInstrBtn" style="flex:1;">💾 Сохранить</button>
-        <button class="btn btn-gray" id="cancelInstrBtn" style="flex:1;">Отмена</button>
-      </div>
+      <div class="form-group"><label>Описание</label><textarea id="fDesc" rows="2">${instr?.description||''}</textarea></div>
+      <div class="form-group"><label>Категория</label><select id="fCategory"><option value="">Без категории</option>${db.categories.map(c=>`<option value="${c.id}" ${instr?.categoryId===c.id?'selected':''}>${getCategoryPath(c.id)}</option>`).join('')}</select></div>
+      <div style="display:flex;gap:10px;"><button class="btn btn-green" id="saveInstrBtn" style="flex:1;">💾 Сохранить</button><button class="btn btn-gray" id="cancelInstrBtn" style="flex:1;">Отмена</button></div>
     `;
     document.getElementById('saveInstrBtn').addEventListener('click', () => {
       const article = document.getElementById('fArticle').value.trim();
       const name = document.getElementById('fName').value.trim();
-      if (!article || !name) { alert('Артикул и название обязательны'); return; }
+      if (!article||!name) { alert('Артикул и название обязательны'); return; }
       if (id) {
-        if (db.instruments.find(i => i.article === article && i.id !== id)) { alert('Артикул уже существует'); return; }
-        Object.assign(instr, {
-          article,
-          name,
-          description: document.getElementById('fDesc').value,
-          categoryId: document.getElementById('fCategory').value || null
-        });
+        if (db.instruments.find(i=>i.article===article&&i.id!==id)) { alert('Артикул занят'); return; }
+        Object.assign(instr, {article,name,description:document.getElementById('fDesc').value,categoryId:document.getElementById('fCategory').value||null});
       } else {
-        if (db.instruments.find(i => i.article === article)) { alert('Артикул уже существует'); return; }
-        db.instruments.push({
-          id: 'i' + Date.now(),
-          article,
-          name,
-          description: document.getElementById('fDesc').value,
-          categoryId: document.getElementById('fCategory').value || null,
-          status: 'in_stock',
-          currentHolderId: null
-        });
+        if (db.instruments.find(i=>i.article===article)) { alert('Артикул занят'); return; }
+        db.instruments.push({id:'i'+Date.now(),article,name,description:document.getElementById('fDesc').value,categoryId:document.getElementById('fCategory').value||null,status:'in_stock',currentHolderId:null});
       }
-      saveDB(db);
-      form.classList.add('hidden');
-      renderCategoryTree();
-      refreshTable(document.getElementById('instrSearch')?.value || '');
+      saveDB(db); form.classList.add('hidden'); renderTree(); refreshTable();
     });
     document.getElementById('cancelInstrBtn').addEventListener('click', () => form.classList.add('hidden'));
   }
 }
 
-// --- Админ: Категории ---
+// ============ АДМИН: КАТЕГОРИИ ============
 function renderAdminCategories(container) {
   container.innerHTML = `
-    <div class="full-width" style="display:flex;justify-content:space-between;align-items:center;">
-      <h3>📁 Управление категориями</h3>
-      <button class="btn btn-green btn-sm" id="addCatBtn">+ Добавить категорию</button>
-    </div>
-    <div class="card full-width">
-      <div id="catList"></div>
-    </div>
+    <div class="full-width" style="display:flex;justify-content:space-between;align-items:center;"><h3>📁 Категории</h3><button class="btn btn-green btn-sm" id="addCatBtn">+ Добавить</button></div>
+    <div class="card full-width"><div id="catList"></div></div>
     <div id="catForm" class="hidden full-width card"></div>
   `;
 
-  function renderCatList() {
-    const buildTree = (parentId = null, level = 0) => {
-      const children = db.categories.filter(c => c.parentId === parentId);
-      return children.map(c => `
-        <div style="padding:8px 12px;border-bottom:1px solid #eee;display:flex;align-items:center;gap:10px;">
-          <span style="padding-left:${level * 20}px;">📁 <b>${c.name}</b></span>
-          <span style="font-size:11px;color:#999;">(${db.instruments.filter(i => i.categoryId === c.id).length} инструментов)</span>
-          <span style="flex:1;"></span>
-          <button class="btn-xs btn-gray editCat" data-id="${c.id}">✏️</button>
-          <button class="btn-xs btn-red delCat" data-id="${c.id}">🗑</button>
-        </div>
-        ${buildTree(c.id, level + 1)}
-      `).join('');
-    };
-    document.getElementById('catList').innerHTML = buildTree(null) || '<p style="padding:12px;">Нет категорий. Создайте первую.</p>';
-
-    document.querySelectorAll('.editCat').forEach(b => b.addEventListener('click', () => showCatForm(b.dataset.id)));
-    document.querySelectorAll('.delCat').forEach(b => b.addEventListener('click', () => {
-      if (confirm('Удалить категорию? Инструменты в ней останутся, но потеряют привязку.')) {
-        db.categories = db.categories.filter(c => c.id !== b.dataset.id && c.parentId !== b.dataset.id);
-        db.instruments.forEach(i => { if (i.categoryId === b.dataset.id) i.categoryId = null; });
-        saveDB(db);
-        renderCatList();
-      }
+  function refresh() {
+    const build = (parentId=null,level=0) => db.categories.filter(c=>c.parentId===parentId).map(c=>`
+      <div style="padding:10px 14px;border-bottom:1px solid #eee;display:flex;align-items:center;gap:10px;">
+        <span style="padding-left:${level*20}px;">📁 <b>${c.name}</b> <span style="font-size:11px;color:#999;">(${db.instruments.filter(i=>i.categoryId===c.id).length})</span></span>
+        <span style="flex:1;"></span>
+        <button class="btn-xs btn-gray editCat" data-id="${c.id}">✏️</button>
+        <button class="btn-xs btn-red delCat" data-id="${c.id}">🗑</button>
+      </div>${build(c.id,level+1)}`).join('');
+    document.getElementById('catList').innerHTML = build() || '<p style="padding:14px;color:#888;">Нет категорий.</p>';
+    document.querySelectorAll('.editCat').forEach(b=>b.addEventListener('click',()=>showForm(b.dataset.id)));
+    document.querySelectorAll('.delCat').forEach(b=>b.addEventListener('click',()=>{
+      if(confirm('Удалить категорию?')){db.categories=db.categories.filter(c=>c.id!==b.dataset.id&&c.parentId!==b.dataset.id);db.instruments.forEach(i=>{if(i.categoryId===b.dataset.id)i.categoryId=null;});saveDB(db);refresh();}
     }));
   }
 
-  renderCatList();
-  document.getElementById('addCatBtn').addEventListener('click', () => showCatForm());
+  refresh();
+  document.getElementById('addCatBtn').addEventListener('click',()=>showForm());
 
-  function showCatForm(id = null) {
-    const cat = id ? db.categories.find(c => c.id === id) : null;
-    const form = document.getElementById('catForm');
-    form.classList.remove('hidden');
-    const parentOptions = db.categories.filter(c => c.id !== id).map(c => `<option value="${c.id}" ${cat?.parentId === c.id ? 'selected' : ''}>${getCategoryPath(c.id)}</option>`).join('');
-    form.innerHTML = `
-      <h4>${id ? '✏️ Редактировать' : '➕ Добавить'} категорию</h4>
-      <div class="form-group"><label>Название *</label><input id="fCatName" value="${cat?.name || ''}" placeholder="Название категории"></div>
-      <div class="form-group"><label>Родительская категория</label><select id="fCatParent"><option value="">Нет (корневая)</option>${parentOptions}</select></div>
-      <div style="display:flex;gap:10px;">
-        <button class="btn btn-green" id="saveCatBtn" style="flex:1;">💾 Сохранить</button>
-        <button class="btn btn-gray" id="cancelCatBtn" style="flex:1;">Отмена</button>
-      </div>
+  function showForm(id=null){
+    const cat=id?db.categories.find(c=>c.id===id):null;
+    const form=document.getElementById('catForm'); form.classList.remove('hidden');
+    form.innerHTML=`
+      <h4>${id?'✏️ Редактировать':'➕ Добавить'} категорию</h4>
+      <div class="form-group"><label>Название *</label><input id="fCatName" value="${cat?.name||''}"></div>
+      <div class="form-group"><label>Родительская</label><select id="fCatParent"><option value="">Нет</option>${db.categories.filter(c=>c.id!==id).map(c=>`<option value="${c.id}" ${cat?.parentId===c.id?'selected':''}>${getCategoryPath(c.id)}</option>`).join('')}</select></div>
+      <div style="display:flex;gap:10px;"><button class="btn btn-green" id="saveCatBtn" style="flex:1;">💾 Сохранить</button><button class="btn btn-gray" id="cancelCatBtn" style="flex:1;">Отмена</button></div>
     `;
-    document.getElementById('saveCatBtn').addEventListener('click', () => {
-      const name = document.getElementById('fCatName').value.trim();
-      if (!name) { alert('Название обязательно'); return; }
-      if (id) {
-        Object.assign(cat, { name, parentId: document.getElementById('fCatParent').value || null });
-      } else {
-        db.categories.push({
-          id: 'c' + Date.now(),
-          name,
-          parentId: document.getElementById('fCatParent').value || null
-        });
-      }
-      saveDB(db);
-      form.classList.add('hidden');
-      renderCatList();
+    document.getElementById('saveCatBtn').addEventListener('click',()=>{
+      const name=document.getElementById('fCatName').value.trim();
+      if(!name){alert('Название обязательно');return;}
+      if(id){Object.assign(cat,{name,parentId:document.getElementById('fCatParent').value||null});}
+      else{db.categories.push({id:'c'+Date.now(),name,parentId:document.getElementById('fCatParent').value||null});}
+      saveDB(db);form.classList.add('hidden');refresh();
     });
-    document.getElementById('cancelCatBtn').addEventListener('click', () => form.classList.add('hidden'));
+    document.getElementById('cancelCatBtn').addEventListener('click',()=>form.classList.add('hidden'));
   }
 }
 
-// --- Админ: Пользователи ---
+// ============ АДМИН: ПОЛЬЗОВАТЕЛИ ============
 function renderAdminUsers(container) {
   container.innerHTML = `
-    <div class="full-width" style="display:flex;justify-content:space-between;align-items:center;">
-      <h3>👥 Управление пользователями</h3>
-      <button class="btn btn-green btn-sm" id="addUserBtn">+ Добавить пользователя</button>
-    </div>
-    <div class="card full-width">
-      <div class="scroll-table">
-        <table>
-          <thead><tr><th>ФИО</th><th>Логин</th><th>Роль</th><th>Артикул</th><th>Действия</th></tr></thead>
-          <tbody id="usersTbody"></tbody>
-        </table>
-      </div>
-    </div>
+    <div class="full-width" style="display:flex;justify-content:space-between;align-items:center;"><h3>👥 Пользователи</h3><button class="btn btn-green btn-sm" id="addUserBtn">+ Добавить</button></div>
+    <div class="card full-width"><div class="scroll-table"><table><thead><tr><th>ФИО</th><th>Логин</th><th>Роль</th><th>Артикул</th><th>Действия</th></tr></thead><tbody id="usersTbody"></tbody></table></div></div>
     <div id="userForm" class="hidden full-width card"></div>
   `;
 
-  function refreshUsers() {
-    document.getElementById('usersTbody').innerHTML = db.users.map(u => `
-      <tr>
-        <td><b>${u.fullName}</b></td>
-        <td>${u.login}</td>
-        <td>${u.role === 'admin' ? '🛡️ Админ' : u.role === 'foreman' ? '🪖 Бригадир' : '🦺 Сотрудник'}</td>
-        <td><code>${u.personalArticle}</code></td>
-        <td>
-          <button class="btn-xs btn-gray editUser" data-id="${u.id}">✏️</button>
-          ${u.id !== currentUser.id ? `<button class="btn-xs btn-red delUser" data-id="${u.id}">🗑</button>` : ''}
-        </td>
-      </tr>
-    `).join('');
-    document.querySelectorAll('.editUser').forEach(b => b.addEventListener('click', () => showUserForm(b.dataset.id)));
-    document.querySelectorAll('.delUser').forEach(b => b.addEventListener('click', () => {
-      if (confirm('Удалить пользователя? Все его операции в истории сохранятся.')) {
-        db.users = db.users.filter(u => u.id !== b.dataset.id);
-        saveDB(db);
-        refreshUsers();
-      }
-    }));
+  function refresh(){
+    document.getElementById('usersTbody').innerHTML=db.users.map(u=>`<tr>
+      <td><b>${u.fullName}</b></td><td>${u.login}</td>
+      <td>${u.role==='admin'?'🛡️ Админ':u.role==='foreman'?'🪖 Бригадир':'🦺 Сотрудник'}</td>
+      <td><code>${u.personalArticle}</code></td>
+      <td><button class="btn-xs btn-gray editUser" data-id="${u.id}">✏️</button>${u.id!==currentUser.id?`<button class="btn-xs btn-red delUser" data-id="${u.id}">🗑</button>`:''}</td>
+    </tr>`).join('');
+    document.querySelectorAll('.editUser').forEach(b=>b.addEventListener('click',()=>showForm(b.dataset.id)));
+    document.querySelectorAll('.delUser').forEach(b=>b.addEventListener('click',()=>{if(confirm('Удалить?')){db.users=db.users.filter(u=>u.id!==b.dataset.id);saveDB(db);refresh();}}));
   }
 
-  refreshUsers();
-  document.getElementById('addUserBtn').addEventListener('click', () => showUserForm());
+  refresh();
+  document.getElementById('addUserBtn').addEventListener('click',()=>showForm());
 
-  function showUserForm(id = null) {
-    const user = id ? db.users.find(u => u.id === id) : null;
-    const form = document.getElementById('userForm');
-    form.classList.remove('hidden');
-    form.innerHTML = `
-      <h4>${id ? '✏️ Редактировать' : '➕ Добавить'} пользователя</h4>
-      <div class="form-row">
-        <div class="form-group"><label>ФИО *</label><input id="ufName" value="${user?.fullName || ''}"></div>
-        <div class="form-group"><label>Логин *</label><input id="ufLogin" value="${user?.login || ''}"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>Пароль *</label><input id="ufPass" type="text" value="${user?.password || ''}"></div>
-        <div class="form-group"><label>Роль *</label><select id="ufRole">
-          <option value="employee" ${user?.role==='employee'?'selected':''}>🦺 Сотрудник</option>
-          <option value="foreman" ${user?.role==='foreman'?'selected':''}>🪖 Бригадир</option>
-          <option value="admin" ${user?.role==='admin'?'selected':''}>🛡️ Админ</option>
-        </select></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>Артикул * (для QR-бейджа)</label><input id="ufArticle" value="${user?.personalArticle || ''}"></div>
-        <div class="form-group"><label>&nbsp;</label><button class="btn btn-gray btn-sm" id="genArticle" style="margin-top:5px;">🎲 Сгенерировать</button></div>
-      </div>
-      <div style="display:flex;gap:10px;">
-        <button class="btn btn-green" id="saveUserBtn" style="flex:1;">💾 Сохранить</button>
-        <button class="btn btn-gray" id="cancelUserBtn" style="flex:1;">Отмена</button>
-      </div>
+  function showForm(id=null){
+    const user=id?db.users.find(u=>u.id===id):null;
+    const form=document.getElementById('userForm'); form.classList.remove('hidden');
+    form.innerHTML=`
+      <h4>${id?'✏️ Редактировать':'➕ Добавить'} пользователя</h4>
+      <div class="form-row"><div class="form-group"><label>ФИО *</label><input id="ufName" value="${user?.fullName||''}"></div><div class="form-group"><label>Логин *</label><input id="ufLogin" value="${user?.login||''}"></div></div>
+      <div class="form-row"><div class="form-group"><label>Пароль *</label><input id="ufPass" type="text" value="${user?.password||''}"></div><div class="form-group"><label>Роль *</label><select id="ufRole"><option value="employee" ${user?.role==='employee'?'selected':''}>🦺 Сотрудник</option><option value="foreman" ${user?.role==='foreman'?'selected':''}>🪖 Бригадир</option><option value="admin" ${user?.role==='admin'?'selected':''}>🛡️ Админ</option></select></div></div>
+      <div class="form-row"><div class="form-group"><label>Артикул *</label><input id="ufArticle" value="${user?.personalArticle||''}"></div><div class="form-group"><label>&nbsp;</label><button class="btn btn-gray btn-sm" id="genArticle">🎲 Сгенерировать</button></div></div>
+      <div style="display:flex;gap:10px;"><button class="btn btn-green" id="saveUserBtn" style="flex:1;">💾 Сохранить</button><button class="btn btn-gray" id="cancelUserBtn" style="flex:1;">Отмена</button></div>
     `;
-    document.getElementById('genArticle').addEventListener('click', () => {
-      document.getElementById('ufArticle').value = generateArticle();
+    document.getElementById('genArticle').addEventListener('click',()=>{document.getElementById('ufArticle').value=generateArticle();});
+    document.getElementById('saveUserBtn').addEventListener('click',()=>{
+      const d={fullName:document.getElementById('ufName').value.trim(),login:document.getElementById('ufLogin').value.trim(),password:document.getElementById('ufPass').value.trim(),role:document.getElementById('ufRole').value,personalArticle:document.getElementById('ufArticle').value.trim()};
+      if(!d.fullName||!d.login||!d.password||!d.personalArticle){alert('Все поля обязательны');return;}
+      if(id){if(db.users.find(u=>u.login===d.login&&u.id!==id)){alert('Логин занят');return;}if(db.users.find(u=>u.personalArticle===d.personalArticle&&u.id!==id)){alert('Артикул занят');return;}Object.assign(user,d);}
+      else{if(db.users.find(u=>u.login===d.login)){alert('Логин занят');return;}if(db.users.find(u=>u.personalArticle===d.personalArticle)){alert('Артикул занят');return;}db.users.push({id:'u'+Date.now(),...d});}
+      saveDB(db);form.classList.add('hidden');refresh();
     });
-    document.getElementById('saveUserBtn').addEventListener('click', () => {
-      const d = {
-        fullName: document.getElementById('ufName').value.trim(),
-        login: document.getElementById('ufLogin').value.trim(),
-        password: document.getElementById('ufPass').value.trim(),
-        role: document.getElementById('ufRole').value,
-        personalArticle: document.getElementById('ufArticle').value.trim()
-      };
-      if (!d.fullName || !d.login || !d.password || !d.personalArticle) {
-        alert('Все поля обязательны для заполнения');
-        return;
-      }
-      if (id) {
-        if (db.users.find(u => u.login === d.login && u.id !== id)) { alert('Логин занят'); return; }
-        if (db.users.find(u => u.personalArticle === d.personalArticle && u.id !== id)) { alert('Артикул занят'); return; }
-        Object.assign(user, d);
-      } else {
-        if (db.users.find(u => u.login === d.login)) { alert('Логин занят'); return; }
-        if (db.users.find(u => u.personalArticle === d.personalArticle)) { alert('Артикул занят'); return; }
-        db.users.push({ id: 'u' + Date.now(), ...d });
-      }
-      saveDB(db);
-      form.classList.add('hidden');
-      refreshUsers();
-    });
-    document.getElementById('cancelUserBtn').addEventListener('click', () => form.classList.add('hidden'));
+    document.getElementById('cancelUserBtn').addEventListener('click',()=>form.classList.add('hidden'));
   }
 }
 
-// --- Админ: Журнал ---
+// ============ АДМИН: ЖУРНАЛ ============
 function renderAdminLog(container) {
   container.innerHTML = `
-    <div class="full-width" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
-      <h3>📊 Полный журнал событий</h3>
-      <button class="btn btn-blue btn-sm" id="exportCSV">📥 Выгрузить CSV</button>
-    </div>
+    <div class="full-width" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;"><h3>📊 Журнал событий</h3><button class="btn btn-blue btn-sm" id="exportCSV">📥 CSV</button></div>
     <div class="card full-width">
       <div class="form-row" style="margin-bottom:12px;">
-        <div class="form-group"><label>Фильтр по инструменту</label><input id="logFilterInstr" type="text" placeholder="Артикул или название..."></div>
-        <div class="form-group"><label>Фильтр по сотруднику</label><input id="logFilterUser" type="text" placeholder="ФИО..."></div>
-        <div class="form-group"><label>Тип действия</label><select id="logFilterAction">
-          <option value="">Все</option>
-          <option value="taken">Взял</option>
-          <option value="returned">Вернул</option>
-          <option value="issued_by_foreman">Выдал</option>
-          <option value="force_returned">Принуд. возврат</option>
-        </select></div>
+        <div class="form-group"><label>Инструмент</label><input id="logFilterInstr" placeholder="Артикул или название..."></div>
+        <div class="form-group"><label>Сотрудник</label><input id="logFilterUser" placeholder="ФИО..."></div>
+        <div class="form-group"><label>Действие</label><select id="logFilterAction"><option value="">Все</option><option value="taken">Взял</option><option value="returned">Вернул</option><option value="issued_by_foreman">Выдал</option><option value="force_returned">Принуд. возврат</option></select></div>
       </div>
-      <div class="scroll-table">
-        <table id="logTable">
-          <thead><tr><th>Дата</th><th>Инструмент</th><th>Действие</th><th>Инициатор</th><th>Цель</th><th>Комментарий</th></tr></thead>
-          <tbody></tbody>
-        </table>
-      </div>
+      <div class="scroll-table"><table id="logTable"><thead><tr><th>Дата</th><th>Инструмент</th><th>Действие</th><th>Инициатор</th><th>Цель</th><th>Комментарий</th></tr></thead><tbody></tbody></table></div>
     </div>
   `;
 
-  const actions = { taken: '🔴 Взял', returned: '🔵 Вернул', issued_by_foreman: '🟠 Выдал', force_returned: '🟣 Принуд. возврат' };
+  const actions={taken:'🔴 Взял',returned:'🔵 Вернул',issued_by_foreman:'🟠 Выдал',force_returned:'🟣 Принуд. возврат'};
 
-  function refreshLog() {
-    const fInstr = (document.getElementById('logFilterInstr')?.value || '').toLowerCase();
-    const fUser = (document.getElementById('logFilterUser')?.value || '').toLowerCase();
-    const fAction = document.getElementById('logFilterAction')?.value || '';
-
-    let filtered = [...db.log];
-    if (fInstr) {
-      filtered = filtered.filter(e => {
-        const instr = db.instruments.find(i => i.id === e.instrumentId);
-        return instr && (instr.article.toLowerCase().includes(fInstr) || instr.name.toLowerCase().includes(fInstr));
-      });
-    }
-    if (fUser) {
-      filtered = filtered.filter(e => {
-        const init = db.users.find(u => u.id === e.initiatorId);
-        const target = db.users.find(u => u.id === e.targetId);
-        return (init?.fullName.toLowerCase().includes(fUser)) || (target?.fullName.toLowerCase().includes(fUser));
-      });
-    }
-    if (fAction) {
-      filtered = filtered.filter(e => e.action === fAction);
-    }
-
-    filtered.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
-
-    document.getElementById('logTable').querySelector('tbody').innerHTML = filtered.map(e => {
-      const instr = db.instruments.find(i => i.id === e.instrumentId);
-      const init = db.users.find(u => u.id === e.initiatorId);
-      const target = db.users.find(u => u.id === e.targetId);
-      return `<tr>
-        <td>${formatDate(e.timestamp)}</td>
-        <td>${instr?.article || '?'} ${instr?.name || ''}</td>
-        <td>${actions[e.action] || e.action}</td>
-        <td>${init?.fullName || '?'}</td>
-        <td>${target?.fullName || '?'}</td>
-        <td>${e.comment || '—'}</td>
-      </tr>`;
+  function refresh(){
+    const fi=(document.getElementById('logFilterInstr')?.value||'').toLowerCase();
+    const fu=(document.getElementById('logFilterUser')?.value||'').toLowerCase();
+    const fa=document.getElementById('logFilterAction')?.value||'';
+    let filtered=[...db.log];
+    if(fi) filtered=filtered.filter(e=>{const i=db.instruments.find(x=>x.id===e.instrumentId);return i&&(i.article.toLowerCase().includes(fi)||i.name.toLowerCase().includes(fi));});
+    if(fu) filtered=filtered.filter(e=>{const ini=db.users.find(u=>u.id===e.initiatorId);const tar=db.users.find(u=>u.id===e.targetId);return (ini?.fullName.toLowerCase().includes(fu))||(tar?.fullName.toLowerCase().includes(fu));});
+    if(fa) filtered=filtered.filter(e=>e.action===fa);
+    filtered.sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp));
+    document.querySelector('#logTable tbody').innerHTML=filtered.map(e=>{
+      const i=db.instruments.find(x=>x.id===e.instrumentId);
+      const ini=db.users.find(u=>u.id===e.initiatorId);
+      const tar=db.users.find(u=>u.id===e.targetId);
+      return `<tr><td>${formatDate(e.timestamp)}</td><td>${i?.article||'?'} ${i?.name||''}</td><td>${actions[e.action]||e.action}</td><td>${ini?.fullName||'?'}</td><td>${tar?.fullName||'?'}</td><td>${e.comment||'—'}</td></tr>`;
     }).join('');
   }
 
-  refreshLog();
-  document.getElementById('logFilterInstr').addEventListener('input', refreshLog);
-  document.getElementById('logFilterUser').addEventListener('input', refreshLog);
-  document.getElementById('logFilterAction').addEventListener('change', refreshLog);
-
-  document.getElementById('exportCSV').addEventListener('click', () => {
-    const rows = [['Дата','Инструмент (артикул)','Инструмент (название)','Действие','Инициатор','Цель','Комментарий']];
-    [...db.log].sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp)).forEach(e => {
-      const instr = db.instruments.find(i => i.id === e.instrumentId);
-      rows.push([
-        formatDate(e.timestamp),
-        instr?.article || '',
-        instr?.name || '',
-        actions[e.action] || e.action,
-        db.users.find(u=>u.id===e.initiatorId)?.fullName || '',
-        db.users.find(u=>u.id===e.targetId)?.fullName || '',
-        e.comment || ''
-      ]);
+  refresh();
+  document.getElementById('logFilterInstr').addEventListener('input',refresh);
+  document.getElementById('logFilterUser').addEventListener('input',refresh);
+  document.getElementById('logFilterAction').addEventListener('change',refresh);
+  document.getElementById('exportCSV').addEventListener('click',()=>{
+    const rows=[['Дата','Артикул','Название','Действие','Инициатор','Цель','Комментарий']];
+    [...db.log].sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp)).forEach(e=>{
+      const i=db.instruments.find(x=>x.id===e.instrumentId);
+      rows.push([formatDate(e.timestamp),i?.article||'',i?.name||'',actions[e.action]||e.action,db.users.find(u=>u.id===e.initiatorId)?.fullName||'',db.users.find(u=>u.id===e.targetId)?.fullName||'',e.comment||'']);
     });
-    const csv = '\uFEFF' + rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
-    const blob = new Blob([csv], {type: 'text/csv;charset=utf-8'});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'journal_' + new Date().toISOString().slice(0,10) + '.csv';
-    a.click();
+    const csv='\uFEFF'+rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+    const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='journal_'+new Date().toISOString().slice(0,10)+'.csv';a.click();
   });
 }
 
